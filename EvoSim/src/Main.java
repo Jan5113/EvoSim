@@ -1,3 +1,5 @@
+import org.jbox2d.common.Vec2;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +37,9 @@ public class Main extends Application{
 		
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
+		
+		Vec2 v = new Vec2(2, -1);
+		v.toString();
 	}
 
 	private void stageResize(Stage s) {
