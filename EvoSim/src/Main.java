@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -67,7 +66,6 @@ public class Main extends Application{
 	
 	private void refreshScreen(double dt) {
 		screen.clearScreen();
-		
 		world.step((float) dt, 10, 10);
 		
 		for (B2DCube c : al_cubes) {
@@ -82,7 +80,7 @@ public class Main extends Application{
 	private void onPressedScreen(MouseEvent e) {
 		al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()),
 				new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-				BodyType.DYNAMIC, world));		
+				BodyType.DYNAMIC, world));
 	}
 
 	private void stageResize(Stage s) {
