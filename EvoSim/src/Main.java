@@ -15,6 +15,7 @@ public class Main extends Application{
 	
 	public static void main(String[] args) {
 		launch (args);
+		Vec2 v = new Vec2(2,2);
 	}
 
 	public void start(Stage primaryStage) throws Exception {
