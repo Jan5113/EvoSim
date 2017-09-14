@@ -1,10 +1,13 @@
-import org.jbox2d.common.Vec2;
+import java.util.ArrayList;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.World;
+
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.Observable;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -16,9 +19,13 @@ public class Main extends Application{
 	GraphicsContext gc;
 	private Screen screen;
 	
+	private World world;
+	private long lastNanoTime;
+	private static final Vec2 v2_gravity = new Vec2(0, -10);
+	private ArrayList<B2DCube> al_cubes = new ArrayList<B2DCube>();
+	
 	public static void main(String[] args) {
 		launch (args);
-		Vec2 v = new Vec2(2,2);
 	}
 
 	public void start(Stage primaryStage) throws Exception {
@@ -31,6 +38,7 @@ public class Main extends Application{
 		primaryStage.setScene(scene);
 		screen = new Screen(500, 500);	
 		screen.setOnMouseClicked(e -> onClickScreen(e));
+		screen.setOnMouseMoved(e -> onPressedScreen(e));
 		
 		root.setCenter(screen);
 		
@@ -39,12 +47,42 @@ public class Main extends Application{
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		
-		Vec2 v = new Vec2(2, -1);
-		v.toString();
+		world = new World(v2_gravity);
+		al_cubes.add(new B2DCube(2.5f, 0.5f, 2.0f, 0.1f, BodyType.STATIC, world));	
+		
+		final long startNanoTime = System.nanoTime();
+	    lastNanoTime = startNanoTime;
+	    
+		new AnimationTimer()
+	      {
+	          public void handle(long currentNanoTime)
+	          {
+	              double dt = (currentNanoTime - lastNanoTime) / 1000000000.0;
+	              lastNanoTime = currentNanoTime;
+	              
+	        	  refreshScreen(dt);
+	          }
+	      }.start();
+	}
+	
+	private void refreshScreen(double dt) {
+		screen.clearScreen();
+		
+		world.step((float) dt, 10, 10);
+		
+		for (B2DCube c : al_cubes) {
+			screen.drawRect(c, Color.BLUE, false);
+		}
 	}
 
 	private void onClickScreen(MouseEvent e) {
-		screen.drawRect(e.getX(), e.getY(), 30, 30, Color.BLUE, true);
+		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
+	}
+	
+	private void onPressedScreen(MouseEvent e) {
+		al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()),
+				new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
+				BodyType.DYNAMIC, world));		
 	}
 
 	private void stageResize(Stage s) {
