@@ -7,10 +7,12 @@ import javafx.scene.paint.Color;
 public class Screen extends Canvas {
 	GraphicsContext gc;
 	Color col_background;
+	ConvertUnits cu;
 
-	public Screen(double arg0, double arg1) {
+	public Screen(double arg0, double arg1, double scale_in, Vec2 pos_in) {
 		super(arg0, arg1);
 		
+		cu = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) arg0, (float) arg1));
 		gc = this.getGraphicsContext2D();
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
@@ -65,12 +67,32 @@ public class Screen extends Canvas {
 	}
 	
 	public void drawRect(B2DCube b2d_cube, Color c, boolean fill) {
-		drawRect(ConvertUnits.coordWorldToPixels(b2d_cube.getPos()), ConvertUnits.scalarWorldToPixels(b2d_cube.getDim()), ConvertUnits.radToDeg(-b2d_cube.getRot()), c, fill);
+		drawRect(cu.coordWorldToPixels(b2d_cube.getPos()), cu.scalarWorldToPixels(b2d_cube.getDim()), cu.radToDeg(-b2d_cube.getRot()), c, fill);
 	}
 	
 	public void clearScreen () {		
 		gc.setFill(col_background);
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
+	}
+	
+	public void setScale(double scale_in) {
+		cu.setScale(scale_in);		
+	}
+	
+	public double getScale() {
+		return cu.getScale();
+	}
+	
+	public void setPos(Vec2 pos_in) {
+		cu.setPos(pos_in);
+	}
+	
+	public void addPos(Vec2 pos_in) {
+		cu.addPos(pos_in);
+	}
+	
+	public Vec2 getPos() {
+		return cu.getPos();
 	}
 
 }
