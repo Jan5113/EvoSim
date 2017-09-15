@@ -8,13 +8,15 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application{
-	private static String version = "0.0";
+	private static String version = "0.0.1";
 	GraphicsContext gc;
 	private Screen screen;
 	
@@ -22,6 +24,7 @@ public class Main extends Application{
 	private long lastNanoTime;
 	private static final Vec2 v2_gravity = new Vec2(0, -10);
 	private ArrayList<B2DCube> al_cubes = new ArrayList<B2DCube>();
+	private Vec2 dir = new Vec2(0,0);
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -35,9 +38,11 @@ public class Main extends Application{
 		scene.setFill(Color.color(0.8, 0.8, 1));
 		
 		primaryStage.setScene(scene);
-		screen = new Screen(500, 500);	
+		screen = new Screen(500, 500, 100, new Vec2(0, 5));
 		screen.setOnMouseClicked(e -> onClickScreen(e));
 		screen.setOnMouseMoved(e -> onPressedScreen(e));
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
+		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
 		
 		root.setCenter(screen);
 		
@@ -64,6 +69,44 @@ public class Main extends Application{
 	      }.start();
 	}
 	
+	private void offKeyScreen(KeyEvent e) {
+		if (e.getCode() == KeyCode.W) {
+			dir.y = 0;
+		}
+		if (e.getCode() == KeyCode.A) {
+			dir.x = 0;
+		}
+		if (e.getCode() == KeyCode.S) {
+			dir.y = 0;
+		}
+		if (e.getCode() == KeyCode.D) {
+			dir.x = 0;
+		}
+		dir.normalize();
+	}
+
+	private void onKeyScreen(KeyEvent e) {
+		if (e.getCode() == KeyCode.W) {
+			dir.y += 1;
+		}
+		if (e.getCode() == KeyCode.A) {
+			dir.x += -1;
+		}
+		if (e.getCode() == KeyCode.S) {
+			dir.y += -1;
+		}
+		if (e.getCode() == KeyCode.D) {
+			dir.x += 1;
+		}
+		if (e.getCode() == KeyCode.Q) {
+			screen.setScale(screen.getScale()*0.8);
+		}
+		if (e.getCode() == KeyCode.E) {
+			screen.setScale(screen.getScale()*1.25);
+		}
+		dir.normalize();
+	}
+
 	private void refreshScreen(double dt) {
 		screen.clearScreen();
 		world.step((float) dt, 10, 10);
@@ -71,6 +114,8 @@ public class Main extends Application{
 		for (B2DCube c : al_cubes) {
 			screen.drawRect(c, Color.BLUE, false);
 		}
+		
+		screen.addPos(dir.mul((float) dt));
 	}
 
 	private void onClickScreen(MouseEvent e) {
@@ -78,7 +123,7 @@ public class Main extends Application{
 	}
 	
 	private void onPressedScreen(MouseEvent e) {
-		al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()),
+		al_cubes.add(new B2DCube(screen.cu.coordPixelsToWorld(e.getX(), e.getY()),
 				new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
 				BodyType.DYNAMIC, world));
 	}
