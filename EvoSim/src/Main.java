@@ -22,8 +22,9 @@ public class Main extends Application{
 	
 	private World world;
 	private long lastNanoTime;
-	private static final Vec2 v2_gravity = new Vec2(0, -0);
+	private static final Vec2 v2_gravity = new Vec2(0, -10);
 	private ArrayList<B2DCube> al_cubes = new ArrayList<B2DCube>();
+	private ArrayList<B2DSphere> al_spheres = new ArrayList<B2DSphere>();
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
@@ -127,7 +128,10 @@ public class Main extends Application{
 		screen.clearScreen();
 		
 		for (B2DCube c : al_cubes) {
-			screen.drawRect(c, Color.BLUE, false);
+			screen.drawCube(c, Color.BLUE, false);
+		}
+		for (B2DSphere s : al_spheres) {
+			screen.drawSphere(s, Color.RED, false);
 		}
 		
 		if (shootDir != null && mousePos != null) {
@@ -145,10 +149,7 @@ public class Main extends Application{
 		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
 		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
 		Vec2 shoot_vel = shootDir.add(screen.cu.coordPixelsToWorld(e.getX(), e.getY()).negate()).mul(5.0f);
-		al_cubes.add(new B2DCube(shootDir,
-				new Vec2(2f, 2f),
-				shoot_vel, (float) (Math.random()*Math.PI),
-				BodyType.DYNAMIC, world));
+		al_spheres.add(new B2DSphere(shootDir, 0.2f ,shoot_vel, (float) (Math.random()*Math.PI),BodyType.DYNAMIC, world));
 		shootDir = null;
 	}
 	
