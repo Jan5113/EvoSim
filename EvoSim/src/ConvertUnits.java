@@ -31,6 +31,14 @@ public class ConvertUnits {
 		return px_pos.mul(scale).add(resCam.mul(0.5f));
 	}
 	
+	static  public Vec2 rotateVec2(Vec2 v, float rad) {
+		Vec2 rotated = new Vec2(
+						v.x * (float) Math.cos(rad) - v.y * (float) Math.sin(rad),
+						v.x * (float) Math.sin(rad) + v.y * (float) Math.cos(rad)
+						);
+		return rotated;
+	}
+	
 	
 	
 	
@@ -50,12 +58,12 @@ public class ConvertUnits {
 		return B2D_vec.mul(scale);
 	}
 	
-	public double radToDeg (double rad) {
-		return rad * 180 / Math.PI;
+	static public float radToDeg (float rad) {
+		return rad * 180 / (float) Math.PI;
 	}
 	
-	public double degToRad (double deg) {
-		return deg * Math.PI / 180;
+	static public float degToRad (float deg) {
+		return deg * (float) Math.PI / 180;
 	}
 	
 	public double getScale() {
