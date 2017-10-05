@@ -85,13 +85,13 @@ public class Screen extends Canvas {
 
 	public void drawCube(B2DCube b2d_cube, Color c, boolean fill) {
 		drawPxRect(cu.coordWorldToPixels(b2d_cube.getPos()), cu.scalarWorldToPixels(b2d_cube.getDim()),
-				cu.radToDeg(-b2d_cube.getRot()), c, fill);
+				ConvertUnits.radToDeg(-b2d_cube.getRot()), c, fill);
 	}
 
 	public void drawSphere(B2DSphere b2d_sphere, Color c, boolean fill) {
 		Vec2 pos = cu.coordWorldToPixels(b2d_sphere.getPos());
-		double rad = (double) cu.scalarWorldToPixels(b2d_sphere.getRadius());
-		double angl = cu.radToDeg(-b2d_sphere.getRot());
+		float rad = cu.scalarWorldToPixels(b2d_sphere.getRadius());
+		float angl = ConvertUnits.radToDeg(-b2d_sphere.getRot());
 		drawPxLineCircle(pos.x, pos.y, rad, angl, c, fill);
 	}
 	
@@ -101,6 +101,14 @@ public class Screen extends Canvas {
 		
 		gc.setStroke(c);
 		gc.strokeLine(b2d_pos1.x, b2d_pos1.y, b2d_pos2.x, b2d_pos2.y);
+	}
+	
+
+	
+	public void drawLocalLine(Vec2 body1_pos, Vec2 body1_loc, float body1_rot, Vec2 body2_pos, Vec2 body2_loc, float body2_rot, Color c) {
+		Vec2 rotated1 = body1_pos.add(ConvertUnits.rotateVec2(body1_loc, body1_rot));
+		Vec2 rotated2 = body2_pos.add(ConvertUnits.rotateVec2(body2_loc, body2_rot));
+		drawLine(rotated1, rotated2, c);
 	}
 
 	public void clearScreen() {
