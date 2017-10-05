@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.PrismaticJoint;
+import org.jbox2d.dynamics.joints.PrismaticJointDef;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -28,6 +30,9 @@ public class Main extends Application{
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
+	private PrismaticJoint joint;
+	private float toggleTime = 0.f;
+	private int countTime = 0;
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -59,6 +64,24 @@ public class Main extends Application{
 		
 		world = new World(v2_gravity);
 		al_cubes.add(new B2DCube(0f, 0.2f, 2.0f, 0.1f, BodyType.STATIC, world));	
+		
+		B2DCube tempCubeStat = new B2DCube(new Vec2(0f, 4.0f), new Vec2(0.2f, 0.2f), new Vec2(0f, 0f),  (float) 1.2f, BodyType.STATIC, world);
+		B2DCube tempCubeDyn = new B2DCube(new Vec2(0f, 4.0f), new Vec2(1f, 0.2f),	new Vec2(0f, 0f), (float) 1.2f, BodyType.DYNAMIC, world);
+		PrismaticJointDef jointDef = new PrismaticJointDef();
+		Vec2 worldAxis = ConvertUnits.rotateVec2(new Vec2(0.0f, -1.0f), (float) 1.2f);
+		jointDef.initialize(tempCubeStat.getB2D(), tempCubeDyn.getB2D(), tempCubeStat.getB2D().getWorldCenter(), worldAxis);
+		jointDef.lowerTranslation = 2.0f;
+		jointDef.upperTranslation = 100.0f;
+		jointDef.enableLimit = true;
+		jointDef.maxMotorForce = 100f;
+		jointDef.motorSpeed = 0f;
+		jointDef.enableMotor = true; 
+		//jointDef.localAnchorA.set(0.1f,0.1f);
+		//jointDef.localAnchorB.set(-0.1f,0.1f);
+		joint = (PrismaticJoint) world.createJoint(jointDef);
+		joint.setLimits(0f, 100.0f);
+		al_cubes.add(tempCubeStat);
+		al_cubes.add(tempCubeDyn);
 		
 		final long startNanoTime = System.nanoTime();
 	    lastNanoTime = startNanoTime;
@@ -111,12 +134,7 @@ public class Main extends Application{
 			screen.setScale(screen.getScale()*1.25);
 		}
 		if (e.getCode() == KeyCode.SPACE) {	
-			for (int i = 0; i < 50; i++) {
-				al_cubes.add(new B2DCube(mousePos,
-						new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-						new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f), (float) (Math.random()*Math.PI),
-						BodyType.DYNAMIC, world));
-				
+			for (int i = 0; i < 1; i++) {
 			}
 		}
 		dir.normalize();
@@ -138,6 +156,43 @@ public class Main extends Application{
 			screen.drawLine(shootDir, mousePos, Color.RED);
 		}
 		
+		toggleTime += dt;
+		if (toggleTime > 3.0f) {
+			
+			toggleTime -= 3.0f;
+			countTime ++;
+		}
+		
+		{
+
+			float maxLen = 2.5f;
+			float minLen = 1.0f;
+
+			joint.enableMotor(true);
+			if (countTime % 2 == 0) {
+				joint.setMotorSpeed((minLen - joint.getJointTranslation())*10.f);
+			} else {
+//				joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
+				if ((maxLen < joint.getJointTranslation())) {
+					joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
+				} else if (minLen - 0.01f > joint.getJointTranslation()) {
+					joint.setMotorSpeed((minLen - joint.getJointTranslation())*10.f);
+				} else {
+					joint.enableMotor(false);
+				}
+				
+			}
+			System.out.println(joint.getMotorSpeed());
+		}
+		
+		screen.drawLocalLine(
+				al_cubes.get(1).getPos(),
+				joint.getLocalAnchorA(),
+				al_cubes.get(1).getRot(),
+				al_cubes.get(2).getPos(), 
+				joint.getLocalAnchorB(),
+				al_cubes.get(2).getRot(),
+				Color.GREEN);
 	}
 	
 	private void onPressedScreen(MouseEvent e) {
