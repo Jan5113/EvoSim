@@ -67,7 +67,7 @@ public class B2DSphere {
 		return b_sphere.getPosition();
 	}
 	
-	public double getRot() {
+	public float getRot() {
 		return b_sphere.getAngle();
 	}	
 	
