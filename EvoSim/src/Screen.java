@@ -82,17 +82,28 @@ public class Screen extends Canvas {
 			gc.strokeRect(x - w, y - h, 2 * w, 2 * h);
 
 	}
-
-	public void drawCube(B2DCube b2d_cube, Color c, boolean fill) {
-		drawPxRect(cu.coordWorldToPixels(b2d_cube.getPos()), cu.scalarWorldToPixels(b2d_cube.getDim()),
-				ConvertUnits.radToDeg(-b2d_cube.getRot()), c, fill);
+	
+	public void drawBody(B2DBody body) {
+		if (body.getShapeType() == ShapeType.CIRCLE) {
+			drawSphere(body);
+		}
+		else if (body.getShapeType() == ShapeType.CUBOID) {
+			drawCuboid(body);
+		}
+	}
+	
+	private void drawCuboid(B2DBody cube) {
+		drawPxRect(cu.coordWorldToPixels(cube.getPos()),
+				cu.scalarWorldToPixels(cube.getDim()),
+				ConvertUnits.radToDeg(-cube.getAngle()),
+				cube.getColor(), cube.getFill());
 	}
 
-	public void drawSphere(B2DSphere b2d_sphere, Color c, boolean fill) {
-		Vec2 pos = cu.coordWorldToPixels(b2d_sphere.getPos());
-		float rad = cu.scalarWorldToPixels(b2d_sphere.getRadius());
-		float angl = ConvertUnits.radToDeg(-b2d_sphere.getRot());
-		drawPxLineCircle(pos.x, pos.y, rad, angl, c, fill);
+	private void drawSphere(B2DBody sphere) {
+		Vec2 pos = cu.coordWorldToPixels(sphere.getPos());
+		float rad = cu.scalarWorldToPixels(sphere.getDim().x);
+		float angl = ConvertUnits.radToDeg(-sphere.getAngle());
+		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
 	}
 	
 	public void drawLine(Vec2 b2d_pos1, Vec2 b2d_pos2, Color c) {
