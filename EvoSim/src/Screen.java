@@ -17,11 +17,76 @@ public class Screen extends Canvas {
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
 	}
+	
+	//************************************************
+	//*		SCREEN FUNCTIONS
+	//************************************************
 
 	public void setBackgroundCol(Color c) {
 		col_background = c;
 	}
 
+	public void clearScreen() {
+		gc.setFill(col_background);
+		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
+	}
+	
+	//************************************************
+	//*		B2D DRAW FUNCTIONS
+	//************************************************
+
+	
+	public void drawBody(B2DBody body) {
+		if (body.getShapeType() == ShapeType.CIRCLE) {
+			drawSphere(body);
+		}
+		else if (body.getShapeType() == ShapeType.CUBOID) {
+			drawCuboid(body);
+		}
+		else if (body.getShapeType() == ShapeType.POINT) {
+			drawCross(body);
+		}
+	}
+	
+	private void drawCuboid(B2DBody cube) {
+		drawPxRect(cu.coordWorldToPixels(cube.getPos()),
+				cu.scalarWorldToPixels(cube.getDim()),
+				ConvertUnits.radToDeg(-cube.getAngle()),
+				cube.getColor(), cube.getFill());
+	}
+
+	private void drawSphere(B2DBody sphere) {
+		Vec2 pos = cu.coordWorldToPixels(sphere.getPos());
+		float rad = cu.scalarWorldToPixels(sphere.getDim().x);
+		float angl = ConvertUnits.radToDeg(-sphere.getAngle());
+		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
+	}
+	
+	public void drawLine(Vec2 b2d_pos1, Vec2 b2d_pos2, Color c) {
+		b2d_pos1 = cu.coordWorldToPixels(b2d_pos1);
+		b2d_pos2 = cu.coordWorldToPixels(b2d_pos2);
+		
+		gc.setStroke(c);
+		gc.strokeLine(b2d_pos1.x, b2d_pos1.y, b2d_pos2.x, b2d_pos2.y);
+	}
+	
+	public void drawCross(B2DBody cross) {
+		Vec2 dim = cross.getDim();
+		drawLine (cross.getPos().add(dim.negate()), cross.getPos().add(dim), cross.getColor());
+		dim = new Vec2 (dim.x, -dim.y);
+		drawLine (cross.getPos().add(dim.negate()), cross.getPos().add(dim), cross.getColor());
+	}
+	
+	public void drawLocalLine(Vec2 body1_pos, Vec2 body1_loc, float body1_rot, Vec2 body2_pos, Vec2 body2_loc, float body2_rot, Color c) {
+		Vec2 rotated1 = body1_pos.add(ConvertUnits.rotateVec2(body1_loc, body1_rot));
+		Vec2 rotated2 = body2_pos.add(ConvertUnits.rotateVec2(body2_loc, body2_rot));
+		drawLine(rotated1, rotated2, c);
+	}
+	
+	//************************************************
+	//*		PRIVATE PX DRAW FUNCTIONS
+	//************************************************
+	
 	@SuppressWarnings("unused")
 	private void drawPxCircle(double x, double y, double w, double h, double deg, Color c, boolean fill) {
 		gc.save();
@@ -83,50 +148,10 @@ public class Screen extends Canvas {
 
 	}
 	
-	public void drawBody(B2DBody body) {
-		if (body.getShapeType() == ShapeType.CIRCLE) {
-			drawSphere(body);
-		}
-		else if (body.getShapeType() == ShapeType.CUBOID) {
-			drawCuboid(body);
-		}
-	}
+//************************************************
+//*		CAMERA FUNCTIONS
+//************************************************
 	
-	private void drawCuboid(B2DBody cube) {
-		drawPxRect(cu.coordWorldToPixels(cube.getPos()),
-				cu.scalarWorldToPixels(cube.getDim()),
-				ConvertUnits.radToDeg(-cube.getAngle()),
-				cube.getColor(), cube.getFill());
-	}
-
-	private void drawSphere(B2DBody sphere) {
-		Vec2 pos = cu.coordWorldToPixels(sphere.getPos());
-		float rad = cu.scalarWorldToPixels(sphere.getDim().x);
-		float angl = ConvertUnits.radToDeg(-sphere.getAngle());
-		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
-	}
-	
-	public void drawLine(Vec2 b2d_pos1, Vec2 b2d_pos2, Color c) {
-		b2d_pos1 = cu.coordWorldToPixels(b2d_pos1);
-		b2d_pos2 = cu.coordWorldToPixels(b2d_pos2);
-		
-		gc.setStroke(c);
-		gc.strokeLine(b2d_pos1.x, b2d_pos1.y, b2d_pos2.x, b2d_pos2.y);
-	}
-	
-
-	
-	public void drawLocalLine(Vec2 body1_pos, Vec2 body1_loc, float body1_rot, Vec2 body2_pos, Vec2 body2_loc, float body2_rot, Color c) {
-		Vec2 rotated1 = body1_pos.add(ConvertUnits.rotateVec2(body1_loc, body1_rot));
-		Vec2 rotated2 = body2_pos.add(ConvertUnits.rotateVec2(body2_loc, body2_rot));
-		drawLine(rotated1, rotated2, c);
-	}
-
-	public void clearScreen() {
-		gc.setFill(col_background);
-		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
-	}
-
 	public void setScale(double scale_in) {
 		cu.setScale(scale_in);
 	}

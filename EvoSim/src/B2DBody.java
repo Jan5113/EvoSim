@@ -29,9 +29,15 @@ public class B2DBody {
 	private boolean isCreated = false;
 	
 	static private BodyType defaultBodyType = BodyType.DYNAMIC;
+	public final String id; 
+
+	//************************************************
+	//*		SET DEFAULT VALUES
+	//************************************************
 	
-	public B2DBody() {
+	public B2DBody(String id_in) {
 		setDefalutValues();
+		id = id_in;
 	}
 	
 	public void setDefalutValues() {
@@ -72,6 +78,10 @@ public class B2DBody {
 		drawFill = false;
 	}
 	
+	//************************************************
+	//*		SET BODY DEF, SHAPE & FIXTURE DEF
+	//************************************************
+	
 	public void setBodyDef(BodyDef bodyDef_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		bodyDef = bodyDef_in;
@@ -84,6 +94,14 @@ public class B2DBody {
 		shapeType = ShapeType.POLYGON;
 	}
 	
+	public void setCuboidShape(Vec2 dimensions_in) {
+		if (isCreated) {System.err.println("B2DBody already created!"); return;}
+		polygonShape = new PolygonShape();
+		polygonShape.setAsBox(dimensions_in.x, dimensions_in.y);
+		dimensions = dimensions_in;
+		shapeType = ShapeType.CUBOID;
+	}	
+	
 	public void setCircleShape(float dimension_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		circleShape = new CircleShape();
@@ -92,24 +110,31 @@ public class B2DBody {
 		shapeType = ShapeType.CIRCLE;
 	}
 	
-	public void setCuboidShape(Vec2 dimensions_in) {
-		if (isCreated) {System.err.println("B2DBody already created!"); return;}
-		polygonShape = new PolygonShape();
-		polygonShape.setAsBox(dimensions_in.x, dimensions_in.y);
-		dimensions = dimensions_in;
-		shapeType = ShapeType.CUBOID;
-	}
-	
+//	public void setChainShape() {
+//		
+//	}	
+//	
+//	public void setEdgeShape() {
+//		
+//	}
 	
 	public void setFixture(FixtureDef fixtureDef_in) { // WARNING! Shape included in fixtureDef_in will be overwritten with local PolygonShape
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef = fixtureDef_in;
 	}
 	
+
+	
+	//************************************************
+	//*		SET SINGLE VALUES
+	//************************************************
+	
 	public void setBodyType(BodyType bodyType_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		bodyDef.type = bodyType_in;
 	}
+	
+	//		BODY DEF
 	
 	public void setPosition(Vec2 pos_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
@@ -131,6 +156,8 @@ public class B2DBody {
 		bodyDef.setAngularVelocity(vel_in);
 	}
 	
+	//		FIXTURE DEF
+	
 	public void setDensity(float dens_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.density = dens_in;
@@ -150,6 +177,11 @@ public class B2DBody {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.filter.groupIndex = ind_in;
 	}
+	
+
+	//************************************************
+	//*		SHAPE TEMPLATES
+	//************************************************
 	
 	public void setUpCuboid(float pos_x, float pos_y, float dim_x, float dim_y, float rad_in, BodyType bodyType_in) {
 		setUpCuboid(new Vec2(pos_x, pos_y), new Vec2(dim_x, dim_y), rad_in, bodyType_in);
@@ -175,6 +207,16 @@ public class B2DBody {
 		setCircleShape(dim_in);
 	}
 	
+	public void setUpPoint(Vec2 pos_in) {
+		if (isCreated) {System.err.println("B2DBody already created!"); return;}
+		setPosition(pos_in);
+		shapeType = ShapeType.POINT;
+		setBodyType(BodyType.STATIC);
+	}
+
+	//************************************************
+	//*		SET DRAW PORPERTIES
+	//************************************************	
 	
 	public void setColor(Color c_in) {
 		drawColor = c_in;
@@ -187,12 +229,19 @@ public class B2DBody {
 	
 	
 	
+	//************************************************
+	//*		CREATE BODY (locks set-functions)
+	//************************************************	
+	
 	public void createBody(World world) {
 		if (shapeType == ShapeType.POLYGON || shapeType == ShapeType.CUBOID) {
 			fixtureDef.shape = polygonShape;			
 		}
 		else if (shapeType == ShapeType.CIRCLE) {
 			fixtureDef.shape = circleShape;			
+		}
+		else if (shapeType == ShapeType.POINT) {
+			fixtureDef.shape = new PolygonShape();
 		}
 //		else if (shapeType == ShapeType.CHAIN) {
 //			fixtureDef.shape = chainShape;			
@@ -205,6 +254,10 @@ public class B2DBody {
 		isCreated = true;
 	}
 	
+
+	//************************************************
+	//*		GET VALUES
+	//************************************************	
 	
 	public boolean isCreated() {
 		return isCreated;
@@ -229,7 +282,6 @@ public class B2DBody {
 		if (!isCreated) {System.err.println("B2DBody not created!"); return null;}
 		return shapeType;
 	}
-		
 	
 	public Color getColor() {
 		return drawColor;
@@ -238,5 +290,8 @@ public class B2DBody {
 	public boolean getFill() {
 		return drawFill;
 	}
+	
+//	Add in future:
+//		- extractValues() / "unCreate()": Takes current Values from body, enables editing (destroy() old body)
 
 }

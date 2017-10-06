@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.World;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -20,10 +16,8 @@ public class Main extends Application{
 	GraphicsContext gc;
 	private Screen screen;
 	
-	private World world;
 	private long lastNanoTime;
-	private static final Vec2 v2_gravity = new Vec2(0, -10);
-	private ArrayList<B2DBody> al_bodies = new ArrayList<B2DBody>();
+	private Test test;
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
@@ -56,11 +50,7 @@ public class Main extends Application{
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		
-		world = new World(v2_gravity);
-		B2DBody tempB2DBody = new B2DBody();
-		tempB2DBody.setUpCuboid(0.0f, 0.2f, 2.0f, 0.1f, 0.0f, BodyType.STATIC);
-		tempB2DBody.createBody(world);
-		al_bodies.add(tempB2DBody);	
+		test = new Test(new Vec2(0.0f, -9.81f));
 		
 		final long startNanoTime = System.nanoTime();
 	    lastNanoTime = startNanoTime;
@@ -114,23 +104,26 @@ public class Main extends Application{
 		}
 		if (e.getCode() == KeyCode.SPACE) {	
 			for (int i = 0; i < 50; i++) {
-				B2DBody tempB2DBody = new B2DBody();
-				tempB2DBody.setUpCuboid(mousePos, new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-						(float) (Math.random()*Math.PI), BodyType.DYNAMIC);
-				tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
-				tempB2DBody.createBody(world);
-				al_bodies.add(tempB2DBody);					
+//				B2DBody tempB2DBody = new B2DBody();
+//				tempB2DBody.setUpCuboid(mousePos, new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
+//						(float) (Math.random()*Math.PI), BodyType.DYNAMIC);
+//				tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
+//				tempB2DBody.createBody(world);
+//				al_bodies.add(tempB2DBody);					
 			}
 		}
 		dir.normalize();
 	}
 
 	private void refreshScreen(double dt) {
-		world.step((float) dt, 10, 10);
+		test.step((float) dt);
 		screen.addPos(dir.mul((float) (dt * 1000/screen.getScale())));
 		screen.clearScreen();
 		
-		for (B2DBody b : al_bodies) {
+		for (B2DBody b : test.worldInstancesList) {
+			screen.drawBody(b);
+		}
+		for (B2DBody b : test.creatureInstancesList) {
 			screen.drawBody(b);
 		}
 		
@@ -148,15 +141,17 @@ public class Main extends Application{
 	private void onClickScreen(MouseEvent e) {
 		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
 		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
-		Vec2 shoot_vel = shootDir.add(screen.cu.coordPixelsToWorld(e.getX(), e.getY()).negate()).mul(5.0f);
-
-		B2DBody tempB2DBody = new B2DBody();
-		tempB2DBody.setUpCircle(shootDir, 0.2f,	(float) (Math.random()*Math.PI*2), BodyType.DYNAMIC);
-		tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
-		tempB2DBody.setLinearVelocity(shoot_vel);
-		tempB2DBody.setColor(Color.RED);
-		tempB2DBody.createBody(world);
-		al_bodies.add(tempB2DBody);
+		
+		
+//		Vec2 shoot_vel = shootDir.add(screen.cu.coordPixelsToWorld(e.getX(), e.getY()).negate()).mul(5.0f);
+//
+//		B2DBody tempB2DBody = new B2DBody();
+//		tempB2DBody.setUpCircle(shootDir, 0.2f,	(float) (Math.random()*Math.PI*2), BodyType.DYNAMIC);
+//		tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
+//		tempB2DBody.setLinearVelocity(shoot_vel);
+//		tempB2DBody.setColor(Color.RED);
+//		tempB2DBody.createBody(world);
+//		al_bodies.add(tempB2DBody);
 		shootDir = null;
 	}
 	
