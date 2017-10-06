@@ -2,9 +2,9 @@ import org.jbox2d.common.Vec2;
 
 public class Creature {
 	public static float[] minMaxLength = {0.2f, 1.0f};
-	public static float[] minMaxTime = {0.0f, 2.0f};
-	public static Vec2 ballStartPosition = new Vec2(0.0f, 4.0f);
-	public static Vec2 fixturePosition = new Vec2(-1.0f, 2.0f);
+	public static float[] minMaxTime = {0.0f, 1.0f};
+	public static Vec2 ballStartPosition = new Vec2(0.0f, 6.0f);
+	public static Vec2 fixturePosition = new Vec2(-0.5f, 2.0f);
 	public static float ballDim = 0.1f;
 	
 	public final float length;
