@@ -156,6 +156,11 @@ public class B2DBody {
 		bodyDef.setAngularVelocity(vel_in);
 	}
 	
+	public void setBullet (boolean in) {
+		if (isCreated) {System.err.println("B2DBody already created!"); return;}
+		bodyDef.setBullet(in);
+	}
+	
 	//		FIXTURE DEF
 	
 	public void setDensity(float dens_in) {
@@ -250,8 +255,14 @@ public class B2DBody {
 //			fixtureDef.shape = edgeShape;			
 //		}
 		body = world.createBody(bodyDef);
+		fixtureDef.setUserData(id);
 		body.createFixture(fixtureDef);
 		isCreated = true;
+	}
+	
+	
+	public void destroy() {
+		body.getWorld().destroyBody(body);
 	}
 	
 
