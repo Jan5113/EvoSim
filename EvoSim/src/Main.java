@@ -23,8 +23,7 @@ public class Main extends Application{
 	private World world;
 	private long lastNanoTime;
 	private static final Vec2 v2_gravity = new Vec2(0, -10);
-	private ArrayList<B2DCube> al_cubes = new ArrayList<B2DCube>();
-	private ArrayList<B2DSphere> al_spheres = new ArrayList<B2DSphere>();
+	private ArrayList<B2DBody> al_bodies = new ArrayList<B2DBody>();
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
@@ -58,7 +57,10 @@ public class Main extends Application{
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		
 		world = new World(v2_gravity);
-		al_cubes.add(new B2DCube(0f, 0.2f, 2.0f, 0.1f, BodyType.STATIC, world));	
+		B2DBody tempB2DBody = new B2DBody();
+		tempB2DBody.setUpCuboid(0.0f, 0.2f, 2.0f, 0.1f, 0.0f, BodyType.STATIC);
+		tempB2DBody.createBody(world);
+		al_bodies.add(tempB2DBody);	
 		
 		final long startNanoTime = System.nanoTime();
 	    lastNanoTime = startNanoTime;
@@ -112,11 +114,12 @@ public class Main extends Application{
 		}
 		if (e.getCode() == KeyCode.SPACE) {	
 			for (int i = 0; i < 50; i++) {
-				al_cubes.add(new B2DCube(mousePos,
-						new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-						new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f), (float) (Math.random()*Math.PI),
-						BodyType.DYNAMIC, world));
-				
+				B2DBody tempB2DBody = new B2DBody();
+				tempB2DBody.setUpCuboid(mousePos, new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
+						(float) (Math.random()*Math.PI), BodyType.DYNAMIC);
+				tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
+				tempB2DBody.createBody(world);
+				al_bodies.add(tempB2DBody);					
 			}
 		}
 		dir.normalize();
@@ -127,11 +130,8 @@ public class Main extends Application{
 		screen.addPos(dir.mul((float) (dt * 1000/screen.getScale())));
 		screen.clearScreen();
 		
-		for (B2DCube c : al_cubes) {
-			screen.drawCube(c, Color.BLUE, false);
-		}
-		for (B2DSphere s : al_spheres) {
-			screen.drawSphere(s, Color.RED, false);
+		for (B2DBody b : al_bodies) {
+			screen.drawBody(b);
 		}
 		
 		if (shootDir != null && mousePos != null) {
@@ -149,7 +149,14 @@ public class Main extends Application{
 		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
 		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
 		Vec2 shoot_vel = shootDir.add(screen.cu.coordPixelsToWorld(e.getX(), e.getY()).negate()).mul(5.0f);
-		al_spheres.add(new B2DSphere(shootDir, 0.2f ,shoot_vel, (float) (Math.random()*Math.PI),BodyType.DYNAMIC, world));
+
+		B2DBody tempB2DBody = new B2DBody();
+		tempB2DBody.setUpCircle(shootDir, 0.2f,	(float) (Math.random()*Math.PI*2), BodyType.DYNAMIC);
+		tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
+		tempB2DBody.setLinearVelocity(shoot_vel);
+		tempB2DBody.setColor(Color.RED);
+		tempB2DBody.createBody(world);
+		al_bodies.add(tempB2DBody);
 		shootDir = null;
 	}
 	
