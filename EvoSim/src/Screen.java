@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
+	public boolean gridEnabled = true;
 	public ConvertUnits cu;
 
 	public Screen(double arg0, double arg1, double scale_in, Vec2 pos_in) {
@@ -29,6 +30,21 @@ public class Screen extends Canvas {
 	public void clearScreen() {
 		gc.setFill(col_background);
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if (gridEnabled) drawGrid();
+	}
+	
+	public void setScreenSize(int x_in, int y_in) {
+		this.setWidth(x_in);
+		this.setHeight(y_in);
+	}
+	
+	private void drawGrid() {
+		Vec2 startPos = new Vec2 ((float) Math.floor(cu.getPos().x), (float) Math.floor(cu.getPos().y));
+		for (float i = -5.0f; i < 10.0f; i++) {
+			Color c = Color.GRAY;
+			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) c = Color.RED;
+			drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), c);
+		}
 	}
 	
 	//************************************************
