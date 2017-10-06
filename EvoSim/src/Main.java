@@ -30,11 +30,11 @@ public class Main extends Application{
 		primaryStage.setTitle("EvoSim - v"+ version);
 		BorderPane root = new BorderPane();
 		
-		Scene scene = new Scene(root, 600, 600);
+		Scene scene = new Scene(root, 1200, 600);
 		scene.setFill(Color.color(0.8, 0.8, 1));
 		
 		primaryStage.setScene(scene);
-		screen = new Screen(500, 500, 100, new Vec2(0, 2.4f));
+		screen = new Screen(1100, 500, 100, new Vec2(3.0f, 2.0f));
 		screen.setBackgroundCol(Color.ALICEBLUE);
 		screen.setOnMouseReleased(e -> onClickScreen(e));
 		screen.setOnMouseMoved(e -> onMoveScreen(e));
@@ -168,11 +168,12 @@ public class Main extends Application{
 	}
 
 	private void stageResize(Stage s) {
-		System.out.println("stage has been resized");
+		//System.out.println("stage has been resized");
 		//canvas.setHeight(s.getHeight()-100);
 		//canvas.setWidth(s.getWidth()-100);
 		//gc.setFill(Color.color(1, 0.8, 0.8));
 		//gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+		screen.setScreenSize((int) s.getWidth()-100, (int) s.getHeight()-100); 
 	}
 
 }
