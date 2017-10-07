@@ -21,6 +21,7 @@ public class Main extends Application{
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
+	byte scaleZahl = 0;
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -46,6 +47,8 @@ public class Main extends Application{
 		root.setCenter(screen);
 		
 		primaryStage.show();
+		
+		
 		
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
@@ -97,10 +100,16 @@ public class Main extends Application{
 			dir.x += 1;
 		}
 		if (e.getCode() == KeyCode.Q) {
+			if(scaleZahl <= 5){
 			screen.setScale(screen.getScale()*0.8);
+			scaleZahl = (byte) (scaleZahl + 1);
+		}
 		}
 		if (e.getCode() == KeyCode.E) {
-			screen.setScale(screen.getScale()*1.25);
+			if(scaleZahl >= -5){
+			screen.setScale(screen.getScale()*1.2);
+			scaleZahl = (byte) (scaleZahl - 1);
+		}
 		}
 		if (e.getCode() == KeyCode.SPACE) {	
 			for (int i = 0; i < 50; i++) {
