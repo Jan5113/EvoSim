@@ -10,7 +10,7 @@ public class Screen extends Canvas {
 	public boolean gridEnabled = true;
 	public ConvertUnits cu;
 
-	public Screen(double arg0, double arg1, double scale_in, Vec2 pos_in) {
+	public Screen(double arg0, double arg1, float scale_in, Vec2 pos_in) {
 		super(arg0, arg1);
 
 		cu = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) arg0, (float) arg1));
@@ -104,7 +104,7 @@ public class Screen extends Canvas {
 	//************************************************
 	
 	@SuppressWarnings("unused")
-	private void drawPxCircle(double x, double y, double w, double h, double deg, Color c, boolean fill) {
+	private void drawPxCircle(float x, float y, float w, float h, float deg, Color c, boolean fill) {
 		gc.save();
 		gc.translate(x, y);
 		gc.rotate(deg);
@@ -113,7 +113,7 @@ public class Screen extends Canvas {
 		gc.restore();
 	}
 	
-	private void drawPxLineCircle(double x, double y, double r, double deg, Color c, boolean fill) {
+	private void drawPxLineCircle(float x, float y, float r, float deg, Color c, boolean fill) {
 		gc.save();
 		gc.translate(x, y);
 		gc.rotate(deg);
@@ -124,7 +124,7 @@ public class Screen extends Canvas {
 		gc.restore();
 	}
 
-	private void drawPxCircle(double x, double y, double w, double h, Color c, boolean fill) {
+	private void drawPxCircle(float x, float y, float w, float h, Color c, boolean fill) {
 		gc.setStroke(c);
 		gc.setFill(c);
 
@@ -135,7 +135,7 @@ public class Screen extends Canvas {
 	}
 
 	@SuppressWarnings("unused")
-	private void drawPxRect(double x, double y, double w, double h, double deg, Color c, boolean fill) {
+	private void drawPxRect(float x, float y, float w, float h, float deg, Color c, boolean fill) {
 		gc.save();
 		gc.translate(x, y);
 		gc.rotate(deg);
@@ -144,7 +144,7 @@ public class Screen extends Canvas {
 		gc.restore();
 	}
 
-	private void drawPxRect(Vec2 pos, Vec2 dim, double deg, Color c, boolean fill) {
+	private void drawPxRect(Vec2 pos, Vec2 dim, float deg, Color c, boolean fill) {
 		gc.save();
 		gc.translate(pos.x, pos.y);
 		gc.rotate(deg);
@@ -153,7 +153,7 @@ public class Screen extends Canvas {
 		gc.restore();
 	}
 
-	private void drawPxRect(double x, double y, double w, double h, Color c, boolean fill) {
+	private void drawPxRect(float x, float y, float w, float h, Color c, boolean fill) {
 		gc.setStroke(c);
 		gc.setFill(c);
 
@@ -168,11 +168,11 @@ public class Screen extends Canvas {
 //*		CAMERA FUNCTIONS
 //************************************************
 	
-	public void setScale(double scale_in) {
+	public void setScale(float scale_in) {
 		cu.setScale(scale_in);
 	}
 
-	public double getScale() {
+	public float getScale() {
 		return cu.getScale();
 	}
 
