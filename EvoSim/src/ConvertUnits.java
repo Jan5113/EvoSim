@@ -2,6 +2,7 @@ import org.jbox2d.common.Vec2;
 
 public class ConvertUnits {
 	private float scale = 100; // 100px = 1m
+	private static float maxScale = 20;
 	private Vec2 posCam = new Vec2(0,5);
 	private Vec2 resCam = new Vec2(500, 500);
 	
@@ -66,12 +67,13 @@ public class ConvertUnits {
 		return deg * (float) Math.PI / 180;
 	}
 	
-	public double getScale() {
+	public float getScale() {
 		return scale;
 	}
 	
-	public void setScale(double scale_in) {
-		scale = (float) scale_in;
+	public void setScale(float scale_in) {
+		if (scale_in >= maxScale)
+		scale = scale_in;
 	}
 	
 	public Vec2 getPos() {
