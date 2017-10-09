@@ -53,7 +53,7 @@ public class Population {
 		int initialListSize = CreatureList.size();
 		while (CreatureList.size() < populationSize) {
 			for (int i = 0; i < initialListSize; i++) {
-				CreatureList.add(CreatureList.get(i).mutate((float) Math.pow(p, generation) + 0.001f, currentID));
+				CreatureList.add(CreatureList.get(i).mutate((float) Math.pow(p, 1 + generation * 0.5f), currentID));
 				currentID ++;
 				if (CreatureList.size() >= populationSize) break;
 			}
