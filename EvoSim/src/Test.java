@@ -21,7 +21,7 @@ public class Test {
 	private boolean testing = false;
 	
 	private float dtToRun = 0;
-	private static float dtStepSize = 0.01f;
+	private static float dtStepSize = 0.005f;
 	
 	private Population pop;
 	
@@ -29,7 +29,7 @@ public class Test {
 		testWorld = new World(gravity_in);
 
 		B2DBody floor = new B2DBody("floor");
-		floor.setUpCuboid(0.0f, -10.0f, 50.0f, 10.0f, 0.0f, BodyType.STATIC);
+		floor.setUpCuboid(0.0f, -10.0f, 100.0f, 10.0f, 0.0f, BodyType.STATIC);
 		floor.setFill(true);
 		floor.setColor(Color.GREENYELLOW);
 		floor.createBody(testWorld);
@@ -53,12 +53,12 @@ public class Test {
 		if (testing) {System.err.println("No Creature set!"); return;}
 		
 		B2DBody fixture = new B2DBody("fixture");
-		fixture.setUpPoint(Creature.fixturePosition);
+		fixture.setUpPoint(creature.fixturePos);
 		fixture.setColor(Color.RED);
 		creatureInstancesList.add(fixture);
 
 		B2DBody bat = new B2DBody("bat");
-		bat.setUpCuboid(Creature.fixturePosition.add(new Vec2(-creature.length, 0)), (new Vec2(creature.length, 0.1f)), 0.0f, BodyType.DYNAMIC);
+		bat.setUpCuboid(creature.fixturePos.add(new Vec2(-creature.length, 0)), (new Vec2(creature.length, 0.1f)), 0.0f, BodyType.DYNAMIC);
 		
 		creatureInstancesList.add(bat);
 
@@ -72,7 +72,7 @@ public class Test {
 		}
 		
 		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.initialize(fixture.body, bat.body, Creature.fixturePosition);
+		jointDef.initialize(fixture.body, bat.body, creature.fixturePos);
 		jointDef.localAnchorB.set(creature.length, 0);
 		jointDef.enableLimit = true;
 		jointDef.lowerAngle = 0.0f;		
