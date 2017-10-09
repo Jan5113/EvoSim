@@ -21,6 +21,7 @@ public class Main extends Application{
 	private Vec2 dir = new Vec2(0,0);
 	private Vec2 shootDir;
 	private Vec2 mousePos;
+	private float playBackSpeed = 1.0f;
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -114,11 +115,19 @@ public class Main extends Application{
 //				al_bodies.add(tempB2DBody);					
 			}
 		}
+		if (e.getCode() == KeyCode.J) {
+			playBackSpeed /= 2.0f;
+			System.out.println("SPEED: " + playBackSpeed);
+		}
+		if (e.getCode() == KeyCode.L) {
+			playBackSpeed *= 2.0f;
+			System.out.println("SPEED: " + playBackSpeed);
+		}
 		dir.normalize();
 	}
 
 	private void refreshScreen(double dt) {
-		test.step((float) dt);
+		test.step((float) dt, playBackSpeed);
 		screen.addPos(dir.mul((float) (dt * 1000/screen.getScale())));
 		screen.clearScreen();
 		
