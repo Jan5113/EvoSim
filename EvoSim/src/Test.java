@@ -20,6 +20,11 @@ public class Test {
 	private float testTimer = 0;
 	private boolean testing = false;
 	
+	private float dtToRun = 0;
+	private static float dtStepSize = 0.01f;
+	
+	private Population pop;
+	
 	public Test (Vec2 gravity_in) {
 		testWorld = new World(gravity_in);
 
@@ -30,7 +35,10 @@ public class Test {
 		floor.createBody(testWorld);
 		worldInstancesList.add(floor);
 		
-		setCreature(new Creature(0));
+		pop = new Population(100);
+		pop.CreateRandPopulation();
+		
+		setCreature(pop.getNext());
 	}
 	
 	public void setCreature (Creature creature_in) {
@@ -75,25 +83,29 @@ public class Test {
 		testing = true;
 	}
 	
-	public void step (float dt) {
+	public void step (float dt, float speed) {
 		if (!testing) return;
+		dtToRun += (speed * dt); 
 		
-		testTimer += dt;
-		testWorld.step(dt, 10, 10);
-		
-		if (testTimer > creature.time) {
-			creatureJointsList.get(0).enableLimit(false);
-		}
-		
-		for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
-			Contact c = ce.contact;
+		while (dtToRun >= dtStepSize) {
+			dtToRun -= dtStepSize;
+			testTimer += dtStepSize;
+			testWorld.step(dtStepSize, 10, 10);
 			
-			if (c.isTouching()) {
-				if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
-					testing = false;
-					creature.setFitness(creatureInstancesList.get(2).getPos().x);
-					System.out.println("Fitness:" + creature.getFitness());
-					reset();
+			if (testTimer > creature.time) {
+				creatureJointsList.get(0).enableLimit(false);
+			}
+			
+			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
+				Contact c = ce.contact;
+				
+				if (c.isTouching()) {
+					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
+						testing = false;
+						creature.setFitness(creatureInstancesList.get(2).getPos().x);
+						System.out.println("ID: "+ creature.id + " | Fitness:" + creature.getFitness());
+						reset();
+					}
 				}
 			}
 		}
@@ -107,6 +119,18 @@ public class Test {
 		creatureInstancesList.clear();
 		creatureJointsList.clear();
 		testTimer = 0.0f;
-		setCreature(new Creature(0));
+		
+		
+		Creature tempCret = pop.getNext();
+		if (tempCret == null) {
+			pop.nextGen();
+			pop.sortPopulation();
+			pop.killPercentage(0.8f);
+			pop.mutatePop(0.8f);
+			setCreature(pop.getNext());
+		} else {
+			setCreature(tempCret);
+		}
+		
 	}
 }
