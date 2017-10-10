@@ -29,6 +29,10 @@ public class Population {
 		return CreatureList.get(activeIndex - 1);
 	}
 	
+	public Creature get(int index) {
+		return CreatureList.get(index);
+	}
+	
 	public void sortPopulation () {
 		Collections.sort(CreatureList);
 	}
