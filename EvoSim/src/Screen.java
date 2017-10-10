@@ -8,12 +8,12 @@ public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
 	public boolean gridEnabled = true;
-	public ConvertUnits cu;
+	public ConvertUnits camera;
 
 	public Screen(double arg0, double arg1, float scale_in, Vec2 pos_in) {
 		super(arg0, arg1);
 
-		cu = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) arg0, (float) arg1));
+		camera = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) arg0, (float) arg1));
 		gc = this.getGraphicsContext2D();
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
@@ -39,8 +39,8 @@ public class Screen extends Canvas {
 	}
 	
 	private void drawGrid() {
-		Vec2 startPos = new Vec2 ((float) Math.floor(cu.getPos().x), (float) Math.floor(cu.getPos().y));
-		for (float i = -5.0f; i < 10.0f; i++) {
+		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
+		for (float i = -20.0f; i < 20.0f; i++) {
 			Color c = Color.GRAY;
 			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) c = Color.RED;
 			drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), c);
@@ -65,22 +65,22 @@ public class Screen extends Canvas {
 	}
 	
 	private void drawCuboid(B2DBody cube) {
-		drawPxRect(cu.coordWorldToPixels(cube.getPos()),
-				cu.scalarWorldToPixels(cube.getDim()),
+		drawPxRect(camera.coordWorldToPixels(cube.getPos()),
+				camera.scalarWorldToPixels(cube.getDim()),
 				ConvertUnits.radToDeg(-cube.getAngle()),
 				cube.getColor(), cube.getFill());
 	}
 
 	private void drawSphere(B2DBody sphere) {
-		Vec2 pos = cu.coordWorldToPixels(sphere.getPos());
-		float rad = cu.scalarWorldToPixels(sphere.getDim().x);
+		Vec2 pos = camera.coordWorldToPixels(sphere.getPos());
+		float rad = camera.scalarWorldToPixels(sphere.getDim().x);
 		float angl = ConvertUnits.radToDeg(-sphere.getAngle());
 		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
 	}
 	
 	public void drawLine(Vec2 b2d_pos1, Vec2 b2d_pos2, Color c) {
-		b2d_pos1 = cu.coordWorldToPixels(b2d_pos1);
-		b2d_pos2 = cu.coordWorldToPixels(b2d_pos2);
+		b2d_pos1 = camera.coordWorldToPixels(b2d_pos1);
+		b2d_pos2 = camera.coordWorldToPixels(b2d_pos2);
 		
 		gc.setStroke(c);
 		gc.strokeLine(b2d_pos1.x, b2d_pos1.y, b2d_pos2.x, b2d_pos2.y);
@@ -169,23 +169,23 @@ public class Screen extends Canvas {
 //************************************************
 	
 	public void setScale(float scale_in) {
-		cu.setScale(scale_in);
+		camera.setScale(scale_in);
 	}
 
 	public float getScale() {
-		return cu.getScale();
+		return camera.getScale();
 	}
 
 	public void setPos(Vec2 pos_in) {
-		cu.setPos(pos_in);
+		camera.setPos(pos_in);
 	}
 
 	public void addPos(Vec2 pos_in) {
-		cu.addPos(pos_in);
+		camera.addPos(pos_in);
 	}
 
 	public Vec2 getPos() {
-		return cu.getPos();
+		return camera.getPos();
 	}
 
 }
