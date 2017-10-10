@@ -142,16 +142,15 @@ public class Main extends Application{
 		if (shootDir != null && mousePos != null) {
 			screen.drawLine(shootDir, mousePos, Color.RED);
 		}
-		
 	}
 	
 	private void onPressedScreen(MouseEvent e) {
-		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
-		shootDir = screen.cu.coordPixelsToWorld(e.getX(), e.getY());
+		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
+		shootDir = screen.camera.coordPixelsToWorld(e.getX(), e.getY());
 	}
 
 	private void onClickScreen(MouseEvent e) {
-		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
+		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
 		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
 		
 		
@@ -168,7 +167,7 @@ public class Main extends Application{
 	}
 	
 	private void onMoveScreen(MouseEvent e) {	
-		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
+		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
 //		al_cubes.add(new B2DCube(screen.cu.coordPixelsToWorld(e.getX(), e.getY()),
 //				new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
 //				new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(10.0f), (float) (Math.random()*Math.PI),
@@ -176,7 +175,7 @@ public class Main extends Application{
 	}
 	
 	private void onEnteredScreen(MouseEvent e) {
-		mousePos = screen.cu.coordPixelsToWorld(e.getX(), e.getY());	
+		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
 	}
 
 	private void stageResize(Stage s) {
