@@ -121,6 +121,7 @@ public class Main extends Application{
 		}
 		if (e.getCode() == KeyCode.L) {
 			playBackSpeed *= 2.0f;
+			if (playBackSpeed > 1500.0f) playBackSpeed = 1024.0f;
 			System.out.println("SPEED: " + playBackSpeed);
 		}
 		dir.normalize();
