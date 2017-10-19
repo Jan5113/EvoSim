@@ -4,7 +4,7 @@ import java.util.Collections;
 public class Population {
 	public final int populationSize;
 	private int generation = 1;
-	private int activeIndex = 0;
+	private int activeIndex = -1;
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	
@@ -22,11 +22,11 @@ public class Population {
 	}
 	
 	public Creature getNext() {
-		if (activeIndex >= CreatureList.size()) {
+		if (activeIndex + 1 >= CreatureList.size()) {
 			return null;
 		}
 		activeIndex ++;
-		return CreatureList.get(activeIndex - 1);
+		return CreatureList.get(activeIndex);
 	}
 	
 	public Creature get(int index) {
@@ -67,11 +67,22 @@ public class Population {
 	public void nextGen() {
 		System.out.println("nG");
 		generation ++;
-		activeIndex = 0;
+		activeIndex = -1;
 	}
 	
 	public int getGen() {
 		return generation;
+	}
+	
+	public void setCurrentFitness(float fitness_in) {
+		CreatureList.get(activeIndex).setFitness(fitness_in);
+	}
+	
+	public Creature getCurrent() {
+		if (activeIndex >= CreatureList.size()) {
+			return null;
+		}
+		return CreatureList.get(activeIndex);
 	}
 	
 	

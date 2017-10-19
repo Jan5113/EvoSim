@@ -19,11 +19,11 @@ public class Test {
 	private Creature creature;
 	private float testTimer = 0;
 	private boolean testing = false;
+	public boolean taskDone = false;
+	private float lastFitness = 0.0f;
 	
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
-	
-	private Population pop;
 	
 	public Test (Vec2 gravity_in) {
 		testWorld = new World(gravity_in);
@@ -34,18 +34,11 @@ public class Test {
 		floor.setColor(Color.GREENYELLOW);
 		floor.createBody(testWorld);
 		worldInstancesList.add(floor);
-		
-		pop = new Population(100);
-		pop.CreateRandPopulation();
-		
-		setCreature(pop.getNext());
 	}
 	
 	public void setCreature (Creature creature_in) {
 		creature = creature_in;
 		buildCreature();
-		
-		startTest();
 	}
 	
 	private  void buildCreature () {
@@ -85,9 +78,9 @@ public class Test {
 	
 	public void step (float dt, float speed) {
 		if (!testing) return;
-		dtToRun += (speed * dt); 
+		dtToRun += (speed * dt);
 		
-		while (dtToRun >= dtStepSize) {
+		while (dtToRun >= dtStepSize && !taskDone) {
 			dtToRun -= dtStepSize;
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
@@ -102,9 +95,9 @@ public class Test {
 				if (c.isTouching()) {
 					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
 						testing = false;
-						creature.setFitness(creatureInstancesList.get(2).getPos().x);
-						System.out.println("ID: "+ creature.id + " | Fitness:" + creature.getFitness());
-						reset();
+						taskDone = true;
+						dtToRun = 0.0f;
+						lastFitness = creatureInstancesList.get(2).getPos().x;
 					}
 				}
 			}
@@ -118,19 +111,15 @@ public class Test {
 		Joint.destroy(creatureJointsList.get(0));
 		creatureInstancesList.clear();
 		creatureJointsList.clear();
-		testTimer = 0.0f;
-		
-		
-		Creature tempCret = pop.getNext();
-		if (tempCret == null) {
-			pop.nextGen();
-			pop.sortPopulation();
-			pop.killPercentage(0.8f);
-			pop.mutatePop(0.8f);
-			setCreature(pop.getNext());
-		} else {
-			setCreature(tempCret);
-		}
-		
+		testTimer = 0.0f;	
+		taskDone = false;
+	}
+	
+	public int getCreatureID() {
+		return creature.id;
+	}
+	
+	public float getLastFitness() {
+		return lastFitness;
 	}
 }

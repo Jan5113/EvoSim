@@ -8,6 +8,7 @@ public class Creature implements Comparable<Creature>{
 	public static Vec2[] minMaxRange = {new Vec2(-5.0f, 1.5f), new Vec2(-0.0f, 6.0f)};
 	public static Vec2 ballStartPosition = new Vec2(0.0f, 17.0f);
 	public static float ballDim = 0.1f;
+	public static Vec2 posBat = new Vec2(-1.0f, 4.0f);
 	
 	public final float length;
 	public final float time;
@@ -24,6 +25,7 @@ public class Creature implements Comparable<Creature>{
 		fixturePos =
 				new Vec2 (minMaxRange[0].x + (float) Math.random() * (minMaxRange[1].x - minMaxRange[0].x),
 						minMaxRange[0].y + (float) Math.random() * (minMaxRange[1].y - minMaxRange[0].y));
+//		fixturePos = posBat;
 
 		id = id_in;
 	}
@@ -33,8 +35,10 @@ public class Creature implements Comparable<Creature>{
 		this.time = time;
 		if (pos.x > -0.5f) {
 			this.fixturePos = new Vec2 (pos.x, pos.y);
+//			fixturePos = posBat;
 		} else {
-			this.fixturePos = pos;			
+			this.fixturePos = pos;	
+//			fixturePos = posBat;
 		}
 		id = id_in;
 		

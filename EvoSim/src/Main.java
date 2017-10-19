@@ -22,6 +22,7 @@ public class Main extends Application{
 	private Vec2 shootDir;
 	private Vec2 mousePos;
 	private float playBackSpeed = 1.0f;
+	private Population pop;
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -53,7 +54,12 @@ public class Main extends Application{
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		
+		pop = new Population(100);
+		pop.CreateRandPopulation();
+		
 		test = new Test(new Vec2(0.0f, -9.81f));
+		test.setCreature(pop.getNext());
+		test.startTest();
 		
 		final long startNanoTime = System.nanoTime();
 	    lastNanoTime = startNanoTime;
@@ -106,13 +112,9 @@ public class Main extends Application{
 			screen.setScale(screen.getScale()*1.2f);
 		}
 		if (e.getCode() == KeyCode.SPACE) {	
-			for (int i = 0; i < 50; i++) {
-//				B2DBody tempB2DBody = new B2DBody();
-//				tempB2DBody.setUpCuboid(mousePos, new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-//						(float) (Math.random()*Math.PI), BodyType.DYNAMIC);
-//				tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
-//				tempB2DBody.createBody(world);
-//				al_bodies.add(tempB2DBody);					
+			int gen = pop.getGen();
+			while (pop.getGen() < gen + 10) {
+				manageTest(1.0f);
 			}
 		}
 		if (e.getCode() == KeyCode.J) {
@@ -120,15 +122,15 @@ public class Main extends Application{
 			System.out.println("SPEED: " + playBackSpeed);
 		}
 		if (e.getCode() == KeyCode.L) {
-			playBackSpeed *= 2.0f;
-			if (playBackSpeed > 1500.0f) playBackSpeed = 1024.0f;
+			if (playBackSpeed * 2 > 1500.0f) playBackSpeed = 1024.0f;
+			else playBackSpeed *= 2.0f;
 			System.out.println("SPEED: " + playBackSpeed);
 		}
 		dir.normalize();
 	}
 
 	private void refreshScreen(double dt) {
-		test.step((float) dt, playBackSpeed);
+		manageTest(dt);
 		screen.addPos(dir.mul((float) (dt * 1000/screen.getScale())));
 		screen.clearScreen();
 		
@@ -142,6 +144,28 @@ public class Main extends Application{
 		if (shootDir != null && mousePos != null) {
 			screen.drawLine(shootDir, mousePos, Color.RED);
 		}
+	}
+	
+	private void manageTest(double dt) {
+		if (test.taskDone) {
+		
+		pop.setCurrentFitness(test.getLastFitness());
+		System.out.println("ID: "+ pop.getCurrent().id + " | Fitness:" + pop.getCurrent().getFitness());
+		
+			if (pop.getNext() == null) {
+				pop.nextGen();
+				pop.sortPopulation();
+				pop.killPercentage(0.8f);
+				pop.mutatePop(0.8f);
+				pop.getNext();
+			}
+
+			test.reset();
+			test.setCreature(pop.getCurrent());
+			test.startTest();
+		}
+
+		test.step((float) dt, playBackSpeed);
 	}
 	
 	private void onPressedScreen(MouseEvent e) {
