@@ -1,5 +1,3 @@
-import java.util.Random;
-
 import org.jbox2d.common.Vec2;
 
 public class Creature implements Comparable<Creature>{
@@ -10,37 +8,28 @@ public class Creature implements Comparable<Creature>{
 	public static float ballDim = 0.1f;
 	public static Vec2 posBat = new Vec2(-1.0f, 4.0f);
 	
-	public final float length;
-	public final float time;
-	public final Vec2 fixturePos;
+	public final MutVal length;
+	public final MutVal time;
+	public final MutVec2 fixturePos;
 	public final int id;
 	
 	private float fitness;
-	
-	private Random rnd = new Random();
+
 	
 	public Creature(int id_in) {
-		length = minMaxLength[0] + (float) Math.random() * (minMaxLength[1] - minMaxLength[0]);
-		time = minMaxTime[0] + (float) Math.random() * (minMaxTime[1] - minMaxTime[0]);
-		fixturePos =
-				new Vec2 (minMaxRange[0].x + (float) Math.random() * (minMaxRange[1].x - minMaxRange[0].x),
-						minMaxRange[0].y + (float) Math.random() * (minMaxRange[1].y - minMaxRange[0].y));
-//		fixturePos = posBat;
+		length = new MutVal(minMaxLength[0], minMaxLength[1], 2.0f);
+		time = new MutVal(minMaxTime[0], minMaxTime[1], 2.0f);
+//		fixturePos = new MutVec2(minMaxRange[0], minMaxRange[1], 2.0f);
+		fixturePos = new MutVec2(posBat, 2);
 
 		id = id_in;
 	}
 	
-	public Creature(int id_in, float length, float time, Vec2 pos) {
+	public Creature(int id_in, MutVal length, MutVal time, MutVec2 pos) {
 		this.length = length;
 		this.time = time;
-		if (pos.x > -0.5f) {
-			this.fixturePos = new Vec2 (pos.x, pos.y);
-//			fixturePos = posBat;
-		} else {
-			this.fixturePos = pos;	
-//			fixturePos = posBat;
-		}
-		id = id_in;
+		this.fixturePos = pos;
+		id = id_in;;
 		
 	}
 	
@@ -53,12 +42,7 @@ public class Creature implements Comparable<Creature>{
 	}
 	
 	public Creature mutate(float amount, int id) {
-		float newLen = this.length + amount *(float) rnd.nextGaussian();
-		float newTime = this.time + amount * (float) rnd.nextGaussian();
-		Vec2 newPos = new Vec2(
-				this.fixturePos.x + amount * (float) rnd.nextGaussian(),
-				this.fixturePos.y + amount * (float) rnd.nextGaussian());
-		return new Creature(id, newLen, newTime, newPos);
+		return new Creature(id, length.mutate(), time.mutate(), fixturePos.mutate());
 	}
 
 	public int compareTo(Creature c) {

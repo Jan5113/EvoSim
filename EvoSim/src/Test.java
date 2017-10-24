@@ -46,12 +46,12 @@ public class Test {
 		if (testing) {System.err.println("No Creature set!"); return;}
 		
 		B2DBody fixture = new B2DBody("fixture");
-		fixture.setUpPoint(creature.fixturePos);
+		fixture.setUpPoint(creature.fixturePos.getVal());
 		fixture.setColor(Color.RED);
 		creatureInstancesList.add(fixture);
 
 		B2DBody bat = new B2DBody("bat");
-		bat.setUpCuboid(creature.fixturePos.add(new Vec2(-creature.length, 0)), (new Vec2(creature.length, 0.1f)), 0.0f, BodyType.DYNAMIC);
+		bat.setUpCuboid(creature.fixturePos.getVal().add(new Vec2(-creature.length.getVal(), 0)), (new Vec2(creature.length.getVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
 		
 		creatureInstancesList.add(bat);
 
@@ -65,8 +65,8 @@ public class Test {
 		}
 		
 		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.initialize(fixture.body, bat.body, creature.fixturePos);
-		jointDef.localAnchorB.set(creature.length, 0);
+		jointDef.initialize(fixture.body, bat.body, creature.fixturePos.getVal());
+		jointDef.localAnchorB.set(creature.length.getVal(), 0);
 		jointDef.enableLimit = true;
 		jointDef.lowerAngle = 0.0f;		
 		creatureJointsList.add((RevoluteJoint) testWorld.createJoint(jointDef));
@@ -85,7 +85,7 @@ public class Test {
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
 			
-			if (testTimer > creature.time) {
+			if (testTimer > creature.time.getVal()) {
 				creatureJointsList.get(0).enableLimit(false);
 			}
 			
