@@ -25,6 +25,8 @@ public class Test {
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
 	
+	public Vec2 ballPosTEST = new Vec2(0, 17.0f);
+	
 	public Test (Vec2 gravity_in) {
 		testWorld = new World(gravity_in);
 
@@ -56,7 +58,8 @@ public class Test {
 		creatureInstancesList.add(bat);
 
 		B2DBody ball = new B2DBody("ball");
-		ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
+		//ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
+		ball.setUpCircle(ballPosTEST, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
 		ball.setBullet(true);
 		creatureInstancesList.add(ball);
 		
@@ -87,6 +90,13 @@ public class Test {
 			
 			if (testTimer > creature.time.getVal()) {
 				creatureJointsList.get(0).enableLimit(false);
+			}
+			
+			if (testTimer > 20.0f) { //abort TEST
+				testing = false;
+				taskDone = true;
+				dtToRun = 0.0f;
+				lastFitness = creatureInstancesList.get(2).getPos().x;
 			}
 			
 			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
