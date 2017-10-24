@@ -27,7 +27,7 @@ public class MutVal {
 			diff *= bigMutFactor;
 		}
 			
-		return new MutVal(value + diff, diff * rangeChange);
+		return new MutVal(value + diff, Math.abs(diff * rangeChange));
 	}
 	
 	public float getVal() {
