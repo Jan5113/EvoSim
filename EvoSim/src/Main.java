@@ -74,6 +74,7 @@ public class Main extends Application{
 	        	  refreshScreen(dt);
 	          }
 	      }.start();
+	      
 	}
 
 	private void offKeyScreen(KeyEvent e) {
@@ -87,6 +88,9 @@ public class Main extends Application{
 			dir.y = 0;
 		}
 		if (e.getCode() == KeyCode.D) {
+			dir.x = 0;
+		}
+		if (e.getCode() == KeyCode.S) {
 			dir.x = 0;
 		}
 		dir.normalize();
@@ -175,27 +179,11 @@ public class Main extends Application{
 
 	private void onClickScreen(MouseEvent e) {
 		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
-		//al_cubes.add(new B2DCube(ConvertUnits.coordPixelsToWorld(e.getX(), e.getY()), new Vec2(0.1f, 0.1f), BodyType.DYNAMIC, world));
-		
-		
-//		Vec2 shoot_vel = shootDir.add(screen.cu.coordPixelsToWorld(e.getX(), e.getY()).negate()).mul(5.0f);
-//
-//		B2DBody tempB2DBody = new B2DBody();
-//		tempB2DBody.setUpCircle(shootDir, 0.2f,	(float) (Math.random()*Math.PI*2), BodyType.DYNAMIC);
-//		tempB2DBody.setLinearVelocity(new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(1.0f));
-//		tempB2DBody.setLinearVelocity(shoot_vel);
-//		tempB2DBody.setColor(Color.RED);
-//		tempB2DBody.createBody(world);
-//		al_bodies.add(tempB2DBody);
 		shootDir = null;
 	}
 	
 	private void onMoveScreen(MouseEvent e) {	
 		mousePos = screen.camera.coordPixelsToWorld(e.getX(), e.getY());	
-//		al_cubes.add(new B2DCube(screen.cu.coordPixelsToWorld(e.getX(), e.getY()),
-//				new Vec2(0.1f * (float)Math.random() + 0.05f, 0.1f* (float)Math.random() + 0.05f),
-//				new Vec2((float) Math.random() - 0.5f, (float) Math.random() - 0.5f).mul(10.0f), (float) (Math.random()*Math.PI),
-//				BodyType.DYNAMIC, world));
 	}
 	
 	private void onEnteredScreen(MouseEvent e) {
@@ -203,11 +191,6 @@ public class Main extends Application{
 	}
 
 	private void stageResize(Stage s) {
-		//System.out.println("stage has been resized");
-		//canvas.setHeight(s.getHeight()-100);
-		//canvas.setWidth(s.getWidth()-100);
-		//gc.setFill(Color.color(1, 0.8, 0.8));
-		//gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
 		screen.setScreenSize((int) s.getWidth()-100, (int) s.getHeight()-100); 
 	}
 
