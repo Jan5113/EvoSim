@@ -2,10 +2,10 @@ import java.util.Random;
 
 public class MutVal {
 	private final float value;
-	private final float mutRange;
+	private float mutRange;
 	private Random normDis = new Random();
 	private static float minRangeChange = 0.9f; //between 0 and 1
-	private static float bigMutFactor = 10.0f;
+	private static float bigMutFactor = 5.0f;
 	
 	public MutVal(float min, float max, float rng) {
 		if (min > max) max += (min - (min = max)); // swap
@@ -20,12 +20,15 @@ public class MutVal {
 	
 	public MutVal mutate() {
 		float mutFactor = (float) normDis.nextGaussian();
-		float diff = mutFactor * mutRange;
-		float rangeChange = Math.abs(mutFactor) + minRangeChange;
 		
 		if (normDis.nextFloat() < 0.05) { // 5% chance for bigger mutation 
-			diff *= bigMutFactor;
+			mutFactor *= bigMutFactor;
 		}
+				
+		float rangeChange = Math.abs(mutFactor) + minRangeChange;
+		float diff = mutFactor * mutRange * rangeChange;
+		
+		mutRange *= 0.99f;
 			
 		return new MutVal(value + diff, Math.abs(diff * rangeChange));
 	}
