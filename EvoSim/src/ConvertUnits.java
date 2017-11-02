@@ -40,6 +40,24 @@ public class ConvertUnits {
 		return rotated;
 	}
 	
+	static public float getRotation(Vec2 v) {
+		float atan;
+		if (v.x == 0) {
+			if (v.y >= 0) atan =  (float) Math.PI*0.5f; //90°
+			else atan =  (float) Math.PI*1.5f; //270°
+		}
+		else if (v.y == 0) {
+			if (v.x >= 0) atan =  0; //0°
+			else atan =  (float) Math.PI; //180°
+		}
+		else {
+			atan = (float)(Math.atan(v.y/v.x));
+			if (v.x > 0 && v.y < 0) atan += (float) 2 * Math.PI; //Q4
+			else if (v.x < 0) atan += (float) Math.PI; //Q2 & Q3
+		}		
+		return atan;
+	}
+	
 	
 	
 	
