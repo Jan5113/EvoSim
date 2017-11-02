@@ -23,6 +23,7 @@ public class Main extends Application{
 	private Vec2 mousePos;
 	private float playBackSpeed = 1.0f;
 	private Population pop;
+	private Controls bp_control;
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -45,7 +46,11 @@ public class Main extends Application{
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
 		
+		bp_control = new Controls();
+		
+		root.setBottom(bp_control);
 		root.setCenter(screen);
+		
 		
 		primaryStage.show();
 		
@@ -147,6 +152,34 @@ public class Main extends Application{
 		
 		if (shootDir != null && mousePos != null) {
 			screen.drawLine(shootDir, mousePos, Color.RED);
+		}
+		
+		// HANDLE CONTROLS
+		while (true) {
+			ContolFunc cf = bp_control.getLastInput();
+			if (cf == null) break;
+			
+			switch (cf) {
+				case PLAY:
+					playBackSpeed = 1.0f;
+					System.out.println("PLAY");
+					break;
+				case PAUSE:
+					playBackSpeed = 0.0f;
+					System.out.println("PAUSE");
+					break;
+				case FAST:
+					playBackSpeed *= 2.0f;
+					System.out.println("SPEED: " + playBackSpeed);
+					break;
+				case SLOW:
+					playBackSpeed *= 0.5f;
+					System.out.println("SPEED: " + playBackSpeed);
+					break;
+				default:
+					System.err.println("CONTROL FUNC ENUM ERROR!");
+					break;
+			}
 		}
 	}
 	
