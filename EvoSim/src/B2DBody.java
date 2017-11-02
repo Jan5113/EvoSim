@@ -275,7 +275,9 @@ public class B2DBody {
 	}
 	
 	public Vec2 getPos() {
-		if (!isCreated) {System.err.println("B2DBody not created!"); return null;}
+		if (!isCreated) {
+			return bodyDef.getPosition();
+		}
 		return body.getPosition();
 	}
 	
