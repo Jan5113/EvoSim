@@ -3,13 +3,21 @@ import org.jbox2d.common.Vec2;
 public class ConvertUnits {
 	private float scale = 100; // 100px = 1m
 	private static float maxScale = 20;
-	private Vec2 posCam = new Vec2(0,5);
+	private Vec2 posCam;
+	private final Vec2 posCamStart;
 	private Vec2 resCam = new Vec2(500, 500);
+	
+	private boolean followXEnabled = false;
+	private boolean followYEnabled = false;
+	private static float followMaxAccel = 30.0f;
+	private Vec2 followSpeed = new Vec2(0,0);
 	
 	public ConvertUnits (float scale_in, Vec2 pos_in, Vec2 res_in) {
 		scale = scale_in;
 		posCam = pos_in;
 		resCam = res_in;
+		
+		posCamStart = posCam.clone();
 	}
 	
 	public Vec2 coordPixelsToWorld (Vec2 px_pos) {
@@ -108,5 +116,47 @@ public class ConvertUnits {
 	
 	public void setScreenRes(Vec2 res_in) {
 		resCam = res_in;
+	}
+	
+	//************************************************
+	//*		FOLLOW CAM
+	//************************************************
+	
+	public void enableFollow() {
+		followXEnabled = true;
+		followYEnabled = true;
+	}
+	
+	public void enableFollowX() {
+		followXEnabled = true;
+	}
+	
+	public void enableFollowY() {
+		followYEnabled = true;
+	}
+	
+	public void disableFollow() {
+		followXEnabled = false;
+		followYEnabled = false;
+	}
+	
+	public boolean followXEnabled() {
+		return followXEnabled;
+	}
+	
+	public boolean followYEnabled() {
+		return followYEnabled;
+	}
+	
+	public void refreshFollow(float dt, Vec2 B2D_target) {
+		if (B2D_target == null) return;
+		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt)).mulLocal(0.9f);
+		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt, 0.0f));
+		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt));
+	}
+	
+	public void resetFollow() {
+		followSpeed = new Vec2(0,0);
+		posCam = posCamStart.clone();
 	}
 }
