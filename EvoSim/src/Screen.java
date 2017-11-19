@@ -3,17 +3,20 @@ import org.jbox2d.common.Vec2;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
 	public boolean gridEnabled = true;
 	public ConvertUnits camera;
+	private boolean infoEnabled = false;
+	private String infoString = "";
 
-	public Screen(double arg0, double arg1, float scale_in, Vec2 pos_in) {
-		super(arg0, arg1);
+	public Screen(double xRes, double yRes, float scale_in, Vec2 pos_in) {
+		super(xRes, yRes);
 
-		camera = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) arg0, (float) arg1));
+		camera = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) xRes, (float) yRes));
 		gc = this.getGraphicsContext2D();
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
@@ -31,6 +34,7 @@ public class Screen extends Canvas {
 		gc.setFill(col_background);
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (gridEnabled) drawGrid();
+		if (infoEnabled) drawInfo();
 	}
 	
 	public void setScreenSize(int x_in, int y_in) {
@@ -187,5 +191,32 @@ public class Screen extends Canvas {
 	public Vec2 getPos() {
 		return camera.getPos();
 	}
+	
+//************************************************
+//*		INFO SCREEN
+//************************************************
 
+	public void enableInfo() {
+		infoEnabled = true;
+	}
+	
+	public void disableInfo() {
+		infoEnabled = false;
+	}
+	
+	public void setInfoString(String text) {
+		infoString = text;
+	}
+	
+	public boolean infoEabled() {
+		return infoEnabled;
+	}
+	
+	private void drawInfo() {
+		gc.save();
+		gc.setFont(new Font(15));
+		gc.setFill(Color.BLACK);
+		gc.fillText(infoString, 10, 40);
+		gc.restore();
+	}
 }
