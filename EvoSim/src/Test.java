@@ -13,8 +13,8 @@ import javafx.scene.paint.Color;
 
 public class Test {
 	private World testWorld;
-	public ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
-	public ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
+	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
+	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
 	public ArrayList<RevoluteJoint> creatureJointsList = new ArrayList<RevoluteJoint>();
 	private Creature creature;
 	private float testTimer = 0;
@@ -27,7 +27,9 @@ public class Test {
 	
 	public Vec2 ballPosTEST = new Vec2(0, 17.0f);
 	
-	public Test (Vec2 gravity_in) {
+	private final TestManager parentTestManager;
+	
+	public Test (Vec2 gravity_in, TestManager testmngr) {
 		testWorld = new World(gravity_in);
 
 		B2DBody floor = new B2DBody("floor");
@@ -36,11 +38,17 @@ public class Test {
 		floor.setColor(Color.GREENYELLOW);
 		floor.createBody(testWorld);
 		worldInstancesList.add(floor);
+		
+		parentTestManager = testmngr;
 	}
 	
 	public void setCreature (Creature creature_in) {
 		creature = creature_in;
 		buildCreature();
+	}
+	
+	public Creature getCreature () {
+		return creature;
 	}
 	
 	private  void buildCreature () {
@@ -97,6 +105,7 @@ public class Test {
 				taskDone = true;
 				dtToRun = 0.0f;
 				lastFitness = creatureInstancesList.get(2).getPos().x;
+				parentTestManager.taskDone(creature.id);
 			}
 			
 			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
@@ -104,10 +113,11 @@ public class Test {
 				
 				if (c.isTouching()) {
 					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
-						testing = false;
-						taskDone = true;
 						dtToRun = 0.0f;
 						lastFitness = creatureInstancesList.get(2).getPos().x;
+						testing = false;
+						taskDone = true;
+						parentTestManager.taskDone(creature.id);
 					}
 				}
 			}
@@ -123,6 +133,7 @@ public class Test {
 		creatureJointsList.clear();
 		testTimer = 0.0f;	
 		taskDone = false;
+		creature = null;
 	}
 	
 	public int getCreatureID() {
@@ -131,5 +142,13 @@ public class Test {
 	
 	public float getLastFitness() {
 		return lastFitness;
+	}
+	
+	public ArrayList<B2DBody> getWorldInstances() {
+		return worldInstancesList;
+	}
+	
+	public ArrayList<B2DBody> getCreatureInstances () {
+		return creatureInstancesList;
 	}
 }
