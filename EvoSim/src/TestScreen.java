@@ -42,7 +42,7 @@ public class TestScreen extends Screen {
 		
 		if (infoEnabled()) getInfoString();
 		
-		this.camera.refreshFollow(dt, test.getBallPos());
+		this.camera.refreshFollow(dt, playBackSpeed, test.getBallPos());
 	}
 
 	public void manageCommand(ControlFuncTest cf) {

@@ -148,11 +148,11 @@ public class B2DCamera {
 		return followYEnabled;
 	}
 	
-	public void refreshFollow(float dt, Vec2 B2D_target) {
+	public void refreshFollow(float dt, float playbackspeed, Vec2 B2D_target) {
 		if (B2D_target == null) return;
 		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt)).mulLocal(0.9f);
-		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt, 0.0f));
-		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt));
+		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt * playbackspeed, 0.0f));
+		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playbackspeed));
 	}
 	
 	public void resetFollow() {
