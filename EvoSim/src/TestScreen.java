@@ -40,7 +40,7 @@ public class TestScreen extends Screen {
 		
 		if (running) test.step(dt, playBackSpeed);
 		
-		if (infoEabled()) getInfoString();
+		if (infoEnabled()) getInfoString();
 		
 		this.camera.refreshFollow(dt, test.getBallPos());
 	}
@@ -118,7 +118,9 @@ public class TestScreen extends Screen {
 		if (hasCreature()) {
 			infoText += "Creature ID " + test.getCreatureID() + "\n";
 			if (test.getCreature().fitnessEvaulated()) {
-				infoText += "Fitness: " + test.getCreature().getFitness() + "\n";				
+				infoText += "Fitness: " + Math.round(test.getCreature().getFitness()*10.0f)/10.0f + "m";				
+			} else {
+				infoText += "Fitness: -";					
 			}
 		}
 		setInfoString(infoText);

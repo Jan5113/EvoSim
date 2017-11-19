@@ -32,7 +32,7 @@ public class Main extends Application{
 		scene.setFill(Color.color(0.8, 0.8, 1));
 		
 		primaryStage.setScene(scene);
-		mainTestScreen = new TestScreen(new Vec2(0.0f, -9.81f), 1100, 500, 100, new Vec2(0.0f, 2.0f), pop);
+		mainTestScreen = new TestScreen(new Vec2(0.0f, -9.81f), 1100, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Color.ALICEBLUE);
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
@@ -41,6 +41,7 @@ public class Main extends Application{
 		bp_control = new PlayBackControls(mainTestScreen);
 		mainTestScreen.enableAutoGetNext();
 		mainTestScreen.enableInfo();
+		mainTestScreen.enableMarkers();
 		
 		root.setBottom(bp_control);
 		root.setCenter(mainTestScreen);

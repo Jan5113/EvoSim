@@ -8,8 +8,9 @@ import javafx.scene.text.Font;
 public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
-	public boolean gridEnabled = true;
+	private boolean gridEnabled = true;
 	public ConvertUnits camera;
+	private boolean markersEnabled = false;
 	private boolean infoEnabled = false;
 	private String infoString = "";
 
@@ -35,20 +36,12 @@ public class Screen extends Canvas {
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (gridEnabled) drawGrid();
 		if (infoEnabled) drawInfo();
+		if (markersEnabled) drawMarkers();
 	}
 	
 	public void setScreenSize(int x_in, int y_in) {
 		this.setWidth(x_in);
 		this.setHeight(y_in);
-	}
-	
-	private void drawGrid() {
-		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
-		for (float i = -20.0f; i < 20.0f; i++) {
-			Color c = Color.GRAY;
-			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) c = Color.RED;
-			drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), c);
-		}
 	}
 	
 	//************************************************
@@ -208,7 +201,7 @@ public class Screen extends Canvas {
 		infoString = text;
 	}
 	
-	public boolean infoEabled() {
+	public boolean infoEnabled() {
 		return infoEnabled;
 	}
 	
@@ -219,4 +212,63 @@ public class Screen extends Canvas {
 		gc.fillText(infoString, 10, 40);
 		gc.restore();
 	}
+	
+//************************************************
+//*		GRID
+//************************************************
+	
+	public void enableGrid() {
+		markersEnabled = true;
+	}
+	
+	public void disableGird() {
+		infoEnabled = false;
+	}
+	
+	public boolean gridEnabled() {
+		return infoEnabled;
+	}
+	
+	private void drawGrid() {
+		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
+		for (float i = -20.0f; i < 20.0f; i++) {
+			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
+				drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), Color.RED);
+			} else {
+				drawLine(new Vec2(startPos.x + i, 0.5f),new Vec2(startPos.x + i, 0.0f), Color.GRAY);
+				
+			}
+		}
+	}
+	
+//************************************************
+//*		MARKERS
+//************************************************
+	
+	public void enableMarkers() {
+		markersEnabled = true;
+	}
+	
+	public void disableMarkers() {
+		infoEnabled = false;
+	}
+	
+	public boolean markersEnabled() {
+		return infoEnabled;
+	}
+	
+	private void drawMarkers() {
+		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), 0);
+		for (float i = -20.0f; i < 20.0f; i++) {
+			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
+				gc.save();
+				gc.setFont(new Font(30));
+				gc.setFill(Color.RED);
+				Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(i, 1.1f)));
+				gc.fillText((int) (startPos.x + i) + "m", pos.x - 20, pos.y);
+				gc.restore();
+			}
+		}
+	}
+
 }
