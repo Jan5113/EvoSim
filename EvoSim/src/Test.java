@@ -21,6 +21,8 @@ public class Test {
 	private boolean testing = false;
 	public boolean taskDone = false;
 	private float lastFitness = 0.0f;
+	private static float afterTestLength = 2.0f;
+	private float afterTestTime = 100000.0f;
 	
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
@@ -101,24 +103,32 @@ public class Test {
 			}
 			
 			if (testTimer > 20.0f && !taskDone) { //abort TEST
-				dtToRun = 0.0f;
+				taskDone = true;
+				//testing = false;
+				//dtToRun = 0.0f;
 				lastFitness = creatureInstancesList.get(2).getPos().x;
 				parentTestManager.taskDone(creature.id);
-				taskDone = true;
 			}
 			
-			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
+			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null && !taskDone; ce = ce.next) {
 				Contact c = ce.contact;
 				
 				if (c.isTouching()) {
 					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
-						dtToRun = 0.0f;
-						lastFitness = creatureInstancesList.get(2).getPos().x;
 						taskDone = true;
+						//testing = false;
+						//dtToRun = 0.0f;
+						lastFitness = creatureInstancesList.get(2).getPos().x;
 						parentTestManager.taskDone(creature.id);
+						afterTestTime = testTimer + afterTestLength;
 					}
 				}
 			}
+			
+			if (testTimer > afterTestTime) {
+				parentTestManager.pauseDone(creature.id);
+			}
+			
 		}
 	}
 	
@@ -130,8 +140,18 @@ public class Test {
 		creatureInstancesList.clear();
 		creatureJointsList.clear();
 		testTimer = 0.0f;	
+		dtToRun = 0.0f;
 		taskDone = false;
+		testing = false;
 		creature = null;
+		afterTestTime = 100000.0f;
+	}
+	
+	public Vec2 getBallPos() {
+		if (creatureInstancesList.size() == 0) {
+			return null;
+		}
+		return creatureInstancesList.get(2).getPos();
 	}
 	
 	public int getCreatureID() {

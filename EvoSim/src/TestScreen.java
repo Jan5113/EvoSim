@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 import org.jbox2d.common.Vec2;
 
 public class TestScreen extends Screen {
@@ -7,22 +5,58 @@ public class TestScreen extends Screen {
 	private float playBackSpeed = 1;
 	private static float maxPlayBackSpeed = 1024.0f;
 	private boolean running = false;
+	private final Population pop;
+	private boolean autoGetNext = false;
 
-	public TestScreen(Vec2 gravity_in, double arg0, double arg1, float scale_in, Vec2 pos_in) {
+	public TestScreen(Vec2 gravity_in, double arg0, double arg1, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(arg0, arg1, scale_in, pos_in);
 		test = new Test(gravity_in, this);
+		pop = pop_in;
+		
+		
+		camera.enableFollowX();
 	}
 
-	public void refresh(double dt) {
+	public void startSingleTest(Creature creature) {
+		if (creature == null) {
+			System.err.println("No Creature!");
+			return;
+		}
+		
+		test.setCreature(creature);
+		test.startTest();
+		running = true;
+	}
 
+	public void refresh(float dt) {
+		clearScreen();
+
+		for (B2DBody b : test.getWorldInstances()) {
+			drawBody(b);
+		}
+		for (B2DBody b : test.getCreatureInstances()) {
+			drawBody(b);
+		}
+		
+		if (running) test.step(dt, playBackSpeed);
+		
+		if (infoEabled()) getInfoString();
+		
+		this.camera.refreshFollow(dt, test.getBallPos());
 	}
 
 	public void manageCommand(ControlFuncTest cf) {
 		switch (cf) {
 		case PLAYPAUSE:
-			running = !running;
-			if (running)
+			if (hasCreature()) {
+				running = !running;
+			} else if (pop.getNext() != null) {
+				startSingleTest(pop.getCurrent());
+			}
+
+			if (running) {
 				System.out.println("PLAY");
+			}
 			else
 				System.out.println("PAUSE");
 			break;
@@ -45,7 +79,21 @@ public class TestScreen extends Screen {
 	}
 
 	public void taskDone(int id_in) {
-
+		System.out.println("ID: " + test.getCreatureID() + " | Fitness:" + test.getLastFitness());
+		
+		if (!test.getCreature().fitnessEvaulated()) {
+			test.getCreature().setFitness(test.getLastFitness());
+		}		
+	}
+	
+	public void pauseDone(int id_in) {
+		if (autoGetNext) {
+			if (pop.getNext() != null) {
+				test.reset();
+				startSingleTest(pop.getCurrent());
+				camera.resetFollow();
+			}
+		}
 	}
 
 	private void halfPlayBackSpeed() {
@@ -62,6 +110,30 @@ public class TestScreen extends Screen {
 		playBackSpeed = speed;
 		if (playBackSpeed < maxPlayBackSpeed)
 			playBackSpeed = maxPlayBackSpeed;
+	}
+	
+	public void getInfoString() {
+		String infoText = "";
+		infoText += "Generation " + pop.getGen() + "\n";
+		if (hasCreature()) {
+			infoText += "Creature ID " + test.getCreatureID() + "\n";
+			if (test.getCreature().fitnessEvaulated()) {
+				infoText += "Fitness: " + test.getCreature().getFitness() + "\n";				
+			}
+		}
+		setInfoString(infoText);
+	}
+	
+	public boolean hasCreature() {
+		return test.getCreature() != null;
+	}
+	
+	public void enableAutoGetNext() {
+		autoGetNext = true;
+	}
+	
+	public void disableAutoGetNext() {
+		autoGetNext = false;
 	}
 
 	// private Test test;
