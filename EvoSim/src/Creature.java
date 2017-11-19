@@ -14,6 +14,7 @@ public class Creature implements Comparable<Creature>{
 	public final int id;
 	
 	private float fitness;
+	private boolean fitnessEvaluated = false;
 
 	
 	public Creature(int id_in) {
@@ -29,12 +30,21 @@ public class Creature implements Comparable<Creature>{
 		this.length = length;
 		this.time = time;
 		this.fixturePos = pos;
-		id = id_in;;
+		id = id_in;
 		
 	}
 	
 	public void setFitness(float fitness_in) {
+		if (fitnessEvaluated) {
+			System.err.println("Can't overwrite fitness!");
+			return;
+		}
 		fitness = fitness_in;
+		fitnessEvaluated = true;
+	}
+	
+	public boolean fitnessEvaulated() {
+		return fitnessEvaluated;
 	}
 	
 	public float getFitness() {
