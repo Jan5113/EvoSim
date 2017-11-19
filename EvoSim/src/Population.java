@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Population {
-	public final int populationSize;
+	private int populationSize;
 	private int generation = 1;
 	private int activeIndex = -1;
 	private int currentID = 0;
@@ -10,12 +10,12 @@ public class Population {
 	private boolean popInitialised = false;
 	
 	
-	public Population(int popSize_in) {
-		populationSize = popSize_in;
+	public Population() {
 	}
 	
-	public void CreateRandPopulation () {
+	public void CreateRandPopulation (int popSize_in) {
 		if (popInitialised) {System.err.println("Population already initialised!"); return;}		
+		populationSize = popSize_in;
 		for (int i = 0; i < populationSize; i++) {
 			Creature tempC = new Creature(currentID);
 			currentID++;
@@ -25,7 +25,7 @@ public class Population {
 		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
 	
-	public Creature next() {
+	public Creature getNext() {
 		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
 		if (activeIndex + 1 >= CreatureList.size()) {
 			return null;
@@ -34,7 +34,7 @@ public class Population {
 		return CreatureList.get(activeIndex);
 	}
 	
-	public Creature get(int index) {
+	public Creature getCreatureByIndex(int index) {
 		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
 		return CreatureList.get(index);
 	}
@@ -85,6 +85,10 @@ public class Population {
 	
 	public int getGen() {
 		return generation;
+	}
+	
+	public int getPopulationSize() {
+		return populationSize;
 	}
 	
 	public void setCurrentFitness(float fitness_in) {
