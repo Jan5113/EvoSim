@@ -7,6 +7,7 @@ public class Population {
 	private int activeIndex = -1;
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
+	private boolean popInitialised = false;
 	
 	
 	public Population(int popSize_in) {
@@ -14,14 +15,18 @@ public class Population {
 	}
 	
 	public void CreateRandPopulation () {
+		if (popInitialised) {System.err.println("Population already initialised!"); return;}		
 		for (int i = 0; i < populationSize; i++) {
 			Creature tempC = new Creature(currentID);
 			currentID++;
 			CreatureList.add(tempC);
 		}
+		popInitialised = true;
+		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
 	
-	public Creature getNext() {
+	public Creature next() {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
 		if (activeIndex + 1 >= CreatureList.size()) {
 			return null;
 		}
@@ -30,14 +35,17 @@ public class Population {
 	}
 	
 	public Creature get(int index) {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
 		return CreatureList.get(index);
 	}
 	
 	public void sortPopulation () {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		Collections.sort(CreatureList);
 	}
 	
 	public void killPercentage (float p) {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		if (p < 0.0f || p > 1.0f) {
 			System.err.println("Kill percentage between 0 and 1");
 			return;
@@ -49,6 +57,7 @@ public class Population {
 	}
 	
 	public void mutatePop (float p) {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		System.out.println("Mut");
 		if (p < 0.0f || p > 1.0f) {
 			System.err.println("Mutate percentage between 0 and 1");
@@ -65,9 +74,13 @@ public class Population {
 	}
 	
 	public void nextGen() {
-		System.out.println("nG");
+		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		generation ++;
 		activeIndex = -1;
+	}
+	
+	public boolean isInit() {
+		return popInitialised;
 	}
 	
 	public int getGen() {
@@ -75,15 +88,25 @@ public class Population {
 	}
 	
 	public void setCurrentFitness(float fitness_in) {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		CreatureList.get(activeIndex).setFitness(fitness_in);
 	}
 	
 	public Creature getCurrent() {
+		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
 		if (activeIndex >= CreatureList.size()) {
 			return null;
 		}
 		return CreatureList.get(activeIndex);
 	}
 	
+	public Creature getCreatureByID(int searchID) {
+		for (int i = 0; i < CreatureList.size(); i++) {
+			if (searchID == CreatureList.get(i).id) {
+				return CreatureList.get(i);
+			}
+		}
+		return null;
+	}
 	
 }
