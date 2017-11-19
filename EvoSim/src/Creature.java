@@ -17,10 +17,10 @@ public class Creature implements Comparable<Creature>{
 
 	
 	public Creature(int id_in) {
-		length = new MutVal(minMaxLength[0], minMaxLength[1], 2.0f);
-		time = new MutVal(minMaxTime[0], minMaxTime[1], 2.0f);
-//		fixturePos = new MutVec2(minMaxRange[0], minMaxRange[1], 2.0f);
-		fixturePos = new MutVec2(posBat, 2);
+		length = new MutVal(minMaxLength[0], minMaxLength[1], 1.0f);
+		time = new MutVal(minMaxTime[0], minMaxTime[1], 1.0f);
+		fixturePos = new MutVec2(minMaxRange[0], minMaxRange[1], 1.0f);
+//		fixturePos = new MutVec2(posBat, 2);
 
 		id = id_in;
 	}
