@@ -27,9 +27,9 @@ public class Test {
 	
 	public Vec2 ballPosTEST = new Vec2(0, 17.0f);
 	
-	private final TestManager parentTestManager;
+	private final TestScreen parentTestManager;
 	
-	public Test (Vec2 gravity_in, TestManager testmngr) {
+	public Test (Vec2 gravity_in, TestScreen testmngr) {
 		testWorld = new World(gravity_in);
 
 		B2DBody floor = new B2DBody("floor");
@@ -91,7 +91,7 @@ public class Test {
 		if (!testing) return;
 		dtToRun += (speed * dt);
 		
-		while (dtToRun >= dtStepSize && !taskDone) {
+		while (dtToRun >= dtStepSize) {
 			dtToRun -= dtStepSize;
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
@@ -100,12 +100,11 @@ public class Test {
 				creatureJointsList.get(0).enableLimit(false);
 			}
 			
-			if (testTimer > 20.0f) { //abort TEST
-				testing = false;
-				taskDone = true;
+			if (testTimer > 20.0f && !taskDone) { //abort TEST
 				dtToRun = 0.0f;
 				lastFitness = creatureInstancesList.get(2).getPos().x;
 				parentTestManager.taskDone(creature.id);
+				taskDone = true;
 			}
 			
 			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null; ce = ce.next) {
@@ -115,7 +114,6 @@ public class Test {
 					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
 						dtToRun = 0.0f;
 						lastFitness = creatureInstancesList.get(2).getPos().x;
-						testing = false;
 						taskDone = true;
 						parentTestManager.taskDone(creature.id);
 					}
