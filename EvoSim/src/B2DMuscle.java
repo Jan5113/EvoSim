@@ -74,17 +74,17 @@ public class B2DMuscle {
 	public void Create(B2DBody anchor1, B2DBody anchor2, World world) {		
 		if (!anchor1.isCreated() || !anchor2.isCreated()) {System.err.println("Create bodies before creating muscle!"); return;}
 		
-		Vec2 muscleDir = ConvertUnits.rotateVec2(new Vec2(1, 0), ConvertUnits.getRotation(anchor2.getPos().sub(anchor1.getPos())));
+		Vec2 muscleDir = B2DCamera.rotateVec2(new Vec2(1, 0), B2DCamera.getRotation(anchor2.getPos().sub(anchor1.getPos())));
 		fixedAnchor1.setUpPoint(anchor1.getPos());
-		fixedAnchor1.setAngle(ConvertUnits.getRotation(muscleDir));
+		fixedAnchor1.setAngle(B2DCamera.getRotation(muscleDir));
 		fixedAnchor2.setUpPoint(anchor2.getPos());
-		fixedAnchor2.setAngle(ConvertUnits.getRotation(muscleDir));
+		fixedAnchor2.setAngle(B2DCamera.getRotation(muscleDir));
 		
-		anchorOffset1 = ConvertUnits.rotateVec2(anchorOffset1, anchor1.getAngle());
+		anchorOffset1 = B2DCamera.rotateVec2(anchorOffset1, anchor1.getAngle());
 		revJointDef1.initialize(anchor1.body, fixedAnchor1.body, anchor1.body.getWorldCenter().add(anchorOffset1));	
 		revJoint1 = (RevoluteJoint) world.createJoint(revJointDef1);
 
-		anchorOffset2 = ConvertUnits.rotateVec2(anchorOffset2, anchor2.getAngle());
+		anchorOffset2 = B2DCamera.rotateVec2(anchorOffset2, anchor2.getAngle());
 		revJointDef2.initialize(anchor2.body, fixedAnchor2.body, anchor2.body.getWorldCenter().add(anchorOffset2));	
 		revJoint2 = (RevoluteJoint) world.createJoint(revJointDef2);
 		

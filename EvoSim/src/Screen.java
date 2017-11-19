@@ -9,7 +9,7 @@ public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
 	private boolean gridEnabled = true;
-	public ConvertUnits camera;
+	public B2DCamera camera;
 	private boolean markersEnabled = false;
 	private boolean infoEnabled = false;
 	private String infoString = "";
@@ -17,7 +17,7 @@ public class Screen extends Canvas {
 	public Screen(double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes);
 
-		camera = new ConvertUnits((float) scale_in, pos_in, new Vec2((float) xRes, (float) yRes));
+		camera = new B2DCamera((float) scale_in, pos_in, new Vec2((float) xRes, (float) yRes));
 		gc = this.getGraphicsContext2D();
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
@@ -64,14 +64,14 @@ public class Screen extends Canvas {
 	private void drawCuboid(B2DBody cube) {
 		drawPxRect(camera.coordWorldToPixels(cube.getPos()),
 				camera.scalarWorldToPixels(cube.getDim()),
-				ConvertUnits.radToDeg(-cube.getAngle()),
+				B2DCamera.radToDeg(-cube.getAngle()),
 				cube.getColor(), cube.getFill());
 	}
 
 	private void drawSphere(B2DBody sphere) {
 		Vec2 pos = camera.coordWorldToPixels(sphere.getPos());
 		float rad = camera.scalarWorldToPixels(sphere.getDim().x);
-		float angl = ConvertUnits.radToDeg(-sphere.getAngle());
+		float angl = B2DCamera.radToDeg(-sphere.getAngle());
 		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
 	}
 	
@@ -91,8 +91,8 @@ public class Screen extends Canvas {
 	}
 	
 	public void drawLocalLine(Vec2 body1_pos, Vec2 body1_loc, float body1_rot, Vec2 body2_pos, Vec2 body2_loc, float body2_rot, Color c) {
-		Vec2 rotated1 = body1_pos.add(ConvertUnits.rotateVec2(body1_loc, body1_rot));
-		Vec2 rotated2 = body2_pos.add(ConvertUnits.rotateVec2(body2_loc, body2_rot));
+		Vec2 rotated1 = body1_pos.add(B2DCamera.rotateVec2(body1_loc, body1_rot));
+		Vec2 rotated2 = body2_pos.add(B2DCamera.rotateVec2(body2_loc, body2_rot));
 		drawLine(rotated1, rotated2, c);
 	}
 	

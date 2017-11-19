@@ -1,6 +1,6 @@
 import org.jbox2d.common.Vec2;
 
-public class ConvertUnits {
+public class B2DCamera {
 	private float scale = 100; // 100px = 1m
 	private static float maxScale = 20;
 	private Vec2 posCam;
@@ -12,7 +12,7 @@ public class ConvertUnits {
 	private static float followMaxAccel = 30.0f;
 	private Vec2 followSpeed = new Vec2(0,0);
 	
-	public ConvertUnits (float scale_in, Vec2 pos_in, Vec2 res_in) {
+	public B2DCamera (float scale_in, Vec2 pos_in, Vec2 res_in) {
 		scale = scale_in;
 		posCam = pos_in;
 		resCam = res_in;
