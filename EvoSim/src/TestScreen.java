@@ -68,6 +68,10 @@ public class TestScreen extends Screen {
 			halfPlayBackSpeed();
 			System.out.println("SPEED: " + playBackSpeed);
 			break;
+		case SPEED1X:
+			setPlayBackSpeed(1.0f);
+			System.out.println("SPEED: " + playBackSpeed);
+			break;
 		default:
 			System.err.println("CONTROL FUNC ENUM ERROR!");
 			break;
@@ -108,7 +112,7 @@ public class TestScreen extends Screen {
 
 	public void setPlayBackSpeed(float speed) {
 		playBackSpeed = speed;
-		if (playBackSpeed < maxPlayBackSpeed)
+		if (playBackSpeed > maxPlayBackSpeed)
 			playBackSpeed = maxPlayBackSpeed;
 	}
 	

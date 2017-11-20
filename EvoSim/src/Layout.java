@@ -13,7 +13,7 @@ public class Layout {
 	public static void button(Button btn) {
 		btn.setStyle("-fx-background-color:" + "#000000," + "linear-gradient(#7ebcea, #2f4b8f),"
 				+ "linear-gradient(#426ab7, #263e75)," + "linear-gradient(#395cab, #223768);"
-				+ "-fx-background-insets: 0,1,2,3;" + "-fx-background-radius: 0;" + "-fx-padding: 8 15;"
+				+ "-fx-background-insets: 0,1,2,3;" + "-fx-background-radius: 0;" + "-fx-padding: 8 4;"
 				+ "-fx-text-fill: white;" + "-fx-font-size: 12px;");
 		btn.setPrefWidth(prefWidth);
 
@@ -22,6 +22,11 @@ public class Layout {
 	public static void wideButton(Button btn) {
 		button(btn);
 		btn.setPrefWidth(2 * prefWidth + HGap);
+	}
+	
+	public static void TwoThirdsButton(Button btn) {
+		button(btn);
+		btn.setPrefWidth(((prefWidth * 2.0f) - HGap)/3.0f);
 	}
 
 	public static void gridPane(GridPane gp) {
