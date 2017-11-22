@@ -73,7 +73,7 @@ public class TestScreen extends Screen {
 			System.out.println("SPEED: " + playBackSpeed);
 			break;
 		case TOGGLEVIEW:
-			toggleViewLock();
+			toggleViewLock(test.getBallPos(), running);
 			break;
 		case RESETVIEW:
 			resetView();

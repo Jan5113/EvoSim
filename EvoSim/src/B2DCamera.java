@@ -190,6 +190,13 @@ public class B2DCamera {
 		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playBackSpeed));
 	}
 	
+	public void quickFollow(Vec2 B2D_target) {
+		if (B2D_target == null) return;
+		followSpeed = new Vec2(0,0);
+		if (followXEnabled) addPos(new Vec2(B2D_target.sub(posCam).x, 0.0f));
+		if (followYEnabled) addPos(new Vec2(0.0f, B2D_target.sub(posCam).y));		
+	}
+	
 	public void resetPosZoom() {
 		resetPos();
 		zoom = zoomStart;

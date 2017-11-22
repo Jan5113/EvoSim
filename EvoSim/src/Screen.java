@@ -54,6 +54,7 @@ public class Screen extends Canvas {
 	public void setScreenSize(int x_in, int y_in) {
 		this.setWidth(x_in);
 		this.setHeight(y_in);
+		camera.setScreenRes(new Vec2(x_in, y_in));
 	}
 	
 	//************************************************
@@ -243,7 +244,7 @@ public class Screen extends Canvas {
 	
 	private void drawGrid() {
 		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
-		for (float i = -30.0f; i <= 30.0f; i++) {
+		for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
 			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
 				drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), Color.RED);
 			} else {
@@ -271,7 +272,7 @@ public class Screen extends Canvas {
 	
 	private void drawMarkers() {
 		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), 0);
-		for (float i = -30.0f; i < 30.0f; i++) {
+		for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
 			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
 				gc.save();
 				gc.setFont(new Font(30));
@@ -317,6 +318,14 @@ public class Screen extends Canvas {
 	
 	public void toggleViewLock() {
 		viewLock = !viewLock;
+	}
+	
+	public void toggleViewLock(Vec2 B2D_target, boolean running) {
+		toggleViewLock();
+		
+		if (viewLock && !running) {
+			camera.quickFollow(B2D_target);
+		}
 	}
 	
 	public boolean isViewLocked() {
