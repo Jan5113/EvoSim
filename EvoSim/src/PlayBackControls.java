@@ -74,18 +74,6 @@ public class PlayBackControls extends BorderPane {
 		multiTest.addAllCreaturesToQueue();
 		
 		multiTest.startThreads();
-		multiTest.addAllCreaturesToQueue();
-		
-		multiTest.startThreads();
-		multiTest.addAllCreaturesToQueue();
-		
-		multiTest.startThreads();
-		multiTest.addAllCreaturesToQueue();
-		
-		multiTest.startThreads();
-		multiTest.addAllCreaturesToQueue();
-		
-		multiTest.startThreads();
-	}
+		}
 
 }

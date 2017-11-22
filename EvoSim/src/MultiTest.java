@@ -61,8 +61,16 @@ public class MultiTest{
 		}	
 		
 		private void setCreature() {
-			test.setCreature(creatureQueue.remove(0));
-			test.startTest();
+			Creature c = creatureQueue.remove(0);
+			if (!c.fitnessEvaulated()) {
+				test.setCreature(c);
+				test.startTest();
+			} else {
+				System.out.println("Creature ID " + c.id + " already tested!");
+				if (creatureQueue.size() > 0 && !abort) {
+					setCreature();
+				}
+			}
 		}
 
 		public void taskDone(int id_in) {
