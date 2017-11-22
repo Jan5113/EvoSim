@@ -2,6 +2,8 @@ import org.jbox2d.common.Vec2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -14,6 +16,8 @@ public class Screen extends Canvas {
 	private boolean markersEnabled = false;
 	private boolean infoEnabled = false;
 	private String infoString = "";
+	
+	private boolean dragging = false;
 
 	public Screen(double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes);
@@ -24,6 +28,7 @@ public class Screen extends Canvas {
 		clearScreen();
 		
 		this.addEventHandler(ScrollEvent.SCROLL, e -> scrollEvent(e));
+		this.addEventHandler(MouseEvent.DRAG_DETECTED, e -> dragCamera(e));
 	}
 	
 	//************************************************
@@ -284,6 +289,18 @@ public class Screen extends Canvas {
 		} else {
 			camera.zoomInPoint(0.8f, camera.coordPixelsToWorld(se.getX(), se.getY()));
 		}
+	}
+	
+	public void dragCameraStarted(MouseEvent me) {
+		
+	}
+	
+	public void dragCamera(MouseEvent me) {
+		
+	}
+	
+	public void dragCameraEnded(MouseEvent me) {
+		
 	}
 
 }
