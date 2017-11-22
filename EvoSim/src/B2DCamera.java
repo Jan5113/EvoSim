@@ -1,7 +1,8 @@
 import org.jbox2d.common.Vec2;
 
 public class B2DCamera {
-	private float scale = 100; // 100px = 1m
+	private final float zoomStart;
+	private float zoom = 100; // 100px = 1m
 	private static float maxScale = 20;
 	private Vec2 posCam;
 	private final Vec2 posCamStart;
@@ -9,19 +10,21 @@ public class B2DCamera {
 	
 	private boolean followXEnabled = false;
 	private boolean followYEnabled = false;
-	private static float followMaxAccel = 30.0f;
+	private static float followMaxAccel = 60.0f;
+	private static float followResistance = 0.8f;
 	private Vec2 followSpeed = new Vec2(0,0);
 	
-	public B2DCamera (float scale_in, Vec2 pos_in, Vec2 res_in) {
-		scale = scale_in;
+	public B2DCamera (float zoom_in, Vec2 pos_in, Vec2 res_in) {
+		zoom = zoom_in;
 		posCam = pos_in;
 		resCam = res_in;
 		
 		posCamStart = posCam.clone();
+		zoomStart = zoom_in;
 	}
 	
 	public Vec2 coordPixelsToWorld (Vec2 px_pos) {
-		Vec2 B2D_pos = px_pos.add(resCam.mul(0.5f).negate()).mul(1/scale);
+		Vec2 B2D_pos = px_pos.add(resCam.mul(0.5f).negate()).mul(1/zoom);
 		return new Vec2(posCam.x + B2D_pos.x, posCam.y - B2D_pos.y);
 	}
 	
@@ -37,7 +40,7 @@ public class B2DCamera {
 	public Vec2 coordWorldToPixels (Vec2 B2D_pos) {
 		Vec2 px_pos = B2D_pos.add(posCam.negate());
 		px_pos.y = -px_pos.y;
-		return px_pos.mul(scale).add(resCam.mul(0.5f));
+		return px_pos.mul(zoom).add(resCam.mul(0.5f));
 	}
 	
 	static  public Vec2 rotateVec2(Vec2 v, float rad) {
@@ -70,19 +73,19 @@ public class B2DCamera {
 	
 	
 	public float scalarPixelsToWorld (float px_f) {
-		return px_f / scale;
+		return px_f / zoom;
 	}
 
 	public Vec2 scalarPixelsToWorld (Vec2 px_vec) {
-		return px_vec.mul(1/scale);
+		return px_vec.mul(1/zoom);
 	}
 
 	public float scalarWorldToPixels (float B2D_f) {
-		return B2D_f * scale;
+		return B2D_f * zoom;
 	}
 
 	public Vec2 scalarWorldToPixels (Vec2 B2D_vec) {
-		return B2D_vec.mul(scale);
+		return B2D_vec.mul(zoom);
 	}
 	
 	static public float radToDeg (float rad) {
@@ -93,13 +96,26 @@ public class B2DCamera {
 		return deg * (float) Math.PI / 180;
 	}
 	
-	public float getScale() {
-		return scale;
+	public float getZoom() {
+		return zoom;
 	}
 	
-	public void setScale(float scale_in) {
-		if (scale_in >= maxScale)
-		scale = scale_in;
+	public void setZoom(float zoom_in) {
+		if (zoom_in <= maxScale) zoom_in = maxScale;
+		zoom = zoom_in;
+	}
+	
+	public void zoom(float magnification) {
+		if (magnification * zoom <= maxScale) zoom = maxScale;
+		else zoom *= magnification;
+	}
+	
+	public void zoomInPoint(float magnification, Vec2 B2DCenterPos) {
+		if (magnification * zoom <= maxScale) zoom = maxScale;
+		else zoom *= magnification;
+		
+		addPos(B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)));
+		
 	}
 	
 	public Vec2 getPos() {
@@ -150,12 +166,18 @@ public class B2DCamera {
 	
 	public void refreshFollow(float dt, float playbackspeed, Vec2 B2D_target) {
 		if (B2D_target == null) return;
-		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt)).mulLocal(0.9f);
+		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt)).mulLocal(followResistance);
 		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt * playbackspeed, 0.0f));
 		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playbackspeed));
 	}
 	
-	public void resetFollow() {
+	public void resetPosZoom() {
+		resetPos();
+		zoom = zoomStart;
+		
+	}
+	
+	public void resetPos() {
 		followSpeed = new Vec2(0,0);
 		posCam = posCamStart.clone();
 	}

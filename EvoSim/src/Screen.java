@@ -2,6 +2,7 @@ import org.jbox2d.common.Vec2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -21,6 +22,8 @@ public class Screen extends Canvas {
 		gc = this.getGraphicsContext2D();
 		col_background = Color.color(1, 0.8, 0.8);
 		clearScreen();
+		
+		this.addEventHandler(ScrollEvent.SCROLL, e -> scrollEvent(e));
 	}
 	
 	//************************************************
@@ -166,11 +169,11 @@ public class Screen extends Canvas {
 //************************************************
 	
 	public void setScale(float scale_in) {
-		camera.setScale(scale_in);
+		camera.setZoom(scale_in);
 	}
 
 	public float getScale() {
-		return camera.getScale();
+		return camera.getZoom();
 	}
 
 	public void setPos(Vec2 pos_in) {
@@ -209,7 +212,7 @@ public class Screen extends Canvas {
 		gc.save();
 		gc.setFont(new Font(15));
 		gc.setFill(Color.BLACK);
-		gc.fillText(infoString, 10, 40);
+		gc.fillText(infoString, 10, 25);
 		gc.restore();
 	}
 	
@@ -231,7 +234,7 @@ public class Screen extends Canvas {
 	
 	private void drawGrid() {
 		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
-		for (float i = -20.0f; i < 20.0f; i++) {
+		for (float i = -30.0f; i <= 30.0f; i++) {
 			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
 				drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), Color.RED);
 			} else {
@@ -259,7 +262,7 @@ public class Screen extends Canvas {
 	
 	private void drawMarkers() {
 		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), 0);
-		for (float i = -20.0f; i < 20.0f; i++) {
+		for (float i = -30.0f; i < 30.0f; i++) {
 			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
 				gc.save();
 				gc.setFont(new Font(30));
@@ -268,6 +271,18 @@ public class Screen extends Canvas {
 				gc.fillText((int) (startPos.x + i) + "m", pos.x - 20, pos.y);
 				gc.restore();
 			}
+		}
+	}
+
+//************************************************
+//*		CAMERA NAVIGATION
+//************************************************	
+	
+	public void scrollEvent(ScrollEvent se) {
+		if (se.getDeltaY() < 0 ) {
+			camera.zoomInPoint(1.25f, camera.coordPixelsToWorld(se.getX(), se.getY()));
+		} else {
+			camera.zoomInPoint(0.8f, camera.coordPixelsToWorld(se.getX(), se.getY()));
 		}
 	}
 
