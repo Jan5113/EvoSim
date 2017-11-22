@@ -3,7 +3,8 @@ import org.jbox2d.common.Vec2;
 public class B2DCamera {
 	private final float zoomStart;
 	private float zoom = 100; // 100px = 1m
-	private static float maxScale = 20;
+	private static float maxZoomOut = 20;
+	private static float maxZoomIn = 400;
 	private Vec2 posCam;
 	private final Vec2 posCamStart;
 	private Vec2 resCam = new Vec2(500, 500);
@@ -101,17 +102,23 @@ public class B2DCamera {
 	}
 	
 	public void setZoom(float zoom_in) {
-		if (zoom_in <= maxScale) zoom_in = maxScale;
+		if (zoom_in <= maxZoomOut) zoom_in = maxZoomOut;
 		zoom = zoom_in;
 	}
 	
-	public void zoom(float magnification) {
-		if (magnification * zoom <= maxScale) zoom = maxScale;
+	public void zoomCenter(float magnification) {
+		if ((zoom == maxZoomOut && magnification < 1.0f) || (zoom == maxZoomIn && magnification > 1.0f)) return;
+		
+		if (magnification * zoom <= maxZoomOut) zoom = maxZoomOut;
+		else if (magnification * zoom >= maxZoomIn) zoom = maxZoomIn;
 		else zoom *= magnification;
 	}
 	
 	public void zoomInPoint(float magnification, Vec2 B2DCenterPos) {
-		if (magnification * zoom <= maxScale) zoom = maxScale;
+		if ((zoom == maxZoomOut && magnification < 1.0f) || (zoom == maxZoomIn && magnification > 1.0f)) return;
+		
+		if (magnification * zoom <= maxZoomOut) zoom = maxZoomOut;
+		else if (magnification * zoom >= maxZoomIn) zoom = maxZoomIn;
 		else zoom *= magnification;
 		
 		addPos(B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)));
