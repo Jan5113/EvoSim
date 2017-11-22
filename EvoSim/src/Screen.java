@@ -2,7 +2,6 @@ import org.jbox2d.common.Vec2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -17,7 +16,10 @@ public class Screen extends Canvas {
 	private boolean infoEnabled = false;
 	private String infoString = "";
 	
+	private boolean viewLock = true;
+	
 	private boolean dragging = false;
+	private Vec2 dragMousePos;
 
 	public Screen(double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes);
@@ -28,7 +30,9 @@ public class Screen extends Canvas {
 		clearScreen();
 		
 		this.addEventHandler(ScrollEvent.SCROLL, e -> scrollEvent(e));
-		this.addEventHandler(MouseEvent.DRAG_DETECTED, e -> dragCamera(e));
+		this.addEventHandler(MouseEvent.DRAG_DETECTED, e -> dragCameraStarted(e));
+		this.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> dragCamera(e));
+		this.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> dragCameraEnded(e));
 	}
 	
 	//************************************************
@@ -284,23 +288,43 @@ public class Screen extends Canvas {
 //************************************************	
 	
 	public void scrollEvent(ScrollEvent se) {
-		if (se.getDeltaY() < 0 ) {
-			camera.zoomInPoint(1.25f, camera.coordPixelsToWorld(se.getX(), se.getY()));
+		if (se.getDeltaY() > 0 ) {
+			camera.zoomInPoint(1.25f, camera.coordPixelsToWorld(se.getX(), se.getY()), viewLock);
 		} else {
-			camera.zoomInPoint(0.8f, camera.coordPixelsToWorld(se.getX(), se.getY()));
+			camera.zoomInPoint(0.8f, camera.coordPixelsToWorld(se.getX(), se.getY()), viewLock);
 		}
 	}
 	
 	public void dragCameraStarted(MouseEvent me) {
-		
+		dragging = true;
+		viewLock = false;
+		dragMousePos = camera.coordPixelsToWorld(me.getX(), me.getY());
 	}
 	
 	public void dragCamera(MouseEvent me) {
-		
+		if (!dragging) return;
+		addPos(dragMousePos.sub(camera.coordPixelsToWorld(me.getX(), me.getY())));
 	}
 	
 	public void dragCameraEnded(MouseEvent me) {
-		
+		dragging = false;
+	}
+	
+	
+	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target, boolean running) {
+		if (running && viewLock) camera.refreshFollow(dt, playBackSpeed, B2D_target);
+	}
+	
+	public void toggleViewLock() {
+		viewLock = !viewLock;
+	}
+	
+	public boolean isViewLocked() {
+		return viewLock;
+	}
+	
+	public void resetView() {
+		camera.resetPosZoom();
 	}
 
 }

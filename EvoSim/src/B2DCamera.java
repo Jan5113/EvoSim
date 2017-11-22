@@ -114,14 +114,26 @@ public class B2DCamera {
 		else zoom *= magnification;
 	}
 	
-	public void zoomInPoint(float magnification, Vec2 B2DCenterPos) {
+	public void zoomInPoint(float magnification, Vec2 B2DCenterPos, boolean respectLockDirs) {
 		if ((zoom == maxZoomOut && magnification < 1.0f) || (zoom == maxZoomIn && magnification > 1.0f)) return;
 		
 		if (magnification * zoom <= maxZoomOut) zoom = maxZoomOut;
 		else if (magnification * zoom >= maxZoomIn) zoom = maxZoomIn;
 		else zoom *= magnification;
 		
-		addPos(B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)));
+		
+		
+		if (respectLockDirs) {
+			if (followXEnabled) {
+				addPos(new Vec2(0.0f, B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)).y));
+			}
+			if (followYEnabled) {
+				addPos(new Vec2(B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)).x, 0.0f));
+			}
+		} else {
+			addPos(B2DCenterPos.sub(posCam).mul((magnification - 1.0f) * (1.0f / magnification)));
+		}
+		
 		
 	}
 	
@@ -171,11 +183,11 @@ public class B2DCamera {
 		return followYEnabled;
 	}
 	
-	public void refreshFollow(float dt, float playbackspeed, Vec2 B2D_target) {
+	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target) {
 		if (B2D_target == null) return;
-		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt)).mulLocal(followResistance);
-		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt * playbackspeed, 0.0f));
-		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playbackspeed));
+		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt * playBackSpeed)).mulLocal((float) Math.pow(followResistance, playBackSpeed));
+		if (followXEnabled) addPos(new Vec2(followSpeed.x * dt * playBackSpeed, 0.0f));
+		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playBackSpeed));
 	}
 	
 	public void resetPosZoom() {
@@ -188,4 +200,5 @@ public class B2DCamera {
 		followSpeed = new Vec2(0,0);
 		posCam = posCamStart.clone();
 	}
+
 }

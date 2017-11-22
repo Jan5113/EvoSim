@@ -42,7 +42,7 @@ public class TestScreen extends Screen {
 		
 		if (infoEnabled()) getInfoString();
 		
-		if (running) camera.refreshFollow(dt, playBackSpeed, test.getBallPos());
+		refreshFollow(dt, playBackSpeed, test.getBallPos(), running);
 	}
 
 	public void manageCommand(ControlFuncTest cf) {
@@ -71,6 +71,12 @@ public class TestScreen extends Screen {
 		case SPEED1X:
 			setPlayBackSpeed(1.0f);
 			System.out.println("SPEED: " + playBackSpeed);
+			break;
+		case TOGGLEVIEW:
+			toggleViewLock();
+			break;
+		case RESETVIEW:
+			resetView();
 			break;
 		default:
 			System.err.println("CONTROL FUNC ENUM ERROR!");
