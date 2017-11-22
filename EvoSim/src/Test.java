@@ -19,19 +19,20 @@ public class Test {
 	private Creature creature;
 	private float testTimer = 0;
 	private boolean testing = false;
-	public boolean taskDone = false;
+	public boolean taskDone = true;
 	private float lastFitness = 0.0f;
 	private static float afterTestLength = 2.0f;
 	private float afterTestTime = 100000.0f;
+	private final boolean fastCalculation;
 	
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
 	
 	public Vec2 ballPosTEST = new Vec2(0, 17.0f);
 	
-	private final TestScreen parentTestManager;
+	private final TestWrapper parentWrapper;
 	
-	public Test (Vec2 gravity_in, TestScreen testmngr) {
+	public Test (Vec2 gravity_in, TestWrapper testWrapper, boolean fastCalculation) {
 		testWorld = new World(gravity_in);
 
 		B2DBody floor = new B2DBody("floor");
@@ -41,7 +42,8 @@ public class Test {
 		floor.createBody(testWorld);
 		worldInstancesList.add(floor);
 		
-		parentTestManager = testmngr;
+		parentWrapper = testWrapper;
+		this.fastCalculation = fastCalculation;
 	}
 	
 	public void setCreature (Creature creature_in) {
@@ -87,6 +89,17 @@ public class Test {
 	
 	public void startTest() {
 		testing = true;
+		taskDone = false;
+		
+		if (fastCalculation) {
+			fastSteps();
+		}
+	}
+	
+	public void fastSteps() {
+		while (!taskDone) {
+			step(dtStepSize, 1);
+		}
 	}
 	
 	public void step (float dt, float speed) {
@@ -107,7 +120,7 @@ public class Test {
 				//testing = false;
 				//dtToRun = 0.0f;
 				lastFitness = creatureInstancesList.get(2).getPos().x;
-				parentTestManager.taskDone(creature.id);
+				parentWrapper.taskDone(creature.id);
 			}
 			
 			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null && !taskDone; ce = ce.next) {
@@ -119,14 +132,14 @@ public class Test {
 						//testing = false;
 						//dtToRun = 0.0f;
 						lastFitness = creatureInstancesList.get(2).getPos().x;
-						parentTestManager.taskDone(creature.id);
+						parentWrapper.taskDone(creature.id);
 						afterTestTime = testTimer + afterTestLength;
 					}
 				}
 			}
 			
 			if (testTimer > afterTestTime) {
-				parentTestManager.pauseDone(creature.id);
+				parentWrapper.pauseDone(creature.id);
 			}
 			
 		}
@@ -141,7 +154,6 @@ public class Test {
 		creatureJointsList.clear();
 		testTimer = 0.0f;	
 		dtToRun = 0.0f;
-		taskDone = false;
 		testing = false;
 		creature = null;
 		afterTestTime = 100000.0f;

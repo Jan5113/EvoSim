@@ -6,6 +6,7 @@ import javafx.scene.layout.GridPane;
 public class PlayBackControls extends BorderPane {
 
 	private final TestScreen testScreen;
+	private final MultiTest multiTest;
 
 	GridPane gp_controls = new GridPane();
 
@@ -17,9 +18,11 @@ public class PlayBackControls extends BorderPane {
 	Button btn_1x = new Button("1x");
 	Button btn_toggleView = new Button("Unlock View");
 	Button btn_resetView = new Button("Reset View");
+	Button btn_test = new Button("TESTMULTICORE");
 
-	public PlayBackControls(TestScreen testScreen_in) {
+	public PlayBackControls(TestScreen testScreen_in, MultiTest multiTest_in) {
 		testScreen = testScreen_in;
+		multiTest = multiTest_in;
 
 		this.setCenter(gp_controls);
 
@@ -33,6 +36,8 @@ public class PlayBackControls extends BorderPane {
 		Layout.button(btn_toggleView);
 		Layout.button(btn_resetView);
 		
+		Layout.button(btn_test);
+		
 		gp_controls.add(lbl_playback, 0, 0, 3, 1);
 		gp_controls.add(btn_playpause, 0, 1, 3, 1);
 		gp_controls.add(btn_fast, 2, 2);
@@ -41,6 +46,8 @@ public class PlayBackControls extends BorderPane {
 		gp_controls.add(btn_toggleView, 3,1);
 		gp_controls.add(btn_resetView, 3,2);
 		
+		gp_controls.add(btn_test, 4, 1);
+		
 
 		btn_playpause.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.PLAYPAUSE));
 		btn_fast.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.FAST));
@@ -48,10 +55,11 @@ public class PlayBackControls extends BorderPane {
 		btn_1x.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.SPEED1X));
 		btn_toggleView.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.TOGGLEVIEW));
 		btn_resetView.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.RESETVIEW));
+		btn_test.setOnAction(e -> testMultiCore());
 	}
 	
 	public void refresh() {
-		if (testScreen.testIsRunning())
+		if (testScreen.isTestRunning())
 			btn_playpause.setText("Pause");
 		else
 			btn_playpause.setText("Play");
@@ -60,6 +68,24 @@ public class PlayBackControls extends BorderPane {
 			btn_toggleView.setText("Unlock View");
 		else
 			btn_toggleView.setText("Lock View");
+	}
+	
+	public void testMultiCore() {
+		multiTest.addAllCreaturesToQueue();
+		
+		multiTest.startThreads();
+		multiTest.addAllCreaturesToQueue();
+		
+		multiTest.startThreads();
+		multiTest.addAllCreaturesToQueue();
+		
+		multiTest.startThreads();
+		multiTest.addAllCreaturesToQueue();
+		
+		multiTest.startThreads();
+		multiTest.addAllCreaturesToQueue();
+		
+		multiTest.startThreads();
 	}
 
 }

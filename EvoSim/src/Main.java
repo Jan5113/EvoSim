@@ -16,6 +16,7 @@ public class Main extends Application{
 	
 	private long lastNanoTime;
 	private TestScreen mainTestScreen;
+	private MultiTest mainMultiTest;
 	private PlayBackControls bp_control;
 	
 	private Population pop = new Population();
@@ -37,8 +38,9 @@ public class Main extends Application{
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
 		
+		mainMultiTest = new MultiTest(new Vec2(0.0f, -9.81f), pop);
 		
-		bp_control = new PlayBackControls(mainTestScreen);
+		bp_control = new PlayBackControls(mainTestScreen, mainMultiTest);
 		mainTestScreen.enableAutoGetNext();
 		mainTestScreen.enableInfo();
 		mainTestScreen.enableMarkers();

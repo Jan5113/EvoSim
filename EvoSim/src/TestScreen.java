@@ -1,6 +1,6 @@
 import org.jbox2d.common.Vec2;
 
-public class TestScreen extends Screen {
+public class TestScreen extends Screen implements TestWrapper{
 	private Test test;
 	private float playBackSpeed = 1;
 	private static float maxPlayBackSpeed = 1024.0f;
@@ -10,7 +10,7 @@ public class TestScreen extends Screen {
 
 	public TestScreen(Vec2 gravity_in, double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(resX, resY, scale_in, pos_in);
-		test = new Test(gravity_in, this);
+		test = new Test(gravity_in, (TestWrapper) this, false);
 		pop = pop_in;
 		
 		camera.enableFollowX();
@@ -83,7 +83,7 @@ public class TestScreen extends Screen {
 		}
 	}
 
-	public boolean testIsRunning() {
+	public boolean isTestRunning() {
 		return running;
 	}
 
