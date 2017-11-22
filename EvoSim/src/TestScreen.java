@@ -8,11 +8,10 @@ public class TestScreen extends Screen {
 	private final Population pop;
 	private boolean autoGetNext = false;
 
-	public TestScreen(Vec2 gravity_in, double arg0, double arg1, float scale_in, Vec2 pos_in, Population pop_in) {
-		super(arg0, arg1, scale_in, pos_in);
+	public TestScreen(Vec2 gravity_in, double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
+		super(resX, resY, scale_in, pos_in);
 		test = new Test(gravity_in, this);
 		pop = pop_in;
-		
 		
 		camera.enableFollowX();
 	}
@@ -145,6 +144,10 @@ public class TestScreen extends Screen {
 	
 	public void disableAutoGetNext() {
 		autoGetNext = false;
+	}
+	
+	public void abortTest() {
+		test.reset();
 	}
 
 	// private Test test;
