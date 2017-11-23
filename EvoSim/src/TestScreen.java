@@ -87,15 +87,15 @@ public class TestScreen extends Screen implements TestWrapper{
 		return running;
 	}
 
-	public void taskDone(int id_in) {
-		System.out.println("ID: " + test.getCreatureID() + " | Fitness:" + test.getLastFitness());
+	public void taskDone(Creature creature_in, float calcFitness) {
+		System.out.println("ID: " + creature_in.id + " | Fitness:" + calcFitness);
 		
 		if (!test.getCreature().fitnessEvaulated()) {
-			test.getCreature().setFitness(test.getLastFitness());
+			test.getCreature().setFitness(calcFitness);
 		}		
 	}
 	
-	public void pauseDone(int id_in) {
+	public void pauseDone(Creature creature_in, float newFitness) {
 		if (autoGetNext) {
 			if (pop.getNext() != null) {
 				test.reset();
@@ -124,7 +124,7 @@ public class TestScreen extends Screen implements TestWrapper{
 		String infoText = "";
 		infoText += "Generation " + pop.getGen() + "\n";
 		if (hasCreature()) {
-			infoText += "Creature ID " + test.getCreatureID() + "\n";
+			infoText += "Creature ID " + test.getCreature().id + "\n";
 			if (test.getCreature().fitnessEvaulated()) {
 				infoText += "Fitness: " + Math.round(test.getCreature().getFitness()*10.0f)/10.0f + "m";				
 			} else {

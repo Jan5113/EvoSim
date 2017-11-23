@@ -13,14 +13,19 @@ import javafx.scene.paint.Color;
 
 public class Test {
 	private World testWorld;
+	
 	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
 	public ArrayList<RevoluteJoint> creatureJointsList = new ArrayList<RevoluteJoint>();
+	
 	private Creature creature;
-	private float testTimer = 0;
-	private boolean testing = false;
-	public boolean taskDone = true;
 	private float lastFitness = 0.0f;
+	
+	private boolean testing = false;
+	private boolean taskDone = true;
+	
+	private float testTimer = 0;
+	
 	private static float afterTestLength = 2.0f;
 	private float afterTestTime = 100000.0f;
 	private final boolean fastCalculation;
@@ -28,7 +33,7 @@ public class Test {
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
 	
-	public Vec2 ballPosTEST = new Vec2(0, 17.0f);
+	private Vec2 ballPosTEST = new Vec2(0, 17.0f);
 	
 	private final TestWrapper parentWrapper;
 	
@@ -120,7 +125,7 @@ public class Test {
 				//testing = false;
 				//dtToRun = 0.0f;
 				lastFitness = creatureInstancesList.get(2).getPos().x;
-				parentWrapper.taskDone(creature.id);
+				parentWrapper.taskDone(creature, lastFitness);
 			}
 			
 			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null && !taskDone; ce = ce.next) {
@@ -132,14 +137,14 @@ public class Test {
 						//testing = false;
 						//dtToRun = 0.0f;
 						lastFitness = creatureInstancesList.get(2).getPos().x;
-						parentWrapper.taskDone(creature.id);
+						parentWrapper.taskDone(creature, lastFitness);
 						afterTestTime = testTimer + afterTestLength;
 					}
 				}
 			}
 			
 			if (testTimer > afterTestTime) {
-				parentWrapper.pauseDone(creature.id);
+				parentWrapper.pauseDone(creature, lastFitness);
 			}
 			
 		}
@@ -164,14 +169,6 @@ public class Test {
 			return null;
 		}
 		return creatureInstancesList.get(2).getPos();
-	}
-	
-	public int getCreatureID() {
-		return creature.id;
-	}
-	
-	public float getLastFitness() {
-		return lastFitness;
 	}
 	
 	public ArrayList<B2DBody> getWorldInstances() {
