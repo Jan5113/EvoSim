@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 
 public class B2DBody {
-	public Body body;
+	private Body body;
 	private BodyDef bodyDef;
 	private FixtureDef fixtureDef;
 	
@@ -298,6 +298,10 @@ public class B2DBody {
 	
 	public Color getColor() {
 		return drawColor;
+	}
+	
+	public Body getBody() {
+		return body;
 	}
 	
 	public boolean getFill() {

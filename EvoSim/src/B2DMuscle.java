@@ -81,14 +81,14 @@ public class B2DMuscle {
 		fixedAnchor2.setAngle(B2DCamera.getRotation(muscleDir));
 		
 		anchorOffset1 = B2DCamera.rotateVec2(anchorOffset1, anchor1.getAngle());
-		revJointDef1.initialize(anchor1.body, fixedAnchor1.body, anchor1.body.getWorldCenter().add(anchorOffset1));	
+		revJointDef1.initialize(anchor1.getBody(), fixedAnchor1.getBody(), anchor1.getBody().getWorldCenter().add(anchorOffset1));	
 		revJoint1 = (RevoluteJoint) world.createJoint(revJointDef1);
 
 		anchorOffset2 = B2DCamera.rotateVec2(anchorOffset2, anchor2.getAngle());
-		revJointDef2.initialize(anchor2.body, fixedAnchor2.body, anchor2.body.getWorldCenter().add(anchorOffset2));	
+		revJointDef2.initialize(anchor2.getBody(), fixedAnchor2.getBody(), anchor2.getBody().getWorldCenter().add(anchorOffset2));	
 		revJoint2 = (RevoluteJoint) world.createJoint(revJointDef2);
 		
-		jointDef.initialize(fixedAnchor1.body, fixedAnchor2.body, fixedAnchor1.body.getWorldCenter(), muscleDir);
+		jointDef.initialize(fixedAnchor1.getBody(), fixedAnchor2.getBody(), fixedAnchor1.getBody().getWorldCenter(), muscleDir);
 		muscle = (PrismaticJoint) world.createJoint(jointDef);
 		
 		isCreated = true;

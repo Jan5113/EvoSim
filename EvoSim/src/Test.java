@@ -85,7 +85,7 @@ public class Test {
 		}
 		
 		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.initialize(fixture.body, bat.body, creature.fixturePos.getVal());
+		jointDef.initialize(fixture.getBody(), bat.getBody(), creature.fixturePos.getVal());
 		jointDef.localAnchorB.set(creature.length.getVal(), 0);
 		jointDef.enableLimit = true;
 		jointDef.lowerAngle = 0.0f;		
@@ -128,11 +128,11 @@ public class Test {
 				parentWrapper.taskDone(creature, lastFitness);
 			}
 			
-			for (ContactEdge ce = creatureInstancesList.get(2).body.getContactList(); ce != null && !taskDone; ce = ce.next) {
+			for (ContactEdge ce = creatureInstancesList.get(2).getBody().getContactList(); ce != null && !taskDone; ce = ce.next) {
 				Contact c = ce.contact;
 				
 				if (c.isTouching()) {
-					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).body.getFixtureList().m_userData) {
+					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).getBody().getFixtureList().m_userData) {
 						taskDone = true;
 						//testing = false;
 						//dtToRun = 0.0f;
