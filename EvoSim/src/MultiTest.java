@@ -2,38 +2,81 @@ import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 
 
+/**
+ * The <code>MultiTest</code> class manages the distribution of {@link Test} instances the tasks
+ * on the number of threads given. <code>MultiTest</code> enables multithreading for the
+ * calculations; <code>Test</code> are run in parallel to minimise processing time.
+ * <p>
+ * Contains {@link TestThread} as a hidden inner class. 
+ */
 public class MultiTest{
-	private TestThread test1;
-	private TestThread test2;
 	private final Vec2 gravity;
 	private final Population pop;
 	
-	ArrayList<Creature> creatureQueue = new ArrayList<Creature>();
+	private ArrayList<Creature> creatureQueue = new ArrayList<Creature>();
+	private TestThread[] testArray;
 	
 	
-	public MultiTest(Vec2 gravity_in, Population pop_in) {
+	/**
+	 * Initialises a newly created {@code MultiTest} object. {@code threads} specifies
+	 * the number of threads being used. {@code gravity_in} is needed to initialise the
+	 * {@link Test} instances, a reference {@code pop} to the main {@link Population} is needed to
+	 * enable a simple referencing of {@link Creature} instances.
+	 * 
+	 * @param threads
+	 * Number of threads, simultaneous running tests
+	 * @param gravity_in
+	 * The acceleration of the {@link Test} instances
+	 * @param pop_in
+	 * Reference to the the main {@link Population}
+	 * 
+	 */
+	public MultiTest(int threads, Vec2 gravity_in, Population pop_in) {
 		pop = pop_in;
 		gravity = gravity_in;
-		test1 = new TestThread("THREAD 1");
-		test2 = new TestThread("THREAD 2");
+		testArray = new TestThread[threads];
+		
+		for (int i = 0; i < testArray.length; i++) {
+			testArray[i] = new TestThread("THREAD " + i);
+		}
 	}
 	
+	/**
+	 * Adds a reference of all {@link Creature} inside the {@link Population}
+	 * to the calculation queue
+	 * 
+	 */
 	public void addAllCreaturesToQueue() {
 		for (int i = 0; i < pop.getPopulationSize(); i++) {
 			creatureQueue.add(pop.getCreatureByIndex(i));
 		}
 	}
 	
-	public void addCreatureByIndexToQueue(int id) {
-		creatureQueue.add(pop.getCreatureByIndex(id));
+	/**
+	 * Adds a reference of a {@link Creature} inside of the {@link Population}
+	 * at {@code index} to the calculation queue. 
+	 * 
+	 * @param index
+	 * index of the {@link Creature} in the referenced {@link Population}
+	 */
+	public void addCreatureByIndexToQueue(int index) {
+		creatureQueue.add(pop.getCreatureByIndex(index));
 	}
 	
+	/**
+	 * Starts calculation with all given threads until queue is empty
+	 */
 	public void startThreads() {
-		test1.start();
-		test2.start();
+		for (int i = 0; i < testArray.length; i++) {
+			testArray[i].start();
+		}
 	}
 	
-	public class TestThread implements Runnable, TestWrapper {
+	/**
+	 * 
+	 *
+	 */
+	private class TestThread implements Runnable, TestWrapper {
 		private Thread t;
 		private Test test;
 		private String threadName;
