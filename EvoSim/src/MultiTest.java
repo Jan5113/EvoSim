@@ -7,6 +7,8 @@ import org.jbox2d.common.Vec2;
  * on the number of threads given. <code>MultiTest</code> enables multithreading for the
  * calculations; <code>Test</code> are run in parallel to minimise processing time.
  * <p>
+ * The to be tested {@link Creature} instances are referenced in a queue.
+ * <p>
  * Contains {@link TestThread} as a hidden inner class. 
  */
 public class MultiTest{
@@ -42,8 +44,9 @@ public class MultiTest{
 	}
 	
 	/**
-	 * Adds a reference of all {@link Creature} inside the {@link Population}
-	 * to the calculation queue
+	 * Adds a reference of all {@link Creature} inside the before
+	 * referenced {@link Population} to the calculation queue
+	 * 
 	 * 
 	 */
 	public void addAllCreaturesToQueue() {
@@ -64,7 +67,7 @@ public class MultiTest{
 	}
 	
 	/**
-	 * Starts calculation with all given threads until queue is empty
+	 * Starts calculation with all given threads
 	 */
 	public void startThreads() {
 		for (int i = 0; i < testArray.length; i++) {
@@ -73,15 +76,42 @@ public class MultiTest{
 	}
 	
 	/**
-	 * 
+	 * The {@code TestThread} class starts a {@link Test} with a {@link Creature}
+	 * taken from the {@code MultiTest} queue. It is a {@link Runnable} inner
+	 * class of {@link MultiTest}, therefore instances of {@code TestThread} can
+	 * be run in parallel.
 	 *
 	 */
 	private class TestThread implements Runnable, TestWrapper {
+		/**
+		 * The {@link Thread} running the {@link Test}.
+		 * 
+		 */
 		private Thread t;
-		private Test test;
+		
+		/**
+		 * The {@link Test} evaluating the fitness of a given {@link Creature}.
+		 * 
+		 */
+		private final Test test;
+		/**
+		 * Name of the {@link TestThread} (for distinction when debugging)
+		 * 
+		 */
 		private String threadName;
+		/**
+		 * Aborts calculations once set to {@code true}, then exits thread
+		 */
 		public boolean abort = false;
 		
+		/**
+		 * Initialises a newly created {@code TestThread} object. {@code threadName}
+		 * sets the name of the thread; for distinction when debugging. Test is
+		 * initialised by the values provided by {@link TestThread}.
+		 * 
+		 * @param threadName
+		 * string for name
+		 */
 		public TestThread(String threadName) {
 			this.threadName = threadName;
 			System.out.println("Creating " +  this.threadName );
@@ -95,6 +125,10 @@ public class MultiTest{
 		}
 		
 		
+		/**
+		 * Initialises the {@link Thread} and then executes {@code run()} as a
+		 * parallel process, multithreading!
+		 */
 		public void start() {
 			System.out.println("Starting " + threadName);
 			if (t == null) {
@@ -103,7 +137,12 @@ public class MultiTest{
 			}
 		}	
 		
+		/**
+		 * Takes the next creature in the queue and restarts {@link Test}. Check
+		 * for already evaluated creatures or empty queue.
+		 */
 		private void setCreature() {
+			if (creatureQueue.size() == 0) return;
 			Creature c = creatureQueue.remove(0);
 			if (!c.fitnessEvaulated()) {
 				test.setCreature(c);
@@ -116,10 +155,10 @@ public class MultiTest{
 			}
 		}
 
-		public void taskDone(int id_in) {
-			System.out.println("Thread " + threadName + " tested creature ID: " + test.getCreatureID() + " | Fitness:" + test.getLastFitness());
+		public void taskDone(Creature creature_in, float calcFitness) {
+			System.out.println("Thread " + threadName + " tested creature ID: " + creature_in.id + " | Fitness:" + calcFitness);
 			if (!test.getCreature().fitnessEvaulated()) {
-				test.getCreature().setFitness(test.getLastFitness());
+				test.getCreature().setFitness(calcFitness);
 			}	
 			test.reset();
 			
@@ -128,7 +167,7 @@ public class MultiTest{
 			}
 		}
 		
-		public void pauseDone(int id_in) {}
+		public void pauseDone(Creature creature_in, float calcFitness) {}
 
 	}
 
