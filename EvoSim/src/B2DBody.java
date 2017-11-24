@@ -10,8 +10,27 @@ import org.jbox2d.dynamics.World;
 import javafx.scene.paint.Color;
 
 
+/**
+ * The {@code B2DBody} class contains methods and templates for an easy setup
+ * process of a {@link Body} instance and scanning methods to get its properties.
+ * <p>
+ * During setup you can define all its physical properties such as its shape,
+ * density and friction as well as its location and rotation.
+ * <p>
+ * Once the {@code B2DBody} is created in a {@link World} the setup settings are locked
+ * while the scanning methods for its current location, rotation and other properties
+ * are enabled.
+ *
+ */
 public class B2DBody {
+	
+	/**
+	 * The {@link Body} instance which is setup by the {@link B2DBody} class
+	 */
 	private Body body;
+	/**
+	 * 
+	 */
 	private BodyDef bodyDef;
 	private FixtureDef fixtureDef;
 	
