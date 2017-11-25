@@ -41,7 +41,7 @@ public class Test {
 		testWorld = new World(gravity_in);
 
 		B2DBody floor = new B2DBody("floor");
-		floor.setUpCuboid(0.0f, -10.0f, 100.0f, 10.0f, 0.0f, BodyType.STATIC);
+		floor.setUpRect(0.0f, -10.0f, 100.0f, 10.0f, 0.0f, BodyType.STATIC);
 		floor.setFill(true);
 		floor.setColor(Color.GREENYELLOW);
 		floor.createBody(testWorld);
@@ -70,7 +70,7 @@ public class Test {
 		creatureInstancesList.add(fixture);
 
 		B2DBody bat = new B2DBody("bat");
-		bat.setUpCuboid(creature.fixturePos.getVal().add(new Vec2(-creature.length.getVal(), 0)), (new Vec2(creature.length.getVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
+		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getVal(), 0)), (new Vec2(creature.length.getVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
 		
 		creatureInstancesList.add(bat);
 

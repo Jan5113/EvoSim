@@ -1,36 +1,58 @@
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
 
 
 /**
- * The <code>MultiTest</code> class manages the distribution of {@link Test} instances the tasks
- * on the number of threads given. <code>MultiTest</code> enables multithreading for the
- * calculations; <code>Test</code> are run in parallel to minimise processing time.
+ * The <code>MultiTest</code> class manages the distribution of {@link Test}
+ * instances on the number of threads given. <code>MultiTest</code> enables
+ * multithreading for the calculations; <code>Test</code> are run in parallel to
+ * minimise processing time.
  * <p>
- * The to be tested {@link Creature} instances are referenced in a queue.
+ * The {@link Creature} instances which should be tested are referenced in a
+ * queue.
  * <p>
- * Contains {@link TestThread} as a hidden inner class. 
+ * Contains {@link TestThread} as a hidden inner class.
  */
 public class MultiTest{
+	/**
+	 * {@code gravity} holds the {@link Vec2} for the gravitational acceleration. It
+	 * is used to initialise the {@link World} inside a {@link MultiTest} instance.
+	 */
 	private final Vec2 gravity;
+	/**
+	 * {@code pop} is a reference to the {@link Population}. {@link MultiTest} uses
+	 * this reference to load the {@link Creature} instances in the queue.
+	 */
 	private final Population pop;
 	
+	/**
+	 * {@code creatureQueue} references all the {@link Creature} instances which
+	 * have to be calculated. {@link TestThread} calculates an {@code Creature} at
+	 * an time after removing its reference form the {@code creatureQueue}.
+	 */
 	private ArrayList<Creature> creatureQueue = new ArrayList<Creature>();
-	private TestThread[] testArray;
+	/**
+	 * {@code testArray} holds the instances of {@link TestThread}. The number of
+	 * instances, i.e. the number of CPU cores used, has to specified in the
+	 * constructor.
+	 */
+	private final TestThread[] testArray;
 	
 	
 	/**
-	 * Initialises a newly created {@code MultiTest} object. {@code threads} specifies
-	 * the number of threads being used. {@code gravity_in} is needed to initialise the
-	 * {@link Test} instances, a reference {@code pop} to the main {@link Population} is needed to
-	 * enable a simple referencing of {@link Creature} instances.
+	 * Initialises a newly created {@code MultiTest} object. {@code threads}
+	 * specifies the number of threads being used. {@code gravity_in} is needed to
+	 * initialise the {@link Test} instances, a reference {@code pop} to the main
+	 * {@link Population} is needed to enable a simple referencing of
+	 * {@link Creature} instances.
 	 * 
 	 * @param threads
-	 * Number of threads, simultaneous running tests
+	 *            Number of threads, simultaneous running tests
 	 * @param gravity_in
-	 * The acceleration of the {@link Test} instances
+	 *            The acceleration of the {@link Test} instances
 	 * @param pop_in
-	 * Reference to the the main {@link Population}
+	 *            Reference to the the main {@link Population}
 	 * 
 	 */
 	public MultiTest(int threads, Vec2 gravity_in, Population pop_in) {
@@ -44,9 +66,8 @@ public class MultiTest{
 	}
 	
 	/**
-	 * Adds a reference of all {@link Creature} inside the before
-	 * referenced {@link Population} to the calculation queue
-	 * 
+	 * Adds a reference of all {@link Creature} inside the before referenced
+	 * {@link Population} to the calculation queue
 	 * 
 	 */
 	public void addAllCreaturesToQueue() {
@@ -56,11 +77,11 @@ public class MultiTest{
 	}
 	
 	/**
-	 * Adds a reference of a {@link Creature} inside of the {@link Population}
-	 * at {@code index} to the calculation queue. 
+	 * Adds a reference of a {@link Creature} inside of the {@link Population} at
+	 * {@code index} to the calculation queue.
 	 * 
 	 * @param index
-	 * index of the {@link Creature} in the referenced {@link Population}
+	 *            index of the {@link Creature} in the referenced {@link Population}
 	 */
 	public void addCreatureByIndexToQueue(int index) {
 		creatureQueue.add(pop.getCreatureByIndex(index));
@@ -77,9 +98,9 @@ public class MultiTest{
 	
 	/**
 	 * The {@code TestThread} class starts a {@link Test} with a {@link Creature}
-	 * taken from the {@code MultiTest} queue. It is a {@link Runnable} inner
-	 * class of {@link MultiTest}, therefore instances of {@code TestThread} can
-	 * be run in parallel.
+	 * taken from the {@link MultiTest} {@link creatureQueue}. It is a
+	 * {@link Runnable} inner class of {@code MultiTest}, therefore instances of
+	 * {@code TestThread} can be run in parallel.
 	 *
 	 */
 	private class TestThread implements Runnable, TestWrapper {
@@ -110,7 +131,7 @@ public class MultiTest{
 		 * initialised by the values provided by {@link TestThread}.
 		 * 
 		 * @param threadName
-		 * string for name
+		 *            string for name
 		 */
 		public TestThread(String threadName) {
 			this.threadName = threadName;
@@ -126,8 +147,8 @@ public class MultiTest{
 		
 		
 		/**
-		 * Initialises the {@link Thread} and then executes {@code run()} as a
-		 * parallel process, multithreading!
+		 * Initialises the {@link Thread} and then executes {@code run()} as a parallel
+		 * process, multithreading!
 		 */
 		public void start() {
 			System.out.println("Starting " + threadName);
@@ -138,8 +159,8 @@ public class MultiTest{
 		}	
 		
 		/**
-		 * Takes the next creature in the queue and restarts {@link Test}. Check
-		 * for already evaluated creatures or empty queue.
+		 * Takes the next creature in the queue and restarts {@link Test}. Check for
+		 * already evaluated creatures or empty queue.
 		 */
 		private void setCreature() {
 			if (creatureQueue.size() == 0) return;

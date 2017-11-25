@@ -66,7 +66,7 @@ public class Screen extends Canvas {
 		if (body.getShapeType() == ShapeType.CIRCLE) {
 			drawSphere(body);
 		}
-		else if (body.getShapeType() == ShapeType.CUBOID) {
+		else if (body.getShapeType() == ShapeType.RECT) {
 			drawCuboid(body);
 		}
 		else if (body.getShapeType() == ShapeType.POINT) {
