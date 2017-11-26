@@ -255,11 +255,11 @@ public class B2DBody {
 	}	
 	
 	/**
-	 * Takes a {@code float} and creates a circle/ball shape. The radius of the
-	 * {@link B2DBody} is set to {@code radius_in} (in metres).
+	 * Takes a {@code float} and creates a circle/ball shape. The radius of this
+	 * {@link B2DBody} instance is set to {@code radius_in} (in metres).
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param radius_in
 	 *            Sets the radius of the circle/ball.
@@ -282,14 +282,14 @@ public class B2DBody {
 	
 	/**
 	 * Takes properties such as density, friction and restitution in form of a
-	 * {@link FixtureDef} and applies those values to the {@link B2DBody}.
+	 * {@link FixtureDef} and applies those values to this {@link B2DBody} instance.
 	 * <p>
 	 * <strong>NOTE:</strong> The {@code Shape} included in {@code fixtureDef_in}
 	 * will be overwritten with local {@code Shape}! Use {@code setPolygonShape()}
 	 * or {@code setCircleShape()} to avoid this problem.
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param fixtureDef_in
 	 *            Specifies the {@link FixtureDef} for the {@link B2DBody}
@@ -306,8 +306,8 @@ public class B2DBody {
 	//************************************************
 	
 	/**
-	 * Specifies what type this {@link B2DBody} is. Takes a {@link BodyType} enum:
-	 * <blockquote>
+	 * Specifies what type this {@link B2DBody} instance is. Takes a
+	 * {@link BodyType} enum: <blockquote>
 	 * <ul>
 	 * <li>{@code DYNAMIC}: Body is affected by gravity; falls and collides</li>
 	 * <li>{@code STATIC}: Body is not affected by physics but collides with other
@@ -317,11 +317,13 @@ public class B2DBody {
 	 * </ul>
 	 * </blockquote>
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * Default value: {@code DYNAMIC}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param bodyType_in
-	 * Specifies the {@link BodyType} of the {@link B2DBody}
+	 *            Specifies the {@link BodyType} of the {@link B2DBody}
 	 */
 	public void setBodyType(BodyType bodyType_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
@@ -331,14 +333,16 @@ public class B2DBody {
 	//		BODY DEF
 	
 	/**
-	 * Takes a {@link Vec2} and sets the location of the {@link B2DBody}. The
-	 * coordinates are given in metres.
+	 * Takes a {@link Vec2} and sets the location of this {@link B2DBody}
+	 * instance.The coordinates are given in metres.
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * Default value: {@code 0m, 0m}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param pos_in
-	 *            Sets the position of the {@link B2DBody}
+	 *            sets the position of the {@link B2DBody}
 	 */
 	public void setPosition(Vec2 pos_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
@@ -346,14 +350,16 @@ public class B2DBody {
 	}
 
 	/**
-	 * Takes a {@code float} and sets the rotation of the {@link B2DBody}. The
-	 * rotation is given in radiant counterclockwise around the centre point.
+	 * Takes a {@code float} and sets the rotation of this {@link B2DBody} instance.
+	 * The rotation is given in radiant counterclockwise around the centre point.
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * Default value: {@code 0 rad}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param rad_in
-	 *            Sets the rotation of the {@link B2DBody}
+	 *            sets the rotation of the {@link B2DBody} in radiant
 	 */
 	public void setAngle(float rad_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
@@ -361,14 +367,16 @@ public class B2DBody {
 	}
 	
 	/**
-	 * Takes a {@link Vec2} and sets the velocity of the {@link B2DBody}. The
-	 * velocity is given in metres/second.
+	 * Takes a {@link Vec2} and sets the velocity of this {@link B2DBody} instance.
+	 * The velocity is given in metres/second.
 	 * <p>
-	 * <i>This method can only be accessed before this {@code B2DBody} instance
-	 * has been created with {@code createBody()}</i>
+	 * Default value: {@code 0 m/s, 0m/s}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param vel_in
-	 *            Sets the velocity of the {@link B2DBody}
+	 *            sets the velocity of the {@link B2DBody}
 	 * 
 	 */
 	public void setLinearVelocity (Vec2 vel_in) {
@@ -377,14 +385,16 @@ public class B2DBody {
 	}
 	
 	/**
-	 * Takes a {@code float} and sets the angular velocity of the {@link B2DBody}.
-	 * The velocity is given in radiant/second counterclockwise.
+	 * Takes a {@code float} and sets the angular velocity of this {@link B2DBody}
+	 * instance. The velocity is given in radiant/second counterclockwise.
+	 * <p>
+	 * Default value: {@code 0.0 rad/s}
 	 * <p>
 	 * <i>This method can only be accessed before this {@code B2DBody} instance has
 	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param vel_in
-	 *            Sets the angular velocity of the {@link B2DBody}
+	 *            sets the angular velocity of the {@link B2DBody}
 	 * 
 	 */
 	public void setAngularVelocity (float vel_in) {
@@ -393,16 +403,19 @@ public class B2DBody {
 	}
 	
 	/**
-	 * Sets the {@code bulletProperty} of the {@link B2DBody} to the given value. It
-	 * increases number of iterations when calculating its movements and prevents
-	 * those bodies from passing through one another. This is recommended for
+	 * Takes a {@code boolean} and sets the {@code bulletProperty} of this
+	 * {@link B2DBody} instance to the given value. It increases number of
+	 * iterations when calculating its movements and prevents those bodies from
+	 * passing through one another when set to {@code true}. This is recommended for
 	 * fast-moving objects.
+	 * <p>
+	 * Default value: {@code false}
 	 * <p>
 	 * <i>This method can only be accessed before this {@code B2DBody} instance has
 	 * been created with {@code createBody()}</i>
 	 * 
 	 * @param bullet_in
-	 *            Sets the {@code bulletProperty} of the {@link B2DBody}
+	 *            sets the {@code bulletProperty} of the {@link B2DBody}
 	 */
 	public void setBullet (boolean bullet_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
@@ -411,21 +424,73 @@ public class B2DBody {
 	
 	//		FIXTURE DEF
 	
+	/**
+	 * Takes a {@code float} and sets the density of this {@link B2DBody} instance.
+	 * A higher value makes the {@code B2DBody} heavier. The overall weight is
+	 * calculated by multiplying the density with the area of the shape of the
+	 * {@code B2DBody}.
+	 * <p>
+	 * Default value: {@code 1.0f}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param dens_in
+	 *            sets the {@code density} of the {@link B2DBody}
+	 */
 	public void setDensity(float dens_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.density = dens_in;
 	}
 	
+	/**
+	 * Takes a {@code float} and sets the {@code friction} of this {@link B2DBody}
+	 * instance to the value given. A higher value increases the fiction between
+	 * this {@code B2DBody} and its collision partner.
+	 * <p>
+	 * Default value: {@code 0.3f}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param fric_in
+	 *            sets the {@code friction} of the {@link B2DBody}
+	 */
 	public void setFriction(float fric_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.friction = fric_in;
 	}
 
+	/**
+	 * Takes a {@code float} and sets the resitiution of this {@link B2DBody}
+	 * instance. By giving a higher value the bounciness of the {@code B2DBody}
+	 * increases. For perfectly elastic collisions let this value be
+	 * {@code 0.9875f}. Values below this are partial-elastic collisions, values
+	 * above this make the collision "over-elastic".
+	 * <p>
+	 * Default value: {@code 0.5f}
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param rest_in
+	 *            value between 0.0f and 1.0f defines the bounciness of the {@link B2DBody}
+	 */
 	public void setRestitution(float rest_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.restitution = rest_in;
 	}
 	
+	/**
+	 * Takes an {@code int} and assigns this {@link B2DBody} instance to a group.
+	 * Only instances with the same group index are interacting with each other.
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param ind_in
+	 *            assigns this {@link B2DBody} instance to a group.
+	 */
 	public void setGroupIndex(int ind_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		fixtureDef.filter.groupIndex = ind_in;
@@ -435,11 +500,55 @@ public class B2DBody {
 	//************************************************
 	//*		SHAPE TEMPLATES
 	//************************************************
-	
+
+	/**
+	 * Simple setup-method for a rectangle. Takes all the information necessary and
+	 * handles all the trouble for you. The position and dimensions are handed over
+	 * as individual {@code float} values, {@code x} part followed by the {@code y}
+	 * part. All the values can still be modified with the set-value-methods. <br>
+	 * {@code dim_x} and {@code dim_y} specify <strong>half</strong> of the
+	 * rectangles width and height (in metres).
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param pos_x
+	 *            sets the {@code x} position of the {@link B2DBody} rectangle
+	 * @param pos_y
+	 *            sets the {@code y} position of the {@link B2DBody} rectangle
+	 * @param dim_x
+	 *            sets half the height of the {@link B2DBody} rectangle
+	 * @param dim_y
+	 *            sets half the width of the {@link B2DBody} rectangle
+	 * @param rad_in
+	 *            sets the rotation of the {@link B2DBody}
+	 * @param bodyType_in
+	 *            specifies the {@link BodyType} of the {@link B2DBody}
+	 */
 	public void setUpRect(float pos_x, float pos_y, float dim_x, float dim_y, float rad_in, BodyType bodyType_in) {
 		setUpRect(new Vec2(pos_x, pos_y), new Vec2(dim_x, dim_y), rad_in, bodyType_in);
 	}
 	
+	/**
+	 * Simple setup-method for a rectangle. Takes all the information necessary and
+	 * handles all the trouble for you. The position and dimensions are handed over
+	 * as {@link Vec2} vectors. All the values can still be modified with the
+	 * set-value-methods. <br>
+	 * The {@code x} and the {@code y} parts of {@code dim_in} specify
+	 * <strong>half</strong> of the rectangles width and height (in metres).
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param pos_in
+	 *            sets the centre position of the {@link B2DBody} rectangle
+	 * @param dim_in
+	 *            sets the radii of the {@link B2DBody} rectangle
+	 * @param rad_in
+	 *            sets the rotation of the {@link B2DBody} in radiant
+	 * @param bodyType_in
+	 *            specifies the {@link BodyType} of the {@link B2DBody}
+	 */
 	public void setUpRect(Vec2 pos_in, Vec2 dim_in, float rad_in, BodyType bodyType_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		setPosition(pos_in);
@@ -448,10 +557,48 @@ public class B2DBody {
 		setRectShape(dim_in);
 	}
 	
+	/**
+	 * Simple setup-method for a circle. Takes all the information necessary and
+	 * handles all the trouble for you. The position is handed over as individual
+	 * {@code float} values, {@code x} part followed by the {@code y} part. All the
+	 * values can still be modified with the set-value-methods.
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param pos_x
+	 *            sets the {@code x} position of the {@link B2DBody} circle
+	 * @param pos_y
+	 *            sets the {@code y} position of the {@link B2DBody} circle
+	 * @param dim
+	 *            sets the radius of the {@link B2DBody} circle
+	 * @param rad_in
+	 *            sets the rotation of the {@link B2DBody}
+	 * @param bodyType_in
+	 *            specifies the {@link BodyType} of the {@link B2DBody}
+	 */
 	public void setUpCircle(float pos_x, float pos_y, float dim, float rad_in, BodyType bodyType_in) {
 		setUpCircle(new Vec2(pos_x, pos_y), dim, rad_in, bodyType_in);
 	}
 	
+	/**
+	 * Simple setup-method for a circle. Takes all the information necessary and
+	 * handles all the trouble for you. The position is handed over as a
+	 * {@link Vec2} vector. All the values can still be modified with the
+	 * set-value-methods.
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param pos_in
+	 *            sets the centre position of the {@link B2DBody} circle
+	 * @param dim_in
+	 *            sets the radius of the {@link B2DBody} circle
+	 * @param rad_in
+	 *            sets the rotation of the {@link B2DBody}
+	 * @param bodyType_in
+	 *            specifies the {@link BodyType} of the {@link B2DBody}
+	 */
 	public void setUpCircle(Vec2 pos_in, float dim_in, float rad_in, BodyType bodyType_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		setPosition(pos_in);
@@ -460,6 +607,17 @@ public class B2DBody {
 		setCircleShape(dim_in);
 	}
 	
+	/**
+	 * Simple setup for only a point without a body. Takes only a position
+	 * {@link Vec2} vector. Default {@link BodyType} is {@code STATIC}, so it can be
+	 * used as an anchor.
+	 * <p>
+	 * <i>This method can only be accessed before this {@code B2DBody} instance has
+	 * been created with {@code createBody()}</i>
+	 * 
+	 * @param pos_in
+	 *            sets the position of the {@link B2DBody} point
+	 */
 	public void setUpPoint(Vec2 pos_in) {
 		if (isCreated) {System.err.println("B2DBody already created!"); return;}
 		setPosition(pos_in);
@@ -471,10 +629,29 @@ public class B2DBody {
 	//*		SET DRAW PORPERTIES
 	//************************************************	
 	
+	/**
+	 * Takes a {@link Color} and makes it the rendering colour for this
+	 * {@link B2DBody} instance. The colour is applied to both the frame and the
+	 * filling. This property is only used by the render-class.
+	 * <p>
+	 * Default value: {@code BLUE}
+	 * 
+	 * @param c_in
+	 *            sets the rendering colour for the {@link B2DBody}
+	 */
 	public void setColor(Color c_in) {
 		drawColor = c_in;
 	}
 	
+	/**
+	 * Takes a {@code boolean} which tells the renderer-class, whether to fill this
+	 * {@link B2DBody} instance when rendering.
+	 * <p>
+	 * Default value: {@code false}
+	 * 
+	 * @param fill_in
+	 *            sets the fill-property of the {@link B2DBody}
+	 */
 	public void setFill(boolean fill_in) {
 		drawFill = fill_in;
 	}
@@ -486,6 +663,21 @@ public class B2DBody {
 	//*		CREATE BODY (locks set-functions)
 	//************************************************	
 	
+	/**
+	 * Initialises this {@link B2DBody} with the previously set values in the given
+	 * {@link World}. Once a had been created, it is <strong>not</strong> possible
+	 * to use the setup-methods make any changes. The {@code B2DBody} instance is
+	 * now being moved according to the physics in the {@link World}.
+	 * Scanner-methods are enabled by calling this method to get position and
+	 * rotation values of the {@code B2DBody} instance.
+	 * <p>
+	 * <strong>Make sure you have set all values before calling this
+	 * method!</strong>
+	 * 
+	 * @param world
+	 *            reference to the {@link World} in which this {@link B2DBody}
+	 *            instance should be created in.
+	 */
 	public void createBody(World world) {
 		if (shapeType == ShapeType.POLYGON || shapeType == ShapeType.RECT) {
 			fixtureDef.shape = polygonShape;			
@@ -509,7 +701,11 @@ public class B2DBody {
 	}
 	
 	
+	/**
+	 * Removes all references to this {@link B2DBody} instance from the {@link World} it had been created in.
+	 */
 	public void destroy() {
+		if (!isCreated) {System.err.println("B2DBody not created!"); return;}
 		body.getWorld().destroyBody(body);
 	}
 	
@@ -518,10 +714,26 @@ public class B2DBody {
 	//*		GET VALUES
 	//************************************************	
 	
+	/**
+	 * Gives the status of this {@link B2DBody} instance. If {@code true} the
+	 * {@code B2DBody} had already been created in a {@link World} and is (probably)
+	 * being calculated, scanning-methods are enabled- When {@code false} the
+	 * properties of this {@code B2DBody} instance can still be modified and it has
+	 * yet to created with {@code createBody()}
+	 * 
+	 * @return {@link B2DBody} is initialised in a {@link World}
+	 */
 	public boolean isCreated() {
 		return isCreated;
 	}
 	
+	/**
+	 * Gives a {@link Vec2} vector of the current position of this
+	 * {@link B2DBody} instance.
+	 * 
+	 * @return the current position vector of the {@link B2DBody}
+	 * 
+	 */
 	public Vec2 getPos() {
 		if (!isCreated) {
 			return bodyDef.getPosition();
@@ -529,33 +741,76 @@ public class B2DBody {
 		return body.getPosition();
 	}
 	
+	/**
+	 * Gives a {@link Vec2} vector of the dimensions of this {@link B2DBody}
+	 * instance.
+	 * 
+	 * @return the dimension vector of the {@link B2DBody}
+	 */
 	public Vec2 getDim() {
 		if (!isCreated) {System.err.println("B2DBody not created!"); return null;}
 		return dimensions;
 	}
 	
+	/**
+	 * Gives the {@code float} of the current rotation of this {@link B2DBody}
+	 * instance. The rotation is given in radiant counterclockwise.
+	 * 
+	 * @return the current rotation of the {@link B2DBody}
+	 */
 	public float getAngle() {
 		if (!isCreated) {System.err.println("B2DBody not created!"); return 0.0f;}
 		return body.getAngle();
 	}
 	
+	/**
+	 * Gives the {@link ShapeType} enum of this {@link B2DBody} instance. It used
+	 * for rendering purposes.
+	 * 
+	 * @return the {@link ShapeType} of this {@link B2DBody}
+	 */
 	public ShapeType getShapeType () {
 		if (!isCreated) {System.err.println("B2DBody not created!"); return null;}
 		return shapeType;
 	}
 	
+	/**
+	 * Gives the {@link Color} value of this {@link B2DBody} instance. It used
+	 * for rendering purposes.
+	 * 
+	 * @return the {@link Color} of this {@link B2DBody}
+	 */
 	public Color getColor() {
 		return drawColor;
 	}
 	
+	/**
+	 * Gives a reference of the {@link Body} of this {@link B2DBody} instance. Only
+	 * use this method if you are aware of what you are doing.
+	 * 
+	 * @return
+	 * a reference of the {@link Body} instance of the {@link B2DBody}
+	 */
 	public Body getBody() {
 		return body;
 	}
 	
+	/**
+	 * Gives the {@code drawFill} of this {@link B2DBody} instance. It returns
+	 * {@code true} when the {@link B2DBody} should be rendered with a filling.
+	 * 
+	 * @return {@code drawFill boolean} 
+	 */
 	public boolean getFill() {
 		return drawFill;
 	}
 	
+	/**
+	 * Returns the {@link String} given during initialisation of this
+	 * {@link B2DBody} instance.
+	 * 
+	 * @return name of the {@link B2DBody}
+	 */
 	public String getName() {
 		return name;
 	}
