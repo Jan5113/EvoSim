@@ -77,14 +77,14 @@ public class Screen extends Canvas {
 	private void drawCuboid(B2DBody cube) {
 		drawPxRect(camera.coordWorldToPixels(cube.getPos()),
 				camera.scalarWorldToPixels(cube.getDim()),
-				B2DCamera.radToDeg(-cube.getAngle()),
+				(float) Math.toDegrees(-cube.getAngle()),
 				cube.getColor(), cube.getFill());
 	}
 
 	private void drawSphere(B2DBody sphere) {
 		Vec2 pos = camera.coordWorldToPixels(sphere.getPos());
 		float rad = camera.scalarWorldToPixels(sphere.getDim().x);
-		float angl = B2DCamera.radToDeg(-sphere.getAngle());
+		float angl = (float) Math.toDegrees(-sphere.getAngle());
 		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
 	}
 	
