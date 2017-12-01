@@ -282,15 +282,40 @@ public class B2DCamera {
 		return B2D_vec.mul(zoom);
 	}
 	
+	/**
+	 * Returns the current zoom value of this {@link B2DCamera} instance. The value
+	 * represents the number of screen pixels equivalent to one metre in the Box2D
+	 * World, so if zoomed out, this method returns a small value and the other way
+	 * around.
+	 * 
+	 * @return amount of pixels equivalent to one Box2D World metre
+	 */
 	public float getZoom() {
 		return zoom;
 	}
 	
+	/**
+	 * Sets the absolute zoom value. The value given defines how many screen pixels
+	 * are equivalent to one metre in the Box2D World, so a smaller value zooms out
+	 * and a bigger value zooms into the scene.
+	 * 
+	 * @param zoom_in
+	 *            sets the zoom of this {@link B2DCamera} instance
+	 */
 	public void setZoom(float zoom_in) {
 		if (zoom_in <= maxZoomOut) zoom_in = maxZoomOut;
 		zoom = zoom_in;
 	}
 	
+	/**
+	 * Zooms into or out of the scene by the {@code magnification} factor. A
+	 * {@code magnification} value under {@code 1.0f} zooms out and a
+	 * {@code magnification} value over {@code 1.0f} zooms into the scene. The
+	 * centre of the zoom is always the centre of the view.
+	 * 
+	 * @param magnification
+	 *            changes the zoom of this {@link B2DCamera} instance by its factor
+	 */
 	public void zoomCenter(float magnification) {
 		if ((zoom == maxZoomOut && magnification < 1.0f) || (zoom == maxZoomIn && magnification > 1.0f)) return;
 		
@@ -299,14 +324,28 @@ public class B2DCamera {
 		else zoom *= magnification;
 	}
 	
+	/**
+	 * Zooms into or out of the scene by the {@code magnification} factor given
+	 * while keeping the Box2D point given at the exact same location on screen. A
+	 * {@code magnification} value under {@code 1.0f} zooms out and a
+	 * {@code magnification} value over {@code 1.0f} zooms into the scene. The
+	 * coordinate given is the centre of the zoom and is usually set to the cursor's
+	 * position. If {@code respectLockDirs} is {@code true} the zoom process only
+	 * centres the not-locked directions of this {@link B2DCamera} instance.
+	 * 
+	 * @param magnification
+	 *            changes the zoom of this {@link B2DCamera} instance by its factor
+	 * @param B2DCenterPos
+	 *            defines the centre of the zoom (in Box2D coordinates)
+	 * @param respectLockDirs
+	 *            centres the zoom only in the unlocked directions if {@code true}
+	 */
 	public void zoomInPoint(float magnification, Vec2 B2DCenterPos, boolean respectLockDirs) {
 		if ((zoom == maxZoomOut && magnification < 1.0f) || (zoom == maxZoomIn && magnification > 1.0f)) return;
 		
 		if (magnification * zoom <= maxZoomOut) zoom = maxZoomOut;
 		else if (magnification * zoom >= maxZoomIn) zoom = maxZoomIn;
 		else zoom *= magnification;
-		
-		
 		
 		if (respectLockDirs) {
 			if (followXEnabled) {
@@ -322,18 +361,45 @@ public class B2DCamera {
 		
 	}
 	
+	/**
+	 * Returns the current position of this {@link B2DCamera} instance. The
+	 * coordinates are given in Box2D coordinates as a {@link Vec2} vector.
+	 * 
+	 * @return the location of this {@code B2DCamera} instance
+	 */
 	public Vec2 getPos() {
 		return posCam;
 	}
 	
+	/**
+	 * Takes Box2D World coordinates as a {@link Vec2} vector and sets the centre of
+	 * this {@link B2DCamera} instance.
+	 * 
+	 * @param pos_in
+	 *            sets the centre position of this {@code B2DCamera} instance
+	 */
 	public void setPos(Vec2 pos_in) {
 		posCam = pos_in;
 	}
 	
+	/**
+	 * Takes Box2D World {@link Vec2} vector and moves this {@link B2DCamera}
+	 * instance by this vector.
+	 * 
+	 * 
+	 * @param pos_in
+	 *            moves this {@code B2DCamera} instance
+	 */
 	public void addPos(Vec2 pos_in) {
 		posCam.addLocal(pos_in);
 	}
 	
+	/**
+	 * Takes a pixel {@link Vec2} vector and sets the screen to a new resolution.
+	 * 
+	 * @param res_in
+	 *            sets the resolution of this {@link B2DCamera} instance
+	 */
 	public void setScreenRes(Vec2 res_in) {
 		resCam = res_in;
 	}
@@ -342,32 +408,76 @@ public class B2DCamera {
 	//*		FOLLOW CAM
 	//************************************************
 	
+	/**
+	 * Enables the follow feature for both axis. The {@link B2DCamera} tracks a
+	 * given coordinate or object in all directions.
+	 */
 	public void enableFollow() {
 		followXEnabled = true;
 		followYEnabled = true;
 	}
-	
+
+	/**
+	 * Enables the follow feature for the x-axis. The {@link B2DCamera} only tracks
+	 * a given coordinate or object in the x-direction. This method does not disable
+	 * the y-follow.
+	 */
 	public void enableFollowX() {
 		followXEnabled = true;
 	}
-	
+
+	/**
+	 * Enables the follow feature for the y-axis. The {@link B2DCamera} only tracks
+	 * a given coordinate or object in the y-direction. This method does not disable
+	 * the x-follow.
+	 */
 	public void enableFollowY() {
 		followYEnabled = true;
 	}
 	
+	/**
+	 * Disables the follow feature for both axis. The {@link B2DCamera} does not
+	 * track any given coordinate or object.
+	 */
 	public void disableFollow() {
 		followXEnabled = false;
 		followYEnabled = false;
 	}
-	
+
+	/**
+	 * Disables the follow feature for the x-axis. The {@link B2DCamera} does not
+	 * track any given coordinate or object in the x-axis. This method does not
+	 * affect the y-axis.
+	 */
 	public boolean followXEnabled() {
 		return followXEnabled;
 	}
-	
+
+	/**
+	 * Disables the follow feature for the y-axis. The {@link B2DCamera} does not
+	 * track any given coordinate or object in the y-axis. This method does not
+	 * affect the x-axis.
+	 */
 	public boolean followYEnabled() {
 		return followYEnabled;
 	}
 	
+	/**
+	 * This method has to be called very frame with a Box2D-World coordinate this
+	 * {@link B2DCamera} instance has to follow. The time since the last frame
+	 * {@code dt} is used to calculate the acceleration and speed of this
+	 * {@code B2DCamera} instance. To adjust for the faster movement when
+	 * fast-forwarding, pass the current {@code playBackSpeed} to this method. If
+	 * the follow had been restricted to an axis the camera will only move along the
+	 * specified axis.
+	 * 
+	 * @param dt
+	 *            delta time, time in-between frames
+	 * @param playBackSpeed
+	 *            current speed of the simulation
+	 * @param B2D_target
+	 *            coordinate this {@code B2DCamera} instance has to follow
+	 */
 	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target) {
 		if (B2D_target == null) return;
 		followSpeed.addLocal(B2D_target.sub(posCam).mul(followMaxAccel).mul(dt * playBackSpeed)).mulLocal((float) Math.pow(followResistance, playBackSpeed));
@@ -375,6 +485,14 @@ public class B2DCamera {
 		if (followYEnabled) addPos(new Vec2(0.0f, followSpeed.y * dt * playBackSpeed));
 	}
 	
+	/**
+	 * Takes a Box2D World coordinate and moves this {@link B2DCamera} instance
+	 * instantly to the target point. If the follow had been restricted to an axis
+	 * the camera will only move along the specified axis.
+	 * 
+	 * @param B2D_target
+	 *            coordinate this {@code B2DCamera} instance jumps to
+	 */
 	public void quickFollow(Vec2 B2D_target) {
 		if (B2D_target == null) return;
 		followSpeed = new Vec2(0,0);
@@ -382,12 +500,21 @@ public class B2DCamera {
 		if (followYEnabled) addPos(new Vec2(0.0f, B2D_target.sub(posCam).y));		
 	}
 	
+
+	/**
+	 * Resets the position and zoom of this {@link B2DCamera} instance to the values
+	 * it had been initialised with.
+	 */
 	public void resetPosZoom() {
 		resetPos();
 		zoom = zoomStart;
 		
 	}
-	
+
+	/**
+	 * Resets only the position of this {@link B2DCamera} instance to the
+	 * coordinates it had been initialised at.
+	 */
 	public void resetPos() {
 		followSpeed = new Vec2(0,0);
 		posCam = posCamStart.clone();
