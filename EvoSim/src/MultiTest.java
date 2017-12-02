@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 
 
 /**
@@ -15,11 +13,6 @@ import org.jbox2d.dynamics.World;
  * Contains {@link TestThread} as a hidden inner class.
  */
 public class MultiTest{
-	/**
-	 * {@code gravity} holds the {@link Vec2} for the gravitational acceleration. It
-	 * is used to initialise the {@link World} inside a {@link MultiTest} instance.
-	 */
-	private final Vec2 gravity;
 	/**
 	 * {@code pop} is a reference to the {@link Population}. {@link MultiTest} uses
 	 * this reference to load the {@link Creature} instances in the queue.
@@ -55,9 +48,8 @@ public class MultiTest{
 	 *            Reference to the the main {@link Population}
 	 * 
 	 */
-	public MultiTest(int threads, Vec2 gravity_in, Population pop_in) {
+	public MultiTest(int threads, Population pop_in) {
 		pop = pop_in;
-		gravity = gravity_in;
 		testArray = new TestThread[threads];
 		
 		for (int i = 0; i < testArray.length; i++) {
@@ -136,7 +128,7 @@ public class MultiTest{
 		public TestThread(String threadName) {
 			this.threadName = threadName;
 			System.out.println("Creating " +  this.threadName );
-			test = new Test(gravity, (TestWrapper) this, true);
+			test = new Test(pop.getTestGravitation(), (TestWrapper) this, true);
 		}
 
 		public void run() {

@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.jbox2d.common.Vec2;
+
 public class Population {
 	private int populationSize;
 	private int generation = 1;
@@ -8,9 +10,11 @@ public class Population {
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	private boolean popInitialised = false;
+	private final Vec2 testGrav;
 	
 	
-	public Population() {
+	public Population(Vec2 testGrav_in) {
+		testGrav = testGrav_in.clone();
 	}
 	
 	public void CreateRandPopulation (int popSize_in) {
@@ -111,6 +115,10 @@ public class Population {
 			}
 		}
 		return null;
+	}
+	
+	public Vec2 getTestGravitation() {
+		return testGrav.clone();
 	}
 	
 }
