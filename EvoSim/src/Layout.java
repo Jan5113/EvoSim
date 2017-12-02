@@ -3,6 +3,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public class Layout {
 	private static Insets insetsDef = new Insets(15, 15, 15, 15);
@@ -39,5 +40,9 @@ public class Layout {
 
 	public static void labelTitle(Label lbl) {
 		lbl.setStyle("-fx-font-size: 21px;");
+	}
+	
+	public static Color getSkycolor() {
+		return Color.color(0.85, 0.90, 0.95);
 	}
 }
