@@ -303,7 +303,6 @@ public class B2DCamera {
 	 *            sets the zoom of this {@link B2DCamera} instance
 	 */
 	public void setZoom(float zoom_in) {
-		if (zoom_in <= maxZoomOut) zoom_in = maxZoomOut;
 		zoom = zoom_in;
 	}
 	
