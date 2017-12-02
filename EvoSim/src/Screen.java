@@ -13,8 +13,9 @@ public class Screen extends Canvas {
 	private boolean gridEnabled = true;
 	public B2DCamera camera;
 	private boolean markersEnabled = false;
-	private boolean infoEnabled = false;
+	private int infoEnabled = 0;
 	private String infoString = "";
+	private boolean scrollZoomEnabled = true;
 	
 	private boolean viewLock = true;
 	
@@ -47,7 +48,7 @@ public class Screen extends Canvas {
 		gc.setFill(col_background);
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (gridEnabled) drawGrid();
-		if (infoEnabled) drawInfo();
+		if (infoEnabled != 0) drawInfo();
 		if (markersEnabled) drawMarkers();
 	}
 	
@@ -203,26 +204,35 @@ public class Screen extends Canvas {
 //************************************************
 
 	public void enableInfo() {
-		infoEnabled = true;
+		infoEnabled = 1;
 	}
 	
 	public void disableInfo() {
-		infoEnabled = false;
+		infoEnabled = 0;
+	}
+	
+	public void enableCompactInfo() {
+		infoEnabled = 2;
 	}
 	
 	public void setInfoString(String text) {
 		infoString = text;
 	}
 	
-	public boolean infoEnabled() {
+	public int infoEnabled() {
 		return infoEnabled;
 	}
 	
 	private void drawInfo() {
 		gc.save();
-		gc.setFont(new Font(15));
 		gc.setFill(Color.BLACK);
-		gc.fillText(infoString, 10, 25);
+		if (infoEnabled == 2) {
+			gc.setFont(new Font(12));
+			gc.fillText(infoString, 8, 20);
+		} else {
+			gc.setFont(new Font(15));	
+			gc.fillText(infoString, 10, 25);		
+		}
 		gc.restore();
 	}
 	
@@ -231,15 +241,15 @@ public class Screen extends Canvas {
 //************************************************
 	
 	public void enableGrid() {
-		markersEnabled = true;
+		gridEnabled = true;
 	}
 	
 	public void disableGird() {
-		infoEnabled = false;
+		gridEnabled = false;
 	}
 	
 	public boolean gridEnabled() {
-		return infoEnabled;
+		return gridEnabled;
 	}
 	
 	private void drawGrid() {
@@ -263,11 +273,11 @@ public class Screen extends Canvas {
 	}
 	
 	public void disableMarkers() {
-		infoEnabled = false;
+		markersEnabled = false;
 	}
 	
 	public boolean markersEnabled() {
-		return infoEnabled;
+		return markersEnabled;
 	}
 	
 	private void drawMarkers() {
@@ -289,11 +299,20 @@ public class Screen extends Canvas {
 //************************************************	
 	
 	public void scrollEvent(ScrollEvent se) {
+		if (!scrollZoomEnabled) return;
 		if (se.getDeltaY() > 0 ) {
 			camera.zoomInPoint(1.25f, camera.coordPixelsToWorld(se.getX(), se.getY()), viewLock);
 		} else {
 			camera.zoomInPoint(0.8f, camera.coordPixelsToWorld(se.getX(), se.getY()), viewLock);
 		}
+	}
+	
+	public void enableScrollZoom() {
+		scrollZoomEnabled = true;
+	}
+	
+	public void disableScrollZoom() {
+		scrollZoomEnabled = false;
 	}
 	
 	public void dragCameraStarted(MouseEvent me) {
@@ -311,13 +330,21 @@ public class Screen extends Canvas {
 		dragging = false;
 	}
 	
+	public boolean isCameraDragged() {
+		return dragging;
+	}
 	
-	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target, boolean running) {
-		if (running && viewLock) camera.refreshFollow(dt, playBackSpeed, B2D_target);
+	
+	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target, Vec2 B2D_offset, boolean running) {
+		if (running && viewLock) camera.refreshFollow(dt, playBackSpeed, B2D_target.add(B2D_offset));
 	}
 	
 	public void toggleViewLock() {
 		viewLock = !viewLock;
+	}
+	
+	public void enableViewLock() {
+		viewLock = true;
 	}
 	
 	public void toggleViewLock(Vec2 B2D_target, boolean running) {
