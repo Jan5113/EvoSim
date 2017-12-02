@@ -7,11 +7,13 @@ public class TestScreen extends Screen implements TestWrapper{
 	private boolean running = false;
 	private final Population pop;
 	private boolean autoGetNext = false;
+	private boolean autoRepeat = false;
+	private Vec2 followOffset = new Vec2(0,0);
 
-	public TestScreen(Vec2 gravity_in, double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
+	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(resX, resY, scale_in, pos_in);
-		test = new Test(gravity_in, (TestWrapper) this, false);
 		pop = pop_in;
+		test = new Test(pop.getTestGravitation(), (TestWrapper) this, false);
 		
 		camera.enableFollowX();
 	}
@@ -22,9 +24,16 @@ public class TestScreen extends Screen implements TestWrapper{
 			return;
 		}
 		
+		if (test.getCreature() != null) {
+			abortTest();
+		}
 		test.setCreature(creature);
 		test.startTest();
 		running = true;
+	}
+
+	public void startSingleTest(int creature_index) {
+		startSingleTest(pop.getCreatureByIndex(creature_index));
 	}
 
 	public void refresh(float dt) {
@@ -39,9 +48,9 @@ public class TestScreen extends Screen implements TestWrapper{
 		
 		if (running) test.step(dt, playBackSpeed);
 		
-		if (infoEnabled()) getInfoString();
+		if (infoEnabled() != 0) getInfoString();
 		
-		refreshFollow(dt, playBackSpeed, test.getBallPos(), running);
+		refreshFollow(dt, playBackSpeed, test.getBallPos(), followOffset, running);
 	}
 
 	public void manageCommand(ControlFuncTest cf) {
@@ -58,6 +67,12 @@ public class TestScreen extends Screen implements TestWrapper{
 			}
 			else
 				System.out.println("PAUSE");
+			break;
+		case STOP:
+			running = false;
+			break;
+		case START:
+			running = true;
 			break;
 		case FAST:
 			doublePlayBackSpeed();
@@ -102,6 +117,13 @@ public class TestScreen extends Screen implements TestWrapper{
 				startSingleTest(pop.getCurrent());
 			}
 		}
+		
+		if (autoRepeat) {
+			Creature tempCret = test.getCreature();
+			test.reset();
+			resetView();
+			startSingleTest(tempCret);
+		}
 	}
 
 	private void halfPlayBackSpeed() {
@@ -122,13 +144,24 @@ public class TestScreen extends Screen implements TestWrapper{
 	
 	public void getInfoString() {
 		String infoText = "";
-		infoText += "Generation " + pop.getGen() + "\n";
-		if (hasCreature()) {
-			infoText += "Creature ID " + test.getCreature().id + "\n";
-			if (test.getCreature().fitnessEvaulated()) {
-				infoText += "Fitness: " + Math.round(test.getCreature().getFitness()*10.0f)/10.0f + "m";				
-			} else {
-				infoText += "Fitness: -";					
+		if (infoEnabled() == 1) {
+			infoText += "Generation " + pop.getGen() + "\n";
+			if (hasCreature()) {
+				infoText += "Creature ID " + test.getCreature().id + "\n";
+				if (test.getCreature().fitnessEvaulated()) {
+					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
+				} else {
+					infoText += "Fitness: -";
+				}
+			}
+		} else if (infoEnabled() == 2){
+			if (hasCreature()) {
+				infoText += "Creature ID " + test.getCreature().id + "\n";
+				if (test.getCreature().fitnessEvaulated()) {
+					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
+				} else {
+					infoText += "Fitness: -";
+				}
 			}
 		}
 		setInfoString(infoText);
@@ -146,8 +179,20 @@ public class TestScreen extends Screen implements TestWrapper{
 		autoGetNext = false;
 	}
 	
+	public void enableAutoRepeat() {
+		autoRepeat = true;
+	}
+	
+	public void disableAutoRepeat() {
+		autoRepeat = false;
+	}
+	
 	public void abortTest() {
 		test.reset();
+	}
+	
+	public void setFollowOffset(Vec2 offset_in) {
+		followOffset = offset_in.clone();
 	}
 
 	// private Test test;
