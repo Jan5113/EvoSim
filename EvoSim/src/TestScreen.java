@@ -122,6 +122,7 @@ public class TestScreen extends Screen implements TestWrapper{
 			Creature tempCret = test.getCreature();
 			test.reset();
 			resetView();
+			enableViewLock();
 			startSingleTest(tempCret);
 		}
 	}

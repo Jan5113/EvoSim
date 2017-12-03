@@ -29,13 +29,13 @@ public class PopScreen extends ScrollPane{
 			testScreenArr[i].setFollowOffset(new Vec2(-1, 0));
 			testScreenArr[i].enableCompactInfo();
 			testScreenArr[i].disableScrollZoom();
-			TilePane.setMargin(testScreenArr[i], new Insets(4));
 			tp_screens.getChildren().add(testScreenArr[i]);
 		}
 		tp_screens.setVgap(10);
 		tp_screens.setHgap(10);
 		tp_screens.setPrefColumns(3);
 		
+		this.setPadding(new Insets(13));
 		this.setPrefWidth(520);
 		this.setContent(tp_screens);
 		this.setStyle("-fx-font-size: 18px;"

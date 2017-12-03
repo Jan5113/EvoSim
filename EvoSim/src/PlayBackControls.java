@@ -66,24 +66,24 @@ public class PlayBackControls extends BorderPane {
 		Layout.gridPane(gp_controls);
 
 		Layout.labelTitle(lbl_playback);
+		Layout.innterTitleMargin(lbl_playback);
 		Layout.wideButton(btn_playpause);
 		Layout.TwoThirdsButton(btn_fast);
 		Layout.TwoThirdsButton(btn_slow);
 		Layout.TwoThirdsButton(btn_1x);
 		Layout.button(btn_toggleView);
-		Layout.button(btn_resetView);
-		
+		Layout.button(btn_resetView);		
 		Layout.button(btn_test);
 		
-		gp_controls.add(lbl_playback, 0, 0, 3, 1);
-		gp_controls.add(btn_playpause, 0, 1, 3, 1);
-		gp_controls.add(btn_fast, 2, 2);
-		gp_controls.add(btn_slow, 0, 2);
-		gp_controls.add(btn_1x, 1,2);
-		gp_controls.add(btn_toggleView, 3,1);
-		gp_controls.add(btn_resetView, 3,2);
+		this.setTop(lbl_playback);
+		gp_controls.add(btn_playpause, 0, 0, 3, 1);
+		gp_controls.add(btn_fast, 2, 1);
+		gp_controls.add(btn_slow, 0, 1);
+		gp_controls.add(btn_1x, 1,1);
+		gp_controls.add(btn_toggleView, 3,0);
+		gp_controls.add(btn_resetView, 3,1);
 		
-		gp_controls.add(btn_test, 4, 1);
+		gp_controls.add(btn_test, 4, 0);
 		
 
 		btn_playpause.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.PLAYPAUSE));

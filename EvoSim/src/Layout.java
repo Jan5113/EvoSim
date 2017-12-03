@@ -1,4 +1,5 @@
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -6,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 public class Layout {
-	private static Insets insetsDef = new Insets(15, 15, 15, 15);
+	private static Insets insetsDef = new Insets(15, 0, 0, 15);
 	private static float HGap = 10;
 	private static float VGap = 10;
 	private static float prefWidth = 80;
@@ -33,9 +34,6 @@ public class Layout {
 	public static void gridPane(GridPane gp) {
 		gp.setVgap(VGap);
 		gp.setHgap(HGap);
-		BorderPane.setMargin(gp, insetsDef);
-		gp.setStyle("-fx-background-color: #CCCCFF;");
-		gp.setPrefHeight(120);
 	}
 
 	public static void labelTitle(Label lbl) {
@@ -44,5 +42,13 @@ public class Layout {
 	
 	public static Color getSkycolor() {
 		return Color.color(0.85, 0.90, 0.95);
+	}
+	
+	public static void defMargin (Node node) {
+		BorderPane.setMargin(node, insetsDef);
+	}
+	
+	public static void innterTitleMargin (Node node) {
+		BorderPane.setMargin(node, new Insets(0,15,15,0));
 	}
 }
