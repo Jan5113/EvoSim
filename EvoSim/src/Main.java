@@ -115,11 +115,10 @@ public class Main extends Application{
 		mainTestScreen.refresh(dt);
 		bp_control.refresh();
 		popScreen.refresh(dt);
-
 	}
 
 	private void stageResize(Stage s) {
-		mainTestScreen.setScreenSize((int) s.getWidth()-580, (int) s.getHeight()-250); 
+		mainTestScreen.setScreenSize((int) s.getWidth()-280, (int) s.getHeight()-250); 
 	}
 
 }

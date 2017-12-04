@@ -103,7 +103,7 @@ public class TestScreen extends Screen implements TestWrapper{
 	}
 
 	public void taskDone(Creature creature_in, float calcFitness) {
-		System.out.println("ID: " + creature_in.id + " | Fitness:" + calcFitness);
+		System.out.println("ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 		
 		if (!test.getCreature().fitnessEvaulated()) {
 			test.getCreature().setFitness(calcFitness);
@@ -148,7 +148,7 @@ public class TestScreen extends Screen implements TestWrapper{
 		if (infoEnabled() == 1) {
 			infoText += "Generation " + pop.getGen() + "\n";
 			if (hasCreature()) {
-				infoText += "Creature ID " + test.getCreature().id + "\n";
+				infoText += "Creature ID " + test.getCreature().getID() + "\n";
 				if (test.getCreature().fitnessEvaulated()) {
 					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
 				} else {
@@ -157,7 +157,7 @@ public class TestScreen extends Screen implements TestWrapper{
 			}
 		} else if (infoEnabled() == 2){
 			if (hasCreature()) {
-				infoText += "Creature ID " + test.getCreature().id + "\n";
+				infoText += "Creature ID " + test.getCreature().getID() + "\n";
 				if (test.getCreature().fitnessEvaulated()) {
 					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
 				} else {
@@ -194,6 +194,10 @@ public class TestScreen extends Screen implements TestWrapper{
 	
 	public void setFollowOffset(Vec2 offset_in) {
 		followOffset = offset_in.clone();
+	}
+	
+	public int getCreatureID () {
+		return test.getCreature().getID();
 	}
 
 	// private Test test;

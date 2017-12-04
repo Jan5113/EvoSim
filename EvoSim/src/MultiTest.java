@@ -161,7 +161,7 @@ public class MultiTest{
 				test.setCreature(c);
 				test.startTest();
 			} else {
-				System.out.println("Creature ID " + c.id + " already tested!");
+				System.out.println("Creature ID " + c.getID() + " already tested!");
 				if (creatureQueue.size() > 0 && !abort) {
 					setCreature();
 				}
@@ -169,7 +169,7 @@ public class MultiTest{
 		}
 
 		public void taskDone(Creature creature_in, float calcFitness) {
-			System.out.println("Thread " + threadName + " tested creature ID: " + creature_in.id + " | Fitness:" + calcFitness);
+			System.out.println("Thread " + threadName + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 			if (!test.getCreature().fitnessEvaulated()) {
 				test.getCreature().setFitness(calcFitness);
 			}	

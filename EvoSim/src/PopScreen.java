@@ -1,67 +1,129 @@
 import org.jbox2d.common.Vec2;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.ScrollPane;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.BorderPane;
 
-public class PopScreen extends ScrollPane{
-	private TestScreen[] testScreenArr;
+public class PopScreen extends BorderPane {
 	private Population pop;
-	private TilePane tp_screens = new TilePane();
 	private final TestScreen mainTestScreen;
-	
+	private boolean mouseHover = false;
+	private TestScreen previewScreen;
+	private TableView<Creature> tbv_pop = new TableView<Creature>();
+	private IntegerProperty selectedIndex = new SimpleIntegerProperty(-1);
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PopScreen(Population pop_in, TestScreen testScreen_in) {
 		mainTestScreen = testScreen_in;
 		pop = pop_in;
-		testScreenArr = new TestScreen[pop.getPopulationSize()];
-		for (int i = 0; i < testScreenArr.length; i++) {
-			int tileNr = i;
-			testScreenArr[i] = new TestScreen(150, 150, 15, new Vec2(-1,4), pop);
-			testScreenArr[i].addEventHandler(MouseEvent.MOUSE_ENTERED, e -> onMouseEntered(e, tileNr));
-			testScreenArr[i].addEventHandler(MouseEvent.MOUSE_EXITED, e -> onMouseExited(e, tileNr));
-			testScreenArr[i].addEventHandler(MouseEvent.MOUSE_CLICKED, e -> onMouseClicked(e, tileNr));
-			testScreenArr[i].startSingleTest(i);
-			testScreenArr[i].setBackgroundCol(Layout.getSkycolor());
-			testScreenArr[i].manageCommand(ControlFuncTest.STOP);
-			testScreenArr[i].enableAutoRepeat();
-			testScreenArr[i].setFollowOffset(new Vec2(-1, 0));
-			testScreenArr[i].enableCompactInfo();
-			testScreenArr[i].disableScrollZoom();
-			tp_screens.getChildren().add(testScreenArr[i]);
+
+		tbv_pop.setRowFactory(tableView -> {
+			final TableRow<Creature> row = new TableRow<>();
+			row.hoverProperty().addListener((observable) -> {
+
+				final Creature cret = row.getItem();
+				row.setId("" + cret.getID());
+				if (row.isHover() && cret != null) {
+					selectedIndex.set(Integer.parseInt(row.getId()));
+				} else {
+					selectedIndex.set(-1);
+				}
+
+			});
+
+			return row;
+		});
+
+		selectedIndex.addListener(
+				(observable, oldValue, newValue) -> selectedChange(oldValue.intValue(), newValue.intValue()));
+
+		pop.fitnessSetProperty().addListener(new ChangeListener() {
+			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+				selectedIndex.set(-1);
+				tbv_pop.refresh();
+			}
+		});
+
+		TableColumn<Creature, Integer> tclm_creatureID = new TableColumn<>("ID");
+		tclm_creatureID.setPrefWidth(50);
+		tclm_creatureID.setCellValueFactory(new PropertyValueFactory<Creature, Integer>("ID"));
+
+		TableColumn<Creature, Float> tclm_creatureFitness = new TableColumn<>("Fitness");
+		tclm_creatureFitness.setPrefWidth(150);
+		tclm_creatureFitness.setCellValueFactory(new PropertyValueFactory<Creature, Float>("FitnessFloat"));
+
+		ObservableList<Creature> tableCreatures = FXCollections.observableArrayList(pop.getArrayList());
+		tbv_pop.setItems(tableCreatures);
+		tbv_pop.getColumns().addAll(tclm_creatureID, tclm_creatureFitness);
+
+		tbv_pop.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> onMouseClicked(e));
+		tbv_pop.addEventHandler(MouseEvent.ANY, e -> onMouseMoved(e));
+		tbv_pop.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+			selectedIndex.set(-1);
+		});
+
+		// this.setPadding(new Insets(13));
+		tbv_pop.setPrefWidth(220);
+		tbv_pop.setStyle(
+				"-fx-font-size: 15px;" + "-fx-focus-color: transparent;" + "-fx-background-insets: -1.4, 0, 1, 2;");
+		this.setCenter(tbv_pop);
+	}
+
+	private void selectedChange(int oldValue, int newValue) {
+
+		if (newValue != -1 && oldValue == -1) {
+			mouseHover = true;
+			if (previewScreen != null) {
+
+			} else {
+				previewScreen = new TestScreen(250, 150, 15, new Vec2(-1, 3), pop);
+				previewScreen.startSingleTest(pop.getCreatureByID(selectedIndex.get()));
+				previewScreen.setBackgroundCol(Layout.getSkycolor());
+				previewScreen.enableAutoRepeat();
+				previewScreen.setFollowOffset(new Vec2(-1, 0));
+				previewScreen.enableCompactInfo();
+				previewScreen.disableScrollZoom();
+
+				this.getChildren().add(previewScreen);
+			}
+
 		}
-		tp_screens.setVgap(10);
-		tp_screens.setHgap(10);
-		tp_screens.setPrefColumns(3);
-		
-		this.setPadding(new Insets(13));
-		this.setPrefWidth(520);
-		this.setContent(tp_screens);
-		this.setStyle("-fx-font-size: 18px;"
-				+ "-fx-focus-color: transparent;"
-				+ "-fx-background-insets: -1.4, 0, 1, 2;");
+
+		if (newValue == -1) {
+			mouseHover = false;
+			this.getChildren().remove(previewScreen);
+			previewScreen = null;
+		}
 	}
 
-	private void onMouseClicked(MouseEvent e, int tileNr) {
-		if(e.getButton().equals(MouseButton.PRIMARY)){
-            if(e.getClickCount() == 2){
-        		mainTestScreen.startSingleTest(tileNr);
-            }
-        }
+	private void onMouseMoved(MouseEvent e) {
+
+		if (mouseHover && previewScreen != null) {
+			previewScreen.setTranslateX(e.getX() + 2);
+			previewScreen.setTranslateY(e.getY() + 2);
+		}
 	}
 
-	private void onMouseExited(MouseEvent e, int tileNr) {
-		testScreenArr[tileNr].manageCommand(ControlFuncTest.STOP);
-	}
-
-	private void onMouseEntered(MouseEvent e, int tileNr) {
-		testScreenArr[tileNr].manageCommand(ControlFuncTest.START);
+	private void onMouseClicked(MouseEvent e) {
+		if (e.getButton().equals(MouseButton.PRIMARY)) {
+			if (e.getClickCount() == 2) {
+				mainTestScreen.startSingleTest(tbv_pop.getSelectionModel().getSelectedItem());
+			}
+		}
 	}
 
 	public void refresh(float dt) {
-		for (int i = 0; i < testScreenArr.length; i++) {
-			testScreenArr[i].refresh(dt);
-		}
+		if (previewScreen != null && mouseHover)
+			previewScreen.refresh(dt);
 	}
 }

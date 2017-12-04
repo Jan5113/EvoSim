@@ -1,5 +1,8 @@
 import org.jbox2d.common.Vec2;
 
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
+
 public class Creature implements Comparable<Creature>{
 	public static float[] minMaxLength = {0.2f, 2.0f};
 	public static float[] minMaxTime = {0.0f, 1.0f};
@@ -11,9 +14,9 @@ public class Creature implements Comparable<Creature>{
 	public final MutVal length;
 	public final MutVal time;
 	public final MutVec2 fixturePos;
-	public final int id;
+	private final int id;
 	
-	private float fitness;
+	private FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
 	private boolean fitnessEvaluated = false;
 
 	
@@ -39,7 +42,7 @@ public class Creature implements Comparable<Creature>{
 			System.err.println("Can't overwrite fitness!");
 			return;
 		}
-		fitness = fitness_in;
+		fitness.set(fitness_in);
 		fitnessEvaluated = true;
 	}
 	
@@ -48,7 +51,15 @@ public class Creature implements Comparable<Creature>{
 	}
 	
 	public float getFitness() {
-		return fitness;
+		return fitness.get();
+	}
+	
+	public Float getFitnessFloat() {
+		if (fitnessEvaluated) {
+			return (float) Math.floor(fitness.get()*100)/100;
+		} else {
+			return null;
+		}
 	}
 	
 	public Creature mutate(float amount, int id) {
@@ -56,8 +67,16 @@ public class Creature implements Comparable<Creature>{
 	}
 
 	public int compareTo(Creature c) {
-		if (this.fitness < c.getFitness()) return 1;
-		else if (this.fitness > c.getFitness()) return -1;
+		if (this.fitness.get() < c.getFitness()) return 1;
+		else if (this.fitness.get() > c.getFitness()) return -1;
 		return 0;
+	}
+	
+	public int getID() {
+		return id;
+	}
+	
+	public FloatProperty fitnessProperty() {
+		return fitness;
 	}
 }

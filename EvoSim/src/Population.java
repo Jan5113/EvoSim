@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.Collections;
-
 import org.jbox2d.common.Vec2;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class Population {
 	private int populationSize;
@@ -11,6 +15,7 @@ public class Population {
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	private boolean popInitialised = false;
 	private final Vec2 testGrav;
+	private IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
 	
 	
 	public Population(Vec2 testGrav_in) {
@@ -23,7 +28,7 @@ public class Population {
 		for (int i = 0; i < populationSize; i++) {
 			Creature tempC = new Creature(currentID);
 			currentID++;
-			CreatureList.add(tempC);
+			addCreature(tempC);
 		}
 		popInitialised = true;
 		System.out.println("Population of " + populationSize + " successfully generated!");
@@ -70,11 +75,23 @@ public class Population {
 		int initialListSize = CreatureList.size();
 		while (CreatureList.size() < populationSize) {
 			for (int i = 0; i < initialListSize; i++) {
-				CreatureList.add(CreatureList.get(i).mutate((float) Math.pow(p, 1 + generation * 0.5f), currentID));
+				addCreature(CreatureList.get(i).mutate((float) Math.pow(p, 1 + generation * 0.5f), currentID));
 				currentID ++;
 				if (CreatureList.size() >= populationSize) break;
 			}
 		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addCreature(Creature cret) {
+
+		cret.fitnessProperty().addListener(new ChangeListener() {
+			public void changed(ObservableValue o, Object oldValue, Object newValue) {
+				fitnessSet.set(cret.getID());
+			}
+		});
+		
+		CreatureList.add(cret);
 	}
 	
 	public void nextGen() {
@@ -110,7 +127,7 @@ public class Population {
 	
 	public Creature getCreatureByID(int searchID) {
 		for (int i = 0; i < CreatureList.size(); i++) {
-			if (searchID == CreatureList.get(i).id) {
+			if (searchID == CreatureList.get(i).getID()) {
 				return CreatureList.get(i);
 			}
 		}
@@ -119,6 +136,14 @@ public class Population {
 	
 	public Vec2 getTestGravitation() {
 		return testGrav.clone();
+	}
+	
+	public ArrayList<Creature> getArrayList() {
+		return CreatureList;
+	}
+	
+	public IntegerProperty fitnessSetProperty() {
+		return fitnessSet;
 	}
 	
 }
