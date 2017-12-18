@@ -134,6 +134,16 @@ public class Population {
 		return null;
 	}
 	
+	public ArrayList<Creature> notTestedCreatures() {
+		ArrayList<Creature> notTestedCreatureList = new ArrayList<>();
+		for (Creature c : CreatureList) {
+			if (c.fitnessEvaulated()) {
+				notTestedCreatureList.add(c);
+			}
+		}
+		return notTestedCreatureList;
+	}
+	
 	public Vec2 getTestGravitation() {
 		return testGrav.clone();
 	}

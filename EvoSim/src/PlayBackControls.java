@@ -31,8 +31,8 @@ public class PlayBackControls extends BorderPane {
 	private final MultiTest multiTest;
 
 	/**
-	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons
-	 * and arranges them accordingly.
+	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons and
+	 * arranges them accordingly.
 	 */
 	GridPane gp_controls = new GridPane();
 
@@ -72,19 +72,18 @@ public class PlayBackControls extends BorderPane {
 		Layout.TwoThirdsButton(btn_slow);
 		Layout.TwoThirdsButton(btn_1x);
 		Layout.button(btn_toggleView);
-		Layout.button(btn_resetView);		
+		Layout.button(btn_resetView);
 		Layout.button(btn_test);
-		
+
 		this.setTop(lbl_playback);
 		gp_controls.add(btn_playpause, 0, 0, 3, 1);
 		gp_controls.add(btn_fast, 2, 1);
 		gp_controls.add(btn_slow, 0, 1);
-		gp_controls.add(btn_1x, 1,1);
-		gp_controls.add(btn_toggleView, 3,0);
-		gp_controls.add(btn_resetView, 3,1);
-		
+		gp_controls.add(btn_1x, 1, 1);
+		gp_controls.add(btn_toggleView, 3, 0);
+		gp_controls.add(btn_resetView, 3, 1);
+
 		gp_controls.add(btn_test, 4, 0);
-		
 
 		btn_playpause.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.PLAYPAUSE));
 		btn_fast.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.FAST));
@@ -94,7 +93,7 @@ public class PlayBackControls extends BorderPane {
 		btn_resetView.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.RESETVIEW));
 		btn_test.setOnAction(e -> testMultiCore());
 	}
-	
+
 	/**
 	 * Handles the labelling of "dynamic" buttons. Those are buttons which change
 	 * their labelling depending on the status of the elements this
@@ -111,11 +110,11 @@ public class PlayBackControls extends BorderPane {
 		else
 			btn_toggleView.setText("Lock View");
 	}
-	
+
 	public void testMultiCore() {
 		multiTest.addAllCreaturesToQueue();
-		
+
 		multiTest.startThreads();
-		}
+	}
 
 }

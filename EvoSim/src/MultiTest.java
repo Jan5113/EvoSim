@@ -80,12 +80,33 @@ public class MultiTest{
 	}
 	
 	/**
+	 * Adds a reference of all {@link Creature} inside the given {@link ArrayList}
+	 * to the calculation queue
+	 * 
+	 * @param creaturesIn
+	 *            {@link Creature} instances in this {@link ArrayList} are added to
+	 *            the queue
+	 */
+	public void addCreatureListToQueue(ArrayList<Creature> creaturesIn) {
+		for (Creature c : creaturesIn) {
+			creatureQueue.add(c);
+		}
+	}
+	
+	/**
 	 * Starts calculation with all given threads
 	 */
 	public void startThreads() {
 		for (int i = 0; i < testArray.length; i++) {
 			testArray[i].start();
 		}
+	}
+	
+	/**
+	 * Starts calculation with only one thread (to avoid sync-problems)
+	 */
+	public void startSingleThread() {
+		testArray[0].start();
 	}
 	
 	/**
