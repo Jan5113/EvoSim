@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import org.jbox2d.common.Vec2;
 
 import javafx.beans.property.IntegerProperty;
@@ -6,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -21,10 +24,12 @@ public class PopScreen extends BorderPane {
 	private TestScreen previewScreen;
 	private TableView<Creature> tbv_pop = new TableView<Creature>();
 	private IntegerProperty selectedIndex = new SimpleIntegerProperty(-1);
+	private final MultiTest mainMultiTest;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public PopScreen(Population pop_in, TestScreen testScreen_in) {
+	public PopScreen(Population pop_in, TestScreen testScreen_in, MultiTest multiTest_in) {
 		mainTestScreen = testScreen_in;
+		mainMultiTest = multiTest_in;
 		pop = pop_in;
 
 		tbv_pop.setRowFactory(tableView -> {
@@ -57,10 +62,12 @@ public class PopScreen extends BorderPane {
 		TableColumn<Creature, Integer> tclm_creatureID = new TableColumn<>("ID");
 		tclm_creatureID.setPrefWidth(50);
 		tclm_creatureID.setCellValueFactory(new PropertyValueFactory<Creature, Integer>("ID"));
+		tclm_creatureID.setSortable(false);
 
 		TableColumn<Creature, Float> tclm_creatureFitness = new TableColumn<>("Fitness");
 		tclm_creatureFitness.setPrefWidth(150);
 		tclm_creatureFitness.setCellValueFactory(new PropertyValueFactory<Creature, Float>("FitnessFloat"));
+		tclm_creatureFitness.setSortable(false);
 
 		ObservableList<Creature> tableCreatures = FXCollections.observableArrayList(pop.getArrayList());
 		tbv_pop.setItems(tableCreatures);
@@ -77,6 +84,13 @@ public class PopScreen extends BorderPane {
 		tbv_pop.setStyle(
 				"-fx-font-size: 15px;" + "-fx-focus-color: transparent;" + "-fx-background-insets: -1.4, 0, 1, 2;");
 		this.setCenter(tbv_pop);
+		
+		Button btn_sortPop = new Button("Sort");
+		//btn_sortPop.setDisable(true);
+		Layout.button(btn_sortPop);
+		Layout.innterTitleMargin(btn_sortPop);
+		btn_sortPop.setOnAction(e -> pop.sortPopulation());
+		this.setTop(btn_sortPop);
 	}
 
 	private void selectedChange(int oldValue, int newValue) {
@@ -110,7 +124,7 @@ public class PopScreen extends BorderPane {
 
 		if (mouseHover && previewScreen != null) {
 			previewScreen.setTranslateX(e.getX() + 2);
-			previewScreen.setTranslateY(e.getY() + 2);
+			previewScreen.setTranslateY(e.getY() + 50);
 		}
 	}
 
@@ -119,6 +133,20 @@ public class PopScreen extends BorderPane {
 			if (e.getClickCount() == 2) {
 				mainTestScreen.startSingleTest(tbv_pop.getSelectionModel().getSelectedItem());
 			}
+		}
+	}
+	
+	public void onBtnSortPopulation() {
+		
+	}
+	
+	public void fixMissingTests() {
+		ArrayList<Creature> notTested = pop.notTestedCreatures();
+		if (notTested.size() != 0) {
+			System.out.println("Detected " + notTested.size() + " skipped Creatures!");
+			mainMultiTest.addCreatureListToQueue(notTested);
+			mainMultiTest.startSingleThread();
+			System.out.println("Tested " + notTested.size() + " skipped Creatures!");
 		}
 	}
 

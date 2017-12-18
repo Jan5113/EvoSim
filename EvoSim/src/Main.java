@@ -96,7 +96,7 @@ public class Main extends Application{
 
 	private void setupPopScreen() {
 		bp_pop = new BorderPane();
-		popScreen = new PopScreen(pop, mainTestScreen);
+		popScreen = new PopScreen(pop, mainTestScreen, mainMultiTest);
 		bp_pop.setCenter(popScreen);
 		Layout.defMargin(popScreen);
 		Label popTitle = new Label("Population");
