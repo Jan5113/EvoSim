@@ -6,7 +6,6 @@ public class TestScreen extends Screen implements TestWrapper{
 	private static float maxPlayBackSpeed = 1024.0f;
 	private boolean running = false;
 	private final Population pop;
-	private boolean autoGetNext = false;
 	private boolean autoRepeat = false;
 	private Vec2 followOffset = new Vec2(0,0);
 
@@ -58,8 +57,6 @@ public class TestScreen extends Screen implements TestWrapper{
 		case PLAYPAUSE:
 			if (hasCreature()) {
 				running = !running;
-			} else if (pop.getNext() != null) {
-				startSingleTest(pop.getCurrent());
 			}
 
 			if (running) {
@@ -107,16 +104,10 @@ public class TestScreen extends Screen implements TestWrapper{
 		
 		if (!test.getCreature().fitnessEvaulated()) {
 			test.getCreature().setFitness(calcFitness);
-		}		
+		}	
 	}
 	
 	public void pauseDone(Creature creature_in, float newFitness) {
-		if (autoGetNext) {
-			if (pop.getNext() != null) {
-				test.reset();
-				startSingleTest(pop.getCurrent());
-			}
-		}
 		
 		if (autoRepeat) {
 			Creature tempCret = test.getCreature();
@@ -170,14 +161,6 @@ public class TestScreen extends Screen implements TestWrapper{
 	
 	public boolean hasCreature() {
 		return test.getCreature() != null;
-	}
-	
-	public void enableAutoGetNext() {
-		autoGetNext = true;
-	}
-	
-	public void disableAutoGetNext() {
-		autoGetNext = false;
 	}
 	
 	public void enableAutoRepeat() {

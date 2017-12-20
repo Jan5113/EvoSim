@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -17,8 +18,9 @@ public class Main extends Application{
 	private long lastNanoTime;
 	private TestScreen mainTestScreen;
 	private MultiTest mainMultiTest;
-	private PlayBackControls bp_control;
-	private BorderPane bp_pop;
+	private PlayBackControls bp_testControl;
+	private PopScreenControl bp_popControl;
+	private VBox bp_pop;
 	private BorderPane bp_test;
 	private PopScreen popScreen;
 	public BorderPane root;
@@ -76,33 +78,37 @@ public class Main extends Application{
 		bp_test = new BorderPane();
 		mainTestScreen = new TestScreen(900, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Layout.getSkycolor());
-		mainTestScreen.enableAutoGetNext();
 		mainTestScreen.enableInfo();
 		mainTestScreen.enableMarkers();
 		Layout.defMargin(mainTestScreen);
 		BorderPane.setAlignment(mainTestScreen, Pos.TOP_LEFT);
 
-		bp_control = new PlayBackControls(mainTestScreen, mainMultiTest);
-		Layout.defMargin(bp_control);
+		bp_testControl = new PlayBackControls(mainTestScreen);
+		Layout.defMargin(bp_testControl);
 		
 		Label testTitle = new Label("Creature preview");
 		Layout.defMargin(testTitle);
 		Layout.labelTitle(testTitle);
 		
 		bp_test.setCenter(mainTestScreen);
-		bp_test.setBottom(bp_control);
+		bp_test.setBottom(bp_testControl);
 		bp_test.setTop(testTitle);
 	}
 
 	private void setupPopScreen() {
-		bp_pop = new BorderPane();
-		popScreen = new PopScreen(pop, mainTestScreen, mainMultiTest);
-		bp_pop.setCenter(popScreen);
+		bp_pop = new VBox();
+		popScreen = new PopScreen(pop, mainTestScreen);
 		Layout.defMargin(popScreen);
 		Label popTitle = new Label("Population");
 		Layout.defMargin(popTitle);
 		Layout.labelTitle(popTitle);
-		bp_pop.setTop(popTitle);
+		
+		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
+		Layout.defMargin(bp_popControl);
+		
+		bp_pop.getChildren().add(popTitle);
+		bp_pop.getChildren().add(bp_popControl);
+		bp_pop.getChildren().add(popScreen);
 	}
 
 	private void offKeyScreen(KeyEvent e) {
@@ -113,12 +119,12 @@ public class Main extends Application{
 
 	private void refreshScreen(float dt) {
 		mainTestScreen.refresh(dt);
-		bp_control.refresh();
+		bp_testControl.refresh();
 		popScreen.refresh(dt);
 	}
 
 	private void stageResize(Stage s) {
-		mainTestScreen.setScreenSize((int) s.getWidth()-280, (int) s.getHeight()-250); 
+		mainTestScreen.setScreenSize((int) s.getWidth()-230, (int) s.getHeight()-230); 
 	}
 
 }

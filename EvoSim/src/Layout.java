@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class Layout {
@@ -13,10 +14,10 @@ public class Layout {
 	private static float prefWidth = 80;
 
 	public static void button(Button btn) {
-		btn.setStyle("-fx-background-color:" + "#000000," + "linear-gradient(#7ebcea, #2f4b8f),"
-				+ "linear-gradient(#426ab7, #263e75)," + "linear-gradient(#395cab, #223768);"
-				+ "-fx-background-insets: 0,1,2,3;" + "-fx-background-radius: 0;" + "-fx-padding: 8 4;"
-				+ "-fx-text-fill: white;" + "-fx-font-size: 12px;");
+//		btn.setStyle("-fx-background-color:" + "#000000," + "linear-gradient(#7ebcea, #2f4b8f),"
+//				+ "linear-gradient(#426ab7, #263e75)," + "linear-gradient(#395cab, #223768);"
+//				+ "-fx-background-insets: 0,1,2,3;" + "-fx-background-radius: 0;" + "-fx-padding: 8 4;"
+//				+ "-fx-text-fill: white;" + "-fx-font-size: 12px;");
 		btn.setPrefWidth(prefWidth);
 
 	}
@@ -46,9 +47,11 @@ public class Layout {
 	
 	public static void defMargin (Node node) {
 		BorderPane.setMargin(node, insetsDef);
+		VBox.setMargin(node, insetsDef);
 	}
 	
 	public static void innterTitleMargin (Node node) {
 		BorderPane.setMargin(node, new Insets(0,15,15,0));
+		VBox.setMargin(node, new Insets(0,15,15,0));
 	}
 }

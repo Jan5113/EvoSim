@@ -10,7 +10,6 @@ import javafx.beans.value.ObservableValue;
 public class Population {
 	private int populationSize;
 	private int generation = 1;
-	private int activeIndex = -1;
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	private boolean popInitialised = false;
@@ -34,14 +33,6 @@ public class Population {
 		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
 	
-	public Creature getNext() {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
-		if (activeIndex + 1 >= CreatureList.size()) {
-			return null;
-		}
-		activeIndex ++;
-		return CreatureList.get(activeIndex);
-	}
 	
 	public Creature getCreatureByIndex(int index) {
 		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
@@ -97,7 +88,6 @@ public class Population {
 	public void nextGen() {
 		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
 		generation ++;
-		activeIndex = -1;
 	}
 	
 	public boolean isInit() {
@@ -112,18 +102,18 @@ public class Population {
 		return populationSize;
 	}
 	
-	public void setCurrentFitness(float fitness_in) {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
-		CreatureList.get(activeIndex).setFitness(fitness_in);
-	}
-	
-	public Creature getCurrent() {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
-		if (activeIndex >= CreatureList.size()) {
-			return null;
-		}
-		return CreatureList.get(activeIndex);
-	}
+//	public void setCurrentFitness(float fitness_in) {
+//		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
+//		CreatureList.get(activeIndex).setFitness(fitness_in);
+//	}
+//	
+//	public Creature getCurrent() {
+//		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
+//		if (activeIndex >= CreatureList.size()) {
+//			return null;
+//		}
+//		return CreatureList.get(activeIndex);
+//	}
 	
 	public Creature getCreatureByID(int searchID) {
 		for (int i = 0; i < CreatureList.size(); i++) {
@@ -135,9 +125,9 @@ public class Population {
 	}
 	
 	public ArrayList<Creature> notTestedCreatures() {
-		ArrayList<Creature> notTestedCreatureList = new ArrayList<>();
+		ArrayList<Creature> notTestedCreatureList = new ArrayList<Creature>();
 		for (Creature c : CreatureList) {
-			if (c.fitnessEvaulated()) {
+			if (!c.fitnessEvaulated()) {
 				notTestedCreatureList.add(c);
 			}
 		}

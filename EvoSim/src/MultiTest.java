@@ -53,7 +53,7 @@ public class MultiTest{
 		testArray = new TestThread[threads];
 		
 		for (int i = 0; i < testArray.length; i++) {
-			testArray[i] = new TestThread("THREAD " + i);
+			testArray[i] = new TestThread(i);
 		}
 	}
 	
@@ -91,6 +91,7 @@ public class MultiTest{
 		for (Creature c : creaturesIn) {
 			creatureQueue.add(c);
 		}
+		System.out.println("Queue length: " + creatureQueue.size());
 	}
 	
 	/**
@@ -100,6 +101,13 @@ public class MultiTest{
 		for (int i = 0; i < testArray.length; i++) {
 			testArray[i].start();
 		}
+		try {
+			for (int i = 0; i < testArray.length; i++) {
+				testArray[i].t.join();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -107,6 +115,25 @@ public class MultiTest{
 	 */
 	public void startSingleThread() {
 		testArray[0].start();
+		try {
+			testArray[0].t.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Searches not tested {@link Creature} instances in the population and
+	 * adds them to the queue.
+	 */
+	public void fixMissingTests() {
+		ArrayList<Creature> notTested = pop.notTestedCreatures();
+
+		if (notTested.size() != 0) {
+			System.out.println("Detected " + notTested.size() + " skipped Creatures!");
+			addCreatureListToQueue(notTested);
+			startSingleThread();
+		}
 	}
 	
 	/**
@@ -129,10 +156,10 @@ public class MultiTest{
 		 */
 		private final Test test;
 		/**
-		 * Name of the {@link TestThread} (for distinction when debugging)
+		 * Number of the {@link TestThread} (for distinction when debugging)
 		 * 
 		 */
-		private String threadName;
+		private final int threadNr;
 		/**
 		 * Aborts calculations once set to {@code true}, then exits thread
 		 */
@@ -146,16 +173,17 @@ public class MultiTest{
 		 * @param threadName
 		 *            string for name
 		 */
-		public TestThread(String threadName) {
-			this.threadName = threadName;
-			System.out.println("Creating " +  this.threadName );
+		public TestThread(int threadNr) {
+			this.threadNr = threadNr;
+			System.out.println("Creating " +  this.threadNr );
 			test = new Test(pop.getTestGravitation(), (TestWrapper) this, true);
 		}
 
 		public void run() {
-			System.out.println("Running " + threadName);
+			System.out.println("Running Thread " + threadNr);
 			if (creatureQueue.size() > 0) setCreature();
-			System.out.println("Thread " + threadName + " exiting.");
+			
+			System.out.println("Thread " + threadNr + " exiting.");
 		}
 		
 		
@@ -164,11 +192,11 @@ public class MultiTest{
 		 * process, multithreading!
 		 */
 		public void start() {
-			System.out.println("Starting " + threadName);
-			if (t == null) {
-				t = new Thread(this, threadName);
-				t.start();
-			}
+			System.out.println("Starting Thread " + threadNr);
+
+			t = new Thread(this, "THREAD "+ threadNr);
+			t.start();
+			System.out.println(t.isAlive());
 		}	
 		
 		/**
@@ -190,7 +218,7 @@ public class MultiTest{
 		}
 
 		public void taskDone(Creature creature_in, float calcFitness) {
-			System.out.println("Thread " + threadName + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
+			System.out.println("Thread " + threadNr + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 			if (!test.getCreature().fitnessEvaulated()) {
 				test.getCreature().setFitness(calcFitness);
 			}	
@@ -202,7 +230,7 @@ public class MultiTest{
 		}
 		
 		public void pauseDone(Creature creature_in, float calcFitness) {}
-
+		
 	}
 
 
