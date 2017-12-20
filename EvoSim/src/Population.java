@@ -12,9 +12,11 @@ public class Population {
 	private int generation = 1;
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
-	private boolean popInitialised = false;
 	private final Vec2 testGrav;
 	private IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
+	private PopulationStatus popStat = PopulationStatus.S0_NOTCREATED;
+	
+	private static float killVal = 0.8f;
 	
 	
 	public Population(Vec2 testGrav_in) {
@@ -22,54 +24,81 @@ public class Population {
 	}
 	
 	public void CreateRandPopulation (int popSize_in) {
-		if (popInitialised) {System.err.println("Population already initialised!"); return;}		
+		if (popStat != PopulationStatus.S0_NOTCREATED) {System.err.println("Population already initialised!");return;}
+		
 		populationSize = popSize_in;
 		for (int i = 0; i < populationSize; i++) {
 			Creature tempC = new Creature(currentID);
 			currentID++;
 			addCreature(tempC);
 		}
-		popInitialised = true;
+		popStat = PopulationStatus.S1_CREATED_MUTATED;
 		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
 	
-	
-	public Creature getCreatureByIndex(int index) {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return null;}
-		return CreatureList.get(index);
+	public void allTested() {
+		if (popStat != PopulationStatus.S1_CREATED_MUTATED) {System.err.println("Incorrect PopStatus @ tested");
+			return;
+		}		
+		popStat = PopulationStatus.S2_TESTED;
 	}
 	
 	public void sortPopulation () {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
+		if (popStat != PopulationStatus.S2_TESTED) {System.err.println("Incorrect PopStatus @ sortPop " + popStat); return;}
 		Collections.sort(CreatureList);
+		popStat = PopulationStatus.S3_SORTED;
+	}
+
+	public void nextGen() {
+		if (popStat != PopulationStatus.S3_SORTED) {System.err.println("Incorrect PopStatus @ nextGen"); return;}
+		generation ++;
+
+		popStat = PopulationStatus.S4_NEWGEN;
 	}
 	
-	public void killPercentage (float p) {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
-		if (p < 0.0f || p > 1.0f) {
-			System.err.println("Kill percentage between 0 and 1");
-			return;
-		}
+	public void killPercentage () {
+		if (popStat != PopulationStatus.S4_NEWGEN) {System.err.println("Incorrect PopStatus @ kill"); return;}
 		
-		for (int i = (int) (p * populationSize); i > 0; i--) {
+		for (int i = (int) (killVal * populationSize); i > 0; i--) {
 			CreatureList.remove(CreatureList.size() - 1);
 		}
+		
+		popStat = PopulationStatus.S5_KILLED;
 	}
 	
-	public void mutatePop (float p) {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
-		System.out.println("Mut");
-		if (p < 0.0f || p > 1.0f) {
-			System.err.println("Mutate percentage between 0 and 1");
-			return;
-		}
+	public void mutatePop () {
+		if (popStat != PopulationStatus.S5_KILLED) {System.err.println("Incorrect PopStatus @ mutate"); return;}
+		
 		int initialListSize = CreatureList.size();
 		while (CreatureList.size() < populationSize) {
 			for (int i = 0; i < initialListSize; i++) {
-				addCreature(CreatureList.get(i).mutate((float) Math.pow(p, 1 + generation * 0.5f), currentID));
+				addCreature(CreatureList.get(i).mutate(currentID));
 				currentID ++;
 				if (CreatureList.size() >= populationSize) break;
 			}
+		}
+
+		popStat = PopulationStatus.S1_CREATED_MUTATED;
+	}
+	
+	public void autoNextStep() {
+		switch (popStat){
+		case S2_TESTED:
+			sortPopulation();
+			break;
+		case S3_SORTED:
+			nextGen();
+			break;
+		case S4_NEWGEN:
+			killPercentage();
+			break;
+		case S5_KILLED:
+			mutatePop();
+			break;
+		default:
+			System.err.println("Not supported auto-nextstep");
+			break;
+		
 		}
 	}
 	
@@ -85,13 +114,13 @@ public class Population {
 		CreatureList.add(cret);
 	}
 	
-	public void nextGen() {
-		if (!popInitialised) {System.err.println("Population not initialised!"); return;}
-		generation ++;
+	public Creature getCreatureByIndex(int index) {
+		if (popStat == PopulationStatus.S0_NOTCREATED) {System.err.println("Population not initialised!"); return null;}
+		return CreatureList.get(index);
 	}
 	
-	public boolean isInit() {
-		return popInitialised;
+	public PopulationStatus getPopStat() {
+		return popStat;
 	}
 	
 	public int getGen() {

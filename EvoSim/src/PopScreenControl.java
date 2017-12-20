@@ -94,13 +94,18 @@ public class PopScreenControl extends BorderPane{
 	
 	private void do1Gen() {
 		popScreen.setActive(false);
-		multiTest.addAllCreaturesToQueue();
-		multiTest.startThreads();
-		multiTest.fixMissingTests();
+		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
+			multiTest.testWholePop();
+		}
+		if (pop.getPopStat() == PopulationStatus.S2_TESTED) {
+			pop.sortPopulation();
+		}
 		pop.nextGen();
+		pop.killPercentage();
+		pop.mutatePop();
+		multiTest.testWholePop();
 		pop.sortPopulation();
-		pop.killPercentage(0.8f);
-		pop.mutatePop(0.8f);
+		
 		popScreen.setActive(true);
 		popScreen.refreshTable();
 	}

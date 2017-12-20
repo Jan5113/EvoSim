@@ -62,7 +62,7 @@ public class Creature implements Comparable<Creature>{
 		}
 	}
 	
-	public Creature mutate(float amount, int id) {
+	public Creature mutate(int id) {
 		return new Creature(id, length.mutate(), time.mutate(), fixturePos.mutate());
 	}
 

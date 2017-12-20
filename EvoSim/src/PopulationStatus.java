@@ -1,0 +1,4 @@
+
+public enum PopulationStatus {
+	S0_NOTCREATED, S1_CREATED_MUTATED, S2_TESTED, S3_SORTED, S4_NEWGEN, S5_KILLED
+}

@@ -58,6 +58,16 @@ public class MultiTest{
 	}
 	
 	/**
+	 * Tests all Creatures of the linked {@link Population}
+	 */
+	public void testWholePop() {
+		addAllCreaturesToQueue();
+		startThreads();
+		fixMissingTests();
+		pop.allTested();
+	}
+	
+	/**
 	 * Adds a reference of all {@link Creature} inside the before referenced
 	 * {@link Population} to the calculation queue
 	 * 
