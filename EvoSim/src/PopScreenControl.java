@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -33,6 +35,10 @@ public class PopScreenControl extends BorderPane{
 	private final Population pop;
 	
 	private final PopScreen popScreen;
+	
+	private TestProgressBar testProgressBar = new TestProgressBar();
+	
+	private ArrayList<PopulationTask> tasks = new ArrayList<PopulationTask>();
 
 	/**
 	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons and
@@ -86,45 +92,141 @@ public class PopScreenControl extends BorderPane{
 	 */
 	public void refresh() {
 		
+		switch (pop.getPopStat()) {
+		case S0_NOTCREATED:
+			btn_singleAction.setText("Create Population");
+			break;
+		case S1_CREATED_MUTATED:
+			btn_singleAction.setText("Test Creatures");
+			break;
+		case S2_TESTING:
+			btn_singleAction.setText("Skip Testing");
+			break;
+		case S3_TESTED:
+			btn_singleAction.setText("Sort Population");
+			break;
+		case S4_SORTED:
+			btn_singleAction.setText("Kill Population");
+			break;
+		case S5_NEWGEN:
+			btn_singleAction.setText("Kill OLD");
+			break;
+		case S6_KILLED:
+			btn_singleAction.setText("Reproduce & Mutate");
+			break;
+		default:
+			break;
+		}
+		
+		if (multiTest.getTestStatus() == MultiTestStatus.TESTING || multiTest.getTestStatus() == MultiTestStatus.FIXING) {
+			testProgressBar.update(1.0f - ((float) multiTest.getQueue().size() / (float) pop.getPopulationSize()));
+		}
+		else {
+			if (multiTest.getTestStatus() == MultiTestStatus.DONE) {
+				System.out.println("Callback");
+				multiTest.resetStatus();
+				if (tasks.size() != 0 && tasks.get(0) == PopulationTask.SORT) {
+					System.out.println("Handling Task " + tasks.get(0).toString());
+					tasks.remove(0);
+					pop.sortPopulation();
+				}
+				popScreen.resetCenter();
+				popScreen.refreshTable();
+			}
+			
+			while (tasks.size() != 0) {
+				System.out.println("Handling Task " + tasks.get(0).toString());
+				switch (tasks.remove(0)) {
+				case CALC_GEN:
+				case COMPLETE_GEN:
+					popScreen.setProgressBar(testProgressBar);
+					multiTest.testWholePop();
+					return;
+				case NEWGEN:
+					pop.nextGen();
+					break;
+				case MUTATE:
+					pop.mutatePop();
+					break;
+				case KILL:
+					pop.killPercentage();
+					break;
+				case SORT:
+					pop.sortPopulation();
+					break;
+				case NEXT_KILL_MUT:
+					pop.nextGen();
+					pop.killPercentage();
+					pop.mutatePop();
+					break;
+				default:
+					break;
+				}
+				
+			}
+		}
 	}
 	
 	private void singleAction() {
-		if (pop.getPopStat() == PopulationStatus.S0_NOTCREATED) { //CREATE POP
+		System.out.println(pop.getPopStat());
+		
+		switch (pop.getPopStat()) {
+		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
-		}
-		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) { //TEST ONE BY ONE
+			popScreen.refreshTable();
+			break;
+		case S1_CREATED_MUTATED: //TEST ONE BY ONE
 			pop.testing();
 			testScreen.manageCommand(ControlFuncTest.TEST_ONE_BY_ONE);
-		}
-		if (pop.getPopStat() == PopulationStatus.S2_TESTING) { //SKIP
-			multiTest.addAllCreaturesToQueue();
-		}
-		else {
-			pop.autoNextStep();
+			break;
+		case S2_TESTING: //SKIP
+			testScreen.manageCommand(ControlFuncTest.STOP);
+			testScreen.manageCommand(ControlFuncTest.SPEED1X);
+			testScreen.manageCommand(ControlFuncTest.RESETVIEW);
+			tasks.add(PopulationTask.CALC_GEN);
+			break;
+		case S3_TESTED: // SORT
+			pop.sortPopulation();
+			popScreen.refreshTable();
+			break;
+		case S4_SORTED:
+			pop.nextGen();
+			pop.killPercentage();
+			popScreen.refreshTable();
+			break;
+		case S6_KILLED:
+			pop.mutatePop();
+			popScreen.refreshTable();
+			break;
+		default:
+			break;
 		}
 	}
 	
 	private void do1Gen() {
-		popScreen.setActive(false);
 		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
-			multiTest.testWholePop();
+			tasks.add(PopulationTask.COMPLETE_GEN);
+			tasks.add(PopulationTask.SORT);
 		}
 		if (pop.getPopStat() == PopulationStatus.S3_TESTED) {
-			pop.sortPopulation();
+			tasks.add(PopulationTask.SORT);
 		}
-		pop.nextGen();
-		pop.killPercentage();
-		pop.mutatePop();
-		multiTest.testWholePop();
-		pop.sortPopulation();
-		
-		popScreen.setActive(true);
-		popScreen.refreshTable();
+		tasks.add(PopulationTask.NEXT_KILL_MUT);
+		tasks.add(PopulationTask.CALC_GEN);
+		tasks.add(PopulationTask.SORT);
 	}
 	
 	private void do10Gen() {
+		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
+			tasks.add(PopulationTask.COMPLETE_GEN);
+		}
+		if (pop.getPopStat() == PopulationStatus.S3_TESTED) {
+			tasks.add(PopulationTask.SORT);
+		}
 		for (int i = 0; i < 10; i++) {
-			do1Gen();
+			tasks.add(PopulationTask.NEXT_KILL_MUT);
+			tasks.add(PopulationTask.CALC_GEN);
+			tasks.add(PopulationTask.SORT);
 		}
 	}
 
