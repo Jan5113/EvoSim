@@ -127,21 +127,27 @@ public class Test {
 				lastFitness = creatureInstancesList.get(2).getPos().x;
 				parentWrapper.taskDone(creature, lastFitness);
 			}
-			
-			for (ContactEdge ce = creatureInstancesList.get(2).getBody().getContactList(); ce != null && !taskDone; ce = ce.next) {
-				Contact c = ce.contact;
-				
-				if (c.isTouching()) {
-					if (c.m_fixtureA.m_userData == worldInstancesList.get(0).getBody().getFixtureList().m_userData) {
-						taskDone = true;
-						//testing = false;
-						//dtToRun = 0.0f;
-						lastFitness = creatureInstancesList.get(2).getPos().x;
-						parentWrapper.taskDone(creature, lastFitness);
-						afterTestTime = testTimer + afterTestLength;
+			try {
+				for (ContactEdge ce = creatureInstancesList.get(2).getBody().getContactList(); ce != null && !taskDone; ce = ce.next) {
+					Contact c = ce.contact;
+					
+					if (c.isTouching()) {
+						if (c.m_fixtureA.m_userData == worldInstancesList.get(0).getBody().getFixtureList().m_userData) {
+							taskDone = true;
+							//testing = false;
+							//dtToRun = 0.0f;
+							lastFitness = creatureInstancesList.get(2).getPos().x;
+							parentWrapper.taskDone(creature, lastFitness);
+							afterTestTime = testTimer + afterTestLength;
+						}
 					}
 				}
+			} catch (IndexOutOfBoundsException e) {
+				System.err.println("Out of Bounds");
+				taskDone = true;
+				lastFitness = 0f;
 			}
+			
 			
 			if (testTimer > afterTestTime) {
 				parentWrapper.pauseDone(creature, lastFitness);
