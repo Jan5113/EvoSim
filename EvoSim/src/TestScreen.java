@@ -7,7 +7,9 @@ public class TestScreen extends Screen implements TestWrapper{
 	private boolean running = false;
 	private final Population pop;
 	private boolean autoRepeat = false;
+	private boolean autoGetNext = false;
 	private Vec2 followOffset = new Vec2(0,0);
+	private int currentIndex = 0;
 
 	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(resX, resY, scale_in, pos_in);
@@ -89,6 +91,11 @@ public class TestScreen extends Screen implements TestWrapper{
 		case RESETVIEW:
 			resetView();
 			break;
+		case TEST_ONE_BY_ONE:
+			currentIndex = 0;
+			autoGetNext = true;
+			startSingleTest(pop.getCreatureByID(currentIndex));
+			break;
 		default:
 			System.err.println("CONTROL FUNC ENUM ERROR!");
 			break;
@@ -115,6 +122,19 @@ public class TestScreen extends Screen implements TestWrapper{
 			resetView();
 			enableViewLock();
 			startSingleTest(tempCret);
+		}
+		
+		if (autoGetNext) {
+			test.reset();
+			resetView();
+			enableViewLock();
+			currentIndex ++;
+			if (currentIndex >= pop.getPopulationSize()) {
+				autoGetNext = false;
+				currentIndex = 0;
+			} else {
+				startSingleTest(pop.getCreatureByID(currentIndex));
+			}
 		}
 	}
 

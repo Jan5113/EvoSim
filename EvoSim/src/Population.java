@@ -36,38 +36,49 @@ public class Population {
 		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
 	
-	public void allTested() {
-		if (popStat != PopulationStatus.S1_CREATED_MUTATED) {System.err.println("Incorrect PopStatus @ tested");
+	public void testing() {
+		if (popStat != PopulationStatus.S1_CREATED_MUTATED) {
+			System.err.println("Incorrect PopStatus @ testing");
 			return;
-		}		
-		popStat = PopulationStatus.S2_TESTED;
+		}
+		popStat = PopulationStatus.S2_TESTING;
 	}
 	
+	public void allTested() {
+		if (popStat != PopulationStatus.S1_CREATED_MUTATED &&
+				popStat != PopulationStatus.S2_TESTING) {
+			System.err.println("Incorrect PopStatus @ tested");
+			return;
+		}		
+		popStat = PopulationStatus.S3_TESTED;
+	}
+	
+	
 	public void sortPopulation () {
-		if (popStat != PopulationStatus.S2_TESTED) {System.err.println("Incorrect PopStatus @ sortPop " + popStat); return;}
+		if (popStat != PopulationStatus.S3_TESTED) {System.err.println("Incorrect PopStatus @ sortPop " + popStat); return;}
 		Collections.sort(CreatureList);
-		popStat = PopulationStatus.S3_SORTED;
+		popStat = PopulationStatus.S4_SORTED;
 	}
 
 	public void nextGen() {
-		if (popStat != PopulationStatus.S3_SORTED) {System.err.println("Incorrect PopStatus @ nextGen"); return;}
+		if (popStat != PopulationStatus.S4_SORTED) {System.err.println("Incorrect PopStatus @ nextGen"); return;}
 		generation ++;
 
-		popStat = PopulationStatus.S4_NEWGEN;
+		popStat = PopulationStatus.S5_NEWGEN;
 	}
 	
 	public void killPercentage () {
-		if (popStat != PopulationStatus.S4_NEWGEN) {System.err.println("Incorrect PopStatus @ kill"); return;}
+		if (popStat != PopulationStatus.S5_NEWGEN) {System.err.println("Incorrect PopStatus @ kill"); return;}
 		
 		for (int i = (int) (killVal * populationSize); i > 0; i--) {
 			CreatureList.remove(CreatureList.size() - 1);
 		}
 		
-		popStat = PopulationStatus.S5_KILLED;
+		popStat = PopulationStatus.S6_KILLED;
 	}
 	
 	public void mutatePop () {
-		if (popStat != PopulationStatus.S5_KILLED) {System.err.println("Incorrect PopStatus @ mutate"); return;}
+		if (popStat != PopulationStatus.S6_KILLED) {System.err.println("Incorrect PopStatus @ mutate"); return;}
 		
 		int initialListSize = CreatureList.size();
 		while (CreatureList.size() < populationSize) {
@@ -83,16 +94,16 @@ public class Population {
 	
 	public void autoNextStep() {
 		switch (popStat){
-		case S2_TESTED:
+		case S3_TESTED:
 			sortPopulation();
 			break;
-		case S3_SORTED:
+		case S4_SORTED:
 			nextGen();
 			break;
-		case S4_NEWGEN:
+		case S5_NEWGEN:
 			killPercentage();
 			break;
-		case S5_KILLED:
+		case S6_KILLED:
 			mutatePop();
 			break;
 		default:

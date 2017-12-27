@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import org.jbox2d.common.Vec2;
 
 import javafx.beans.property.IntegerProperty;
@@ -22,6 +24,7 @@ public class PopScreen extends BorderPane {
 	private TableView<Creature> tbv_pop = new TableView<Creature>();
 	private IntegerProperty selectedIndex = new SimpleIntegerProperty(-1);
 	private boolean isActive = false;
+	private TestProgressBar testProgressBar = new TestProgressBar();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PopScreen(Population pop_in, TestScreen testScreen_in) {
@@ -142,6 +145,15 @@ public class PopScreen extends BorderPane {
 	}
 	
 	public void setActive(boolean active) {
+		if (isActive == active) return;
 		isActive = active;
+		
+		if (!isActive) {
+			this.setCenter(testProgressBar);
+		}
+	}
+	
+	public TestProgressBar getTestProgressBar() {
+		return testProgressBar;
 	}
 }

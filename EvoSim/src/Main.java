@@ -43,7 +43,6 @@ public class Main extends Application{
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
 		
-		mainMultiTest = new MultiTest(6, pop);
 		
 		pop.CreateRandPopulation(100);
 
@@ -98,6 +97,7 @@ public class Main extends Application{
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
+		mainMultiTest = new MultiTest(6, pop, popScreen.getTestProgressBar());
 		Layout.defMargin(popScreen);
 		Label popTitle = new Label("Population");
 		Layout.defMargin(popTitle);

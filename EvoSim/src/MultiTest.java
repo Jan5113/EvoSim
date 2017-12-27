@@ -32,6 +32,8 @@ public class MultiTest{
 	 */
 	private final TestThread[] testArray;
 	
+	//private final TestProgressBar testProgressBar;
+	
 	
 	/**
 	 * Initialises a newly created {@code MultiTest} object. {@code threads}
@@ -48,8 +50,9 @@ public class MultiTest{
 	 *            Reference to the the main {@link Population}
 	 * 
 	 */
-	public MultiTest(int threads, Population pop_in) {
+	public MultiTest(int threads, Population pop_in, TestProgressBar tpb_in) {
 		pop = pop_in;
+		//testProgressBar = tpb_in;
 		testArray = new TestThread[threads];
 		
 		for (int i = 0; i < testArray.length; i++) {
@@ -108,6 +111,7 @@ public class MultiTest{
 	 * Starts calculation with all given threads
 	 */
 	public void startThreads() {
+		//testProgressBar.start();
 		for (int i = 0; i < testArray.length; i++) {
 			testArray[i].start();
 		}
@@ -118,18 +122,21 @@ public class MultiTest{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		//testProgressBar.stop();
 	}
 	
 	/**
 	 * Starts calculation with only one thread (to avoid sync-problems)
 	 */
 	public void startSingleThread() {
+		//testProgressBar.start();
 		testArray[0].start();
 		try {
 			testArray[0].t.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		//testProgressBar.stop();
 	}
 	
 	/**
@@ -203,10 +210,9 @@ public class MultiTest{
 		 */
 		public void start() {
 			System.out.println("Starting Thread " + threadNr);
-
+			
 			t = new Thread(this, "THREAD "+ threadNr);
 			t.start();
-			System.out.println(t.isAlive());
 		}	
 		
 		/**
@@ -216,6 +222,7 @@ public class MultiTest{
 		private void setCreature() {
 			if (creatureQueue.size() == 0) return;
 			Creature c = creatureQueue.remove(0);
+			//testProgressBar.update(1.0f - ((float) creatureQueue.size() / (float) pop.getPopulationSize()));
 			if (!c.fitnessEvaulated()) {
 				test.setCreature(c);
 				test.startTest();
@@ -243,5 +250,8 @@ public class MultiTest{
 		
 	}
 
+	public ArrayList<Creature> getQueue() {
+		return creatureQueue;
+	}
 
 }

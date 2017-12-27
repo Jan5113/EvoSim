@@ -89,7 +89,19 @@ public class PopScreenControl extends BorderPane{
 	}
 	
 	private void singleAction() {
-		
+		if (pop.getPopStat() == PopulationStatus.S0_NOTCREATED) { //CREATE POP
+			pop.CreateRandPopulation(100);
+		}
+		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) { //TEST ONE BY ONE
+			pop.testing();
+			testScreen.manageCommand(ControlFuncTest.TEST_ONE_BY_ONE);
+		}
+		if (pop.getPopStat() == PopulationStatus.S2_TESTING) { //SKIP
+			multiTest.addAllCreaturesToQueue();
+		}
+		else {
+			pop.autoNextStep();
+		}
 	}
 	
 	private void do1Gen() {
@@ -97,7 +109,7 @@ public class PopScreenControl extends BorderPane{
 		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
 			multiTest.testWholePop();
 		}
-		if (pop.getPopStat() == PopulationStatus.S2_TESTED) {
+		if (pop.getPopStat() == PopulationStatus.S3_TESTED) {
 			pop.sortPopulation();
 		}
 		pop.nextGen();
@@ -111,7 +123,9 @@ public class PopScreenControl extends BorderPane{
 	}
 	
 	private void do10Gen() {
-		
+		for (int i = 0; i < 10; i++) {
+			do1Gen();
+		}
 	}
 
 }
