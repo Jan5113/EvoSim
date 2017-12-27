@@ -42,9 +42,6 @@ public class Main extends Application{
 		
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
-		
-		
-		pop.CreateRandPopulation(100);
 
 		setupTestScreen();
 		setupPopScreen();
@@ -97,13 +94,13 @@ public class Main extends Application{
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
-		mainMultiTest = new MultiTest(6, pop, popScreen.getTestProgressBar());
+		mainMultiTest = new MultiTest(6, pop);
+		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
 		Layout.defMargin(popScreen);
 		Label popTitle = new Label("Population");
 		Layout.defMargin(popTitle);
 		Layout.labelTitle(popTitle);
 		
-		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
 		Layout.defMargin(bp_popControl);
 		
 		bp_pop.getChildren().add(popTitle);
@@ -121,6 +118,7 @@ public class Main extends Application{
 		mainTestScreen.refresh(dt);
 		bp_testControl.refresh();
 		popScreen.refresh(dt);
+		bp_popControl.refresh();
 	}
 
 	private void stageResize(Stage s) {
