@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-
 import org.jbox2d.common.Vec2;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,7 +21,6 @@ public class PopScreen extends BorderPane {
 	private TableView<Creature> tbv_pop = new TableView<Creature>();
 	private IntegerProperty selectedIndex = new SimpleIntegerProperty(-1);
 	private boolean isActive = false;
-	private TestProgressBar testProgressBar = new TestProgressBar();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PopScreen(Population pop_in, TestScreen testScreen_in) {
@@ -126,6 +122,7 @@ public class PopScreen extends BorderPane {
 	private void onMouseClicked(MouseEvent e) {
 		if (e.getButton().equals(MouseButton.PRIMARY)) {
 			if (e.getClickCount() == 2) {
+				mainTestScreen.enableAutoRepeat();
 				mainTestScreen.startSingleTest(tbv_pop.getSelectionModel().getSelectedItem());
 			}
 		}
@@ -145,15 +142,16 @@ public class PopScreen extends BorderPane {
 	}
 	
 	public void setActive(boolean active) {
-		if (isActive == active) return;
 		isActive = active;
-		
-		if (!isActive) {
-			this.setCenter(testProgressBar);
-		}
+	}
+
+	public void setProgressBar(TestProgressBar testProgressBar_in) {
+		isActive = false;
+		this.setCenter(testProgressBar_in);
 	}
 	
-	public TestProgressBar getTestProgressBar() {
-		return testProgressBar;
+	public void resetCenter() {
+		this.setCenter(tbv_pop);
+		isActive = true;
 	}
 }
