@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -12,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
 
 public class PopScreen extends BorderPane {
 	private Population pop;
@@ -26,6 +28,10 @@ public class PopScreen extends BorderPane {
 	public PopScreen(Population pop_in, TestScreen testScreen_in) {
 		mainTestScreen = testScreen_in;
 		pop = pop_in;
+		
+		Label placeholder = new Label("No Creatures to show\n\nCreate Population first!");
+		placeholder.setTextAlignment(TextAlignment.CENTER);
+		tbv_pop.setPlaceholder(placeholder);
 
 		tbv_pop.setRowFactory(tableView -> {
 			final TableRow<Creature> row = new TableRow<>();
