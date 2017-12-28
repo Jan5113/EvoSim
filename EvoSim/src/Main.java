@@ -68,6 +68,7 @@ public class Main extends Application{
 		}.start();
 
 		stageResize(primaryStage);
+
 	}
 	
 	private void setupTestScreen() {

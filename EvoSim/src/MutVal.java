@@ -28,13 +28,21 @@ public class MutVal {
 		float rangeChange = Math.abs(mutFactor) + minRangeChange;
 		float diff = mutFactor * mutRange * rangeChange;
 		
-		mutRange *= 0.99f;
+		mutRange *= 0.999999f;
 			
 		return new MutVal(value + diff, Math.abs(diff * rangeChange));
 	}
 	
+	public MutVal clone() {
+		return new MutVal(value, mutRange);
+	}
+	
 	public float getVal() {
 		return value;
+	}
+	
+	public float getSqVal() {
+		return Math.abs(value);
 	}
 	
 	public float getMutRange() {

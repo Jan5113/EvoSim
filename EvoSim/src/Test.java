@@ -70,7 +70,7 @@ public class Test {
 		creatureInstancesList.add(fixture);
 
 		B2DBody bat = new B2DBody("bat");
-		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getVal(), 0)), (new Vec2(creature.length.getVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
+		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getSqVal(), 0)), (new Vec2(creature.length.getSqVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
 		
 		creatureInstancesList.add(bat);
 
@@ -86,7 +86,7 @@ public class Test {
 		
 		RevoluteJointDef jointDef = new RevoluteJointDef();
 		jointDef.initialize(fixture.getBody(), bat.getBody(), creature.fixturePos.getVal());
-		jointDef.localAnchorB.set(creature.length.getVal(), 0);
+		jointDef.localAnchorB.set(creature.length.getSqVal(), 0);
 		jointDef.enableLimit = true;
 		jointDef.lowerAngle = 0.0f;		
 		creatureJointsList.add((RevoluteJoint) testWorld.createJoint(jointDef));
