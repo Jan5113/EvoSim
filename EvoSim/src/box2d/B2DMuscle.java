@@ -1,10 +1,8 @@
 package box2d;
-
 import java.util.ArrayList;
 
-import org.jbox2d.dynamics.joints.RevoluteJoint;
-
 import mutation.MutTimer;
+import mutation.MutVal;
 
 
 public class B2DMuscle {
@@ -13,33 +11,22 @@ public class B2DMuscle {
 	private final B2DBone boneB;
 	private final MutTimer timerOn;
 	private final MutTimer timerOff;
+	private final MutVal rotSpeed;
 	private final int id;
-	private final boolean healthy;
+	private boolean healthy;
 	
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timerOn_in, MutTimer timerOff_in, int id_in) {
+	private static float maxTorque = 2.0f;
+	
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timerOn_in, MutTimer timerOff_in, MutVal rotSpeed_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
 		timerOn = timerOn_in;
 		timerOff = timerOff_in;
+		rotSpeed = rotSpeed_in;
 		id = id_in;
 		
-		boolean[] checkBones = {false, false};
-		ArrayList<B2DBone> regBones = joint.getRegisteredBones();
-		for (int i = 0; i < regBones.size(); i++) {
-			if (regBones.get(i) == boneA) {
-				checkBones[0] = true;
-			} else if (regBones.get(i) == boneB) {
-				checkBones[1] = true;
-			}
-		}
-		
-		if (checkBones[0] && checkBones[1]) {
-			healthy = true;
-		} else {
-			System.err.println("Muscle " + id + " not healty!");
-			healthy = false;
-		}
+		initialiseMuscle();
 	}
 	
 	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int id_in) {
@@ -48,8 +35,17 @@ public class B2DMuscle {
 		boneB = boneB_in;
 		timerOn = new MutTimer();
 		timerOff = new MutTimer();
+		rotSpeed = new MutVal(-5, 5, 1);
 		id = id_in;
 		
+		initialiseMuscle();
+	}
+	
+	public B2DMuscle mutate() {
+		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
+	}
+	
+	private void initialiseMuscle() {
 		boolean[] checkBones = {false, false};
 		ArrayList<B2DBone> regBones = joint.getRegisteredBones();
 		for (int i = 0; i < regBones.size(); i++) {
@@ -68,16 +64,32 @@ public class B2DMuscle {
 		}
 	}
 	
-	public B2DMuscle mutate() {
-		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), id);
-	}
-	
-	private void initialiseMuscle() {
-		
-	}
-	
 	public boolean getHealth() {
 		return healthy;
+	}
+	
+	public boolean isActivated(float percentOfCycle) {
+		if (timerOn.getVal() < timerOff.getVal()) {
+			if (percentOfCycle > timerOn.getVal() && percentOfCycle < timerOff.getVal()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if (percentOfCycle < timerOn.getVal() && percentOfCycle > timerOff.getVal()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+	
+	public float getSpeed() {
+		return rotSpeed.getVal();
+	}
+	
+	public float getTorque() {
+		return maxTorque;
 	}
 	
 	
