@@ -1,4 +1,7 @@
+package display;
+
 import org.jbox2d.common.Vec2;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -14,6 +17,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
+import population.Creature;
+import population.Population;
+import population.TestProgressBar;
 
 public class PopScreen extends BorderPane {
 	private Population pop;

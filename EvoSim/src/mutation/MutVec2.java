@@ -1,3 +1,4 @@
+package mutation;
 import java.util.Random;
 
 import org.jbox2d.common.Vec2;
@@ -43,6 +44,10 @@ public class MutVec2{
 	
 	public Vec2 getVal() {
 		return new Vec2(x, y);
+	}
+	
+	public MutVec2 clone() {
+		return new MutVec2(x, y, diffDir.clone(), diffLen.clone());
 	}
 	
 }

@@ -1,4 +1,7 @@
+package box2d;
 import org.jbox2d.common.Vec2;
+
+import display.Screen;
 
 /**
  * The {@link B2DCamera} class is used to convert the Box2D-World coordinates to

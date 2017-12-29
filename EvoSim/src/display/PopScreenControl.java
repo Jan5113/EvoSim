@@ -1,8 +1,16 @@
+package display;
+
 import java.util.ArrayList;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import population.Population;
+import population.PopulationStatus;
+import population.PopulationTask;
+import population.TestProgressBar;
+import test.MultiTest;
+import test.MultiTestStatus;
 
 /**
  * The {@link PlayBackControls} class is a {@link BorderPane} which holds all

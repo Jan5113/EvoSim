@@ -1,3 +1,4 @@
+package test;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
@@ -9,7 +10,9 @@ import org.jbox2d.dynamics.joints.Joint;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
+import box2d.B2DBody;
 import javafx.scene.paint.Color;
+import population.Creature;
 
 public class Test {
 	private World testWorld;

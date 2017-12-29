@@ -1,3 +1,7 @@
+package test;
+
+import population.Creature;
+
 /**
  * The {@code TestWrapper} interface should be implemented by any class which is
  * a direct parent of a {@link Test} instance. The methods are called after the

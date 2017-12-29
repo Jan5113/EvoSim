@@ -1,5 +1,9 @@
+package display;
 import org.jbox2d.common.Vec2;
 
+import box2d.B2DBody;
+import box2d.B2DCamera;
+import box2d.ShapeType;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;

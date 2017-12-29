@@ -1,3 +1,4 @@
+package mutation;
 import java.util.Random;
 
 public class MutVal {

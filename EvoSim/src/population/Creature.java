@@ -1,7 +1,10 @@
+package population;
 import org.jbox2d.common.Vec2;
 
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import mutation.MutVal;
+import mutation.MutVec2;
 
 public class Creature implements Comparable<Creature>{
 	public static float[] minMaxLength = {0.2f, 2.0f};
@@ -9,7 +12,7 @@ public class Creature implements Comparable<Creature>{
 	public static Vec2[] minMaxRange = {new Vec2(-5.0f, 1.5f), new Vec2(-0.0f, 6.0f)};
 	public static Vec2 ballStartPosition = new Vec2(0.0f, 17.0f);
 	public static float ballDim = 0.1f;
-	public static Vec2 posBat = new Vec2(-1.0f, 4.0f);
+	public static Vec2 posBat = new Vec2(-2.0f, 2.0f);
 	
 	public final MutVal length;
 	public final MutVal time;
@@ -23,8 +26,8 @@ public class Creature implements Comparable<Creature>{
 	public Creature(int id_in) {
 		length = new MutVal(minMaxLength[0], minMaxLength[1], 0.5f);
 		time = new MutVal(minMaxTime[0], minMaxTime[1], 0.5f);
-		fixturePos = new MutVec2(minMaxRange[0], minMaxRange[1], 0.5f);
-//		fixturePos = new MutVec2(posBat, 2);
+	//	fixturePos = new MutVec2(minMaxRange[0], minMaxRange[1], 0.5f);
+		fixturePos = new MutVec2(posBat, 2);
 
 		id = id_in;
 	}
@@ -32,7 +35,7 @@ public class Creature implements Comparable<Creature>{
 	public Creature(int id_in, MutVal length, MutVal time, MutVec2 pos) {
 		this.length = length;
 		this.time = time;
-		this.fixturePos = pos;
+		this.fixturePos = new MutVec2(posBat, 2);
 		id = id_in;
 		
 	}
