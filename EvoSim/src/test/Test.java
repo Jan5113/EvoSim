@@ -8,7 +8,6 @@ import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.jbox2d.dynamics.joints.Joint;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
-import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 import box2d.B2DBody;
 import javafx.scene.paint.Color;
@@ -35,8 +34,6 @@ public class Test {
 	
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
-	
-	private Vec2 ballPosTEST = new Vec2(0, 17.0f);
 	
 	private final TestWrapper parentWrapper;
 	
@@ -67,32 +64,34 @@ public class Test {
 		if (creature == null) {System.err.println("No Creature set!"); return;}
 		if (testing) {System.err.println("No Creature set!"); return;}
 		
-		B2DBody fixture = new B2DBody("fixture");
-		fixture.setUpPoint(creature.fixturePos.getVal());
-		fixture.setColor(Color.RED);
-		creatureInstancesList.add(fixture);
-
-		B2DBody bat = new B2DBody("bat");
-		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getSqVal(), 0)), (new Vec2(creature.length.getSqVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
+		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureJointsList);
 		
-		creatureInstancesList.add(bat);
-
-		B2DBody ball = new B2DBody("ball");
-		//ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
-		ball.setUpCircle(ballPosTEST, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
-		ball.setBullet(true);
-		creatureInstancesList.add(ball);
-		
-		for (B2DBody b : creatureInstancesList) {
-			b.createBody(testWorld);
-		}
-		
-		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.initialize(fixture.getBody(), bat.getBody(), creature.fixturePos.getVal());
-		jointDef.localAnchorB.set(creature.length.getSqVal(), 0);
-		jointDef.enableLimit = true;
-		jointDef.lowerAngle = 0.0f;		
-		creatureJointsList.add((RevoluteJoint) testWorld.createJoint(jointDef));
+//		B2DBody fixture = new B2DBody("fixture");
+//		fixture.setUpPoint(creature.fixturePos.getVal());
+//		fixture.setColor(Color.RED);
+//		creatureInstancesList.add(fixture);
+//
+//		B2DBody bat = new B2DBody("bat");
+//		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getSqVal(), 0)), (new Vec2(creature.length.getSqVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
+//		
+//		creatureInstancesList.add(bat);
+//
+//		B2DBody ball = new B2DBody("ball");
+//		//ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
+//		ball.setUpCircle(ballPosTEST, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
+//		ball.setBullet(true);
+//		creatureInstancesList.add(ball);
+//		
+//		for (B2DBody b : creatureInstancesList) {
+//			b.createBody(testWorld);
+//		}
+//		
+//		RevoluteJointDef jointDef = new RevoluteJointDef();
+//		jointDef.initialize(fixture.getBody(), bat.getBody(), creature.fixturePos.getVal());
+//		jointDef.localAnchorB.set(creature.length.getSqVal(), 0);
+//		jointDef.enableLimit = true;
+//		jointDef.lowerAngle = 0.0f;		
+//		creatureJointsList.add((RevoluteJoint) testWorld.createJoint(jointDef));
 	}
 	
 	public void startTest() {
@@ -119,9 +118,9 @@ public class Test {
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
 			
-			if (testTimer > creature.time.getVal()) {
-				creatureJointsList.get(0).enableLimit(false);
-			}
+//			if (testTimer > creature.time.getVal()) {
+//				creatureJointsList.get(0).enableLimit(false);
+//			}
 			
 			if (testTimer > 20.0f && !taskDone) { //abort TEST
 				taskDone = true;
