@@ -84,6 +84,10 @@ public class B2DMuscle {
 		}
 	}
 	
+	public B2DMuscle clone() {
+		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
+	}
+	
 	public float getSpeed() {
 		return rotSpeed.getVal();
 	}
