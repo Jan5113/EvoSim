@@ -13,6 +13,8 @@ public class Creature implements Comparable<Creature>{
 	private final B2DBone[] bones;
 	private final B2DMuscle[] muscles;
 	
+	private final MutVal cycleLength;
+	
 	private final int id;
 	private FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
 	private boolean fitnessEvaluated = false;
@@ -23,13 +25,17 @@ public class Creature implements Comparable<Creature>{
 		bones = createDefBones();
 		muscles = createDefMuscles();
 		
+		cycleLength = new MutVal(1, 10, 1);
+		
 		id = id_in;
 	}
 	
-	public Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in) {
+	public Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in, MutVal cycleLen_in) {
 		joints = joints_in;
 		bones = bones_in;
 		muscles = muscles_in;
+		
+		cycleLength = cycleLen_in.clone();
 		
 		id = id_in;
 	}
@@ -114,7 +120,7 @@ public class Creature implements Comparable<Creature>{
 			temp_muscles[i] = muscles[i].rereferencedMutate(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]]);
 		}
 		
-		return new Creature(id, temp_joints, temp_bones, temp_muscles);
+		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.mutate());
 	}
 
 	public int compareTo(Creature c) {
@@ -129,5 +135,9 @@ public class Creature implements Comparable<Creature>{
 	
 	public FloatProperty fitnessProperty() {
 		return fitness;
+	}
+	
+	public float getCycleLength() {
+		return cycleLength.getAbsVal();
 	}
 }
