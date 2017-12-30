@@ -1,38 +1,50 @@
 package box2d;
+
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
 
 public class B2DBone {
-	private final B2DJoint jointA;
-	private final B2DJoint jointB;
-	private Vec2 pos;
-	private float angle;
+	private final B2DJoint headJoint;
+	private final B2DJoint endJoint;
 	private final int id;
-	private B2DBody boneBody;
+	private final float halfLength;
 	
 	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in) {
-		jointA = jointA_in;
-		jointB = jointB_in;
+		headJoint = jointA_in;
+		endJoint = jointB_in;
 		id = id_in;
-		initialiseBone();
-	}
-	
-	private void initialiseBone() {
-		jointA.registerBone(this);
-		jointB.registerBone(this);
 		
-		pos = jointA.getPos().add(jointB.getPos()).mul(0.5f);
-		angle = B2DCamera.getRotation(jointB.getPos().add(jointA.getPos().negate()));
-		
-		boneBody = new B2DBody("BONE" + id);
-		boneBody.setUpRect(pos, new Vec2(jointB.getPos().add(jointA.getPos().negate()).length(), 0.1f), angle, BodyType.DYNAMIC);
+		halfLength = (endJoint.getPos().add(headJoint.getPos().negate()).length()) * 0.5f;
+
+		headJoint.registerHeadBone(this);
+		endJoint.registerEndBone(this);
 	}
 	
-	public B2DBody getBone() {
-		return boneBody;
+	public B2DJoint[] getJoints() {
+		B2DJoint[] joints = {headJoint, endJoint};
+		return joints;
 	}
 	
-	public B2DBone clone() {
-		return new B2DBone(jointA.clone(), jointB.clone(), id);
+//	public B2DBone clone() {
+//		return new B2DBone(headJoint.clone(), endJoint.clone(), id);
+//	}
+	
+	public B2DBone rereferencedClone(B2DJoint jointA_in, B2DJoint jointB_in) {
+		return new B2DBone(jointA_in, jointB_in, id);
+	}
+
+	public int getID() {
+		return id;
+	}
+	
+	public float getHalfLen() {
+		return halfLength;
+	}
+	
+	public Vec2 getLocalHead() {
+		return new Vec2(-halfLength, 0);
+	}
+	
+	public Vec2 getLocalEnd() {
+		return new Vec2(halfLength, 0);
 	}
 }

@@ -1,6 +1,9 @@
 package box2d;
 import java.util.ArrayList;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
+
 import mutation.MutTimer;
 import mutation.MutVal;
 
@@ -9,11 +12,14 @@ public class B2DMuscle {
 	private final B2DJoint joint;
 	private final B2DBone boneA;
 	private final B2DBone boneB;
+	private B2DBoneDir boneADir;
+	private B2DBoneDir boneBDir;
 	private final MutTimer timerOn;
 	private final MutTimer timerOff;
 	private final MutVal rotSpeed;
 	private final int id;
 	private boolean healthy;
+	private RevoluteJoint revoluteJoint;
 	
 	private static float maxTorque = 2.0f;
 	
@@ -41,18 +47,35 @@ public class B2DMuscle {
 		initialiseMuscle();
 	}
 	
-	public B2DMuscle mutate() {
-		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
+//	public B2DMuscle mutate() {
+//		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
+//	}
+	
+	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
 	}
 	
 	private void initialiseMuscle() {
 		boolean[] checkBones = {false, false};
-		ArrayList<B2DBone> regBones = joint.getRegisteredBones();
-		for (int i = 0; i < regBones.size(); i++) {
-			if (regBones.get(i) == boneA) {
+		ArrayList<B2DBone> headBones = joint.getRegisteredHeadBones();
+		for (int i = 0; i < headBones.size(); i++) {
+			if (headBones.get(i) == boneA) {
 				checkBones[0] = true;
-			} else if (regBones.get(i) == boneB) {
+				boneADir = B2DBoneDir.HEAD;
+			} else if (headBones.get(i) == boneB) {
 				checkBones[1] = true;
+				boneBDir = B2DBoneDir.HEAD;
+			}
+		}
+		
+		ArrayList<B2DBone> endBones = joint.getRegisteredEndBones();
+		for (int i = 0; i < endBones.size(); i++) {
+			if (endBones.get(i) == boneA) {
+				checkBones[0] = true;
+				boneADir = B2DBoneDir.END;
+			} else if (endBones.get(i) == boneB) {
+				checkBones[1] = true;
+				boneBDir = B2DBoneDir.END;
 			}
 		}
 		
@@ -66,6 +89,14 @@ public class B2DMuscle {
 	
 	public boolean getHealth() {
 		return healthy;
+	}
+	
+	public int getID() {
+		return id;
+	}
+	
+	public int getJointID() {
+		return joint.getID();
 	}
 	
 	public boolean isActivated(float percentOfCycle) {
@@ -84,9 +115,9 @@ public class B2DMuscle {
 		}
 	}
 	
-	public B2DMuscle clone() {
-		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
-	}
+//	public B2DMuscle clone() {
+//		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
+//	}
 	
 	public float getSpeed() {
 		return rotSpeed.getVal();
@@ -95,7 +126,32 @@ public class B2DMuscle {
 	public float getTorque() {
 		return maxTorque;
 	}
+
+	public B2DBone[] getBones() {
+		B2DBone[] bones = {boneA, boneB};
+		return bones;
+	}
 	
+	public Vec2 getPos() {
+		return joint.getPos();
+	}
+	
+	public B2DBoneDir[] getBoneDirs() {
+		B2DBoneDir[] boneDirs = {boneADir, boneBDir};
+		return boneDirs;
+	}
+	
+	public void setRevJoint(RevoluteJoint revJoint_in) {
+		revoluteJoint = revJoint_in;
+	}
+	
+	public RevoluteJoint getRevJoint() {
+		return revoluteJoint;
+	}
+	
+	public void destroyRevJoint() {
+		RevoluteJoint.destroy(revoluteJoint);
+	}
 	
 	
 	
