@@ -58,7 +58,7 @@ public class TestScreen extends Screen implements TestWrapper{
 		
 		if (infoEnabled() != 0) getInfoString();
 		
-		refreshFollow(dt, playBackSpeed, test.getBallPos(), followOffset, running);
+		refreshFollow(dt, playBackSpeed, test.getAveragePosition(), followOffset, running);
 	}
 
 	public void manageCommand(ControlFuncTest cf) {
@@ -93,7 +93,7 @@ public class TestScreen extends Screen implements TestWrapper{
 			System.out.println("SPEED: " + playBackSpeed);
 			break;
 		case TOGGLEVIEW:
-			toggleViewLock(test.getBallPos(), running);
+			toggleViewLock(test.getAveragePosition(), running);
 			break;
 		case RESETVIEW:
 			resetView();
