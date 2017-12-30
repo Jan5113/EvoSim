@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.Contact;
-import org.jbox2d.dynamics.contacts.ContactEdge;
-import org.jbox2d.dynamics.joints.Joint;
-import org.jbox2d.dynamics.joints.RevoluteJoint;
-
 import box2d.B2DBody;
+import box2d.B2DMuscle;
 import javafx.scene.paint.Color;
 import population.Creature;
 
@@ -18,7 +14,7 @@ public class Test {
 	
 	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
-	public ArrayList<RevoluteJoint> creatureJointsList = new ArrayList<RevoluteJoint>();
+	public ArrayList<B2DMuscle> creatureMusclesList = new ArrayList<B2DMuscle>();
 	
 	private Creature creature;
 	private float lastFitness = 0.0f;
@@ -29,7 +25,7 @@ public class Test {
 	private float testTimer = 0;
 	
 	private static float afterTestLength = 2.0f;
-	private float afterTestTime = 100000.0f;
+	private float afterTestTime = 10000.0f;
 	private final boolean fastCalculation;
 	
 	private float dtToRun = 0;
@@ -64,7 +60,7 @@ public class Test {
 		if (creature == null) {System.err.println("No Creature set!"); return;}
 		if (testing) {System.err.println("No Creature set!"); return;}
 		
-		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureJointsList);
+		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureMusclesList);
 		
 //		B2DBody fixture = new B2DBody("fixture");
 //		fixture.setUpPoint(creature.fixturePos.getVal());
@@ -78,8 +74,9 @@ public class Test {
 //
 //		B2DBody ball = new B2DBody("ball");
 //		//ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
-//		ball.setUpCircle(ballPosTEST, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
+//		ball.setUpCircle(new Vec2(0, 10), 0.1f, 0.0f, BodyType.DYNAMIC);
 //		ball.setBullet(true);
+//		ball.createBody(testWorld);
 //		creatureInstancesList.add(ball);
 //		
 //		for (B2DBody b : creatureInstancesList) {
@@ -118,38 +115,16 @@ public class Test {
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
 			
-//			if (testTimer > creature.time.getVal()) {
-//				creatureJointsList.get(0).enableLimit(false);
-//			}
+			
 			
 			if (testTimer > 20.0f && !taskDone) { //abort TEST
 				taskDone = true;
 				//testing = false;
 				//dtToRun = 0.0f;
-				lastFitness = creatureInstancesList.get(2).getPos().x;
+				lastFitness = getAveragePosition().x;
 				parentWrapper.taskDone(creature, lastFitness);
-			}
-			try {
-				for (ContactEdge ce = creatureInstancesList.get(2).getBody().getContactList(); ce != null && !taskDone; ce = ce.next) {
-					Contact c = ce.contact;
-					
-					if (c.isTouching()) {
-						if (c.m_fixtureA.m_userData == worldInstancesList.get(0).getBody().getFixtureList().m_userData) {
-							taskDone = true;
-							//testing = false;
-							//dtToRun = 0.0f;
-							lastFitness = creatureInstancesList.get(2).getPos().x;
-							parentWrapper.taskDone(creature, lastFitness);
-							afterTestTime = testTimer + afterTestLength;
-						}
-					}
-				}
-			} catch (IndexOutOfBoundsException e) {
-				System.err.println("Out of Bounds");
-				taskDone = true;
-				lastFitness = 0f;
-			}
-			
+				afterTestTime = testTimer + afterTestLength;
+			}			
 			
 			if (testTimer > afterTestTime) {
 				parentWrapper.pauseDone(creature, lastFitness);
@@ -159,12 +134,14 @@ public class Test {
 	}
 	
 	public void reset () {
-		for (int i = 0; i < creatureInstancesList.size(); i++) {
-			creatureInstancesList.get(i).destroy();
+		for (B2DBody b : creatureInstancesList) {
+			b.destroy();
 		}
-		Joint.destroy(creatureJointsList.get(0));
 		creatureInstancesList.clear();
-		creatureJointsList.clear();
+		for (B2DMuscle m : creatureMusclesList) {
+			m.destroyRevJoint();
+		}
+		creatureMusclesList.clear();
 		testTimer = 0.0f;	
 		dtToRun = 0.0f;
 		testing = false;
@@ -172,11 +149,13 @@ public class Test {
 		afterTestTime = 100000.0f;
 	}
 	
-	public Vec2 getBallPos() {
-		if (creatureInstancesList.size() == 0) {
-			return null;
+	public Vec2 getAveragePosition() {
+		Vec2 pos = new Vec2(0,0);
+		for (B2DBody b: creatureInstancesList) {
+			pos.addLocal(b.getPos());
 		}
-		return creatureInstancesList.get(2).getPos();
+		pos.mulLocal(1.0f/(float) (creatureInstancesList.size()));
+		return pos;
 	}
 	
 	public ArrayList<B2DBody> getWorldInstances() {
