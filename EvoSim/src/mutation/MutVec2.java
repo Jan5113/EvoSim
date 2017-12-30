@@ -4,8 +4,9 @@ import java.util.Random;
 import org.jbox2d.common.Vec2;
 
 public class MutVec2{
-	private MutVal diffLen;
-	private MutVal diffDir;
+	private static float[] defRangeMinXYMaxXY = {-2, 0, 0, 2};
+	private final MutVal diffLen;
+	private final MutVal diffDir;
 	
 	private float x;
 	private float y;
@@ -29,6 +30,14 @@ public class MutVec2{
 		y = (float) Math.random() * (max.y - min.y) + min.y;
 	}
 	
+	public MutVec2(float rng) {
+		diffLen = new MutVal(rng * rand.nextFloat(), rng);
+		diffDir = new MutVal((float) (rand.nextFloat() * Math.PI * 2), rng);
+		
+		x = (float) Math.random() * (defRangeMinXYMaxXY[2] - defRangeMinXYMaxXY[0]) + defRangeMinXYMaxXY[0];
+		y = (float) Math.random() * (defRangeMinXYMaxXY[3] - defRangeMinXYMaxXY[1]) + defRangeMinXYMaxXY[1];
+	}
+	
 	public MutVec2(float x_in, float y_in, MutVal dir_in, MutVal len_in) {
 		x = x_in;
 		y = y_in;
@@ -39,7 +48,9 @@ public class MutVec2{
 	public MutVec2 mutate() {
 		MutVal tempDir = diffDir.mutate();
 		MutVal tempLen = diffLen.mutate();
-		return new MutVec2(x + (float) (Math.cos(tempDir.getVal()) * tempLen.getSqVal()), y + (float) (Math.sin(tempDir.getVal()) * tempLen.getSqVal()), tempDir, tempLen);
+		return new MutVec2(
+				sigmoid((float) (x + Math.cos(tempDir.getVal()) * tempLen.getSqVal()), defRangeMinXYMaxXY[0], defRangeMinXYMaxXY[2], 10),
+				sigmoid((float) (y + Math.sin(tempDir.getVal()) * tempLen.getSqVal()), defRangeMinXYMaxXY[1], defRangeMinXYMaxXY[3], 10), tempDir, tempLen);
 	}
 	
 	public Vec2 getVal() {
@@ -48,6 +59,10 @@ public class MutVec2{
 	
 	public MutVec2 clone() {
 		return new MutVec2(x, y, diffDir.clone(), diffLen.clone());
+	}
+	
+	public static float sigmoid(float x, float min, float max, float expRange) {
+		return (float) (1/( 1 + Math.pow(Math.E,(-Math.abs(5/(expRange))*x)))) * (max - min) + min;
 	}
 	
 }
