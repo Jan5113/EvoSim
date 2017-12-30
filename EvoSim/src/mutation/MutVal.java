@@ -29,7 +29,7 @@ public class MutVal {
 		float rangeChange = Math.abs(mutFactor) + minRangeChange;
 		float diff = mutFactor * mutRange * rangeChange;
 		
-		mutRange *= 0.999999f;
+		mutRange *= 0.99999f;
 			
 		return new MutVal(value + diff, Math.abs(diff * rangeChange));
 	}

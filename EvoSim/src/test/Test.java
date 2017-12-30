@@ -14,7 +14,7 @@ public class Test {
 	
 	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
-	public ArrayList<B2DMuscle> creatureMusclesList = new ArrayList<B2DMuscle>();
+	private ArrayList<B2DMuscle> creatureMusclesList = new ArrayList<B2DMuscle>();
 	
 	private Creature creature;
 	private float lastFitness = 0.0f;
@@ -33,6 +33,8 @@ public class Test {
 	
 	private final TestWrapper parentWrapper;
 	
+	private float cycleLen;
+	
 	public Test (Vec2 gravity_in, TestWrapper testWrapper, boolean fastCalculation) {
 		testWorld = new World(gravity_in);
 
@@ -50,6 +52,7 @@ public class Test {
 	public void setCreature (Creature creature_in) {
 		creature = creature_in;
 		buildCreature();
+		cycleLen = creature.getCycleLength();
 	}
 	
 	public Creature getCreature () {
@@ -61,34 +64,6 @@ public class Test {
 		if (testing) {System.err.println("No Creature set!"); return;}
 		
 		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureMusclesList);
-		
-//		B2DBody fixture = new B2DBody("fixture");
-//		fixture.setUpPoint(creature.fixturePos.getVal());
-//		fixture.setColor(Color.RED);
-//		creatureInstancesList.add(fixture);
-//
-//		B2DBody bat = new B2DBody("bat");
-//		bat.setUpRect(creature.fixturePos.getVal().add(new Vec2(-creature.length.getSqVal(), 0)), (new Vec2(creature.length.getSqVal(), 0.1f)), 0.0f, BodyType.DYNAMIC);
-//		
-//		creatureInstancesList.add(bat);
-//
-//		B2DBody ball = new B2DBody("ball");
-//		//ball.setUpCircle(Creature.ballStartPosition, Creature.ballDim, 0.0f, BodyType.DYNAMIC);
-//		ball.setUpCircle(new Vec2(0, 10), 0.1f, 0.0f, BodyType.DYNAMIC);
-//		ball.setBullet(true);
-//		ball.createBody(testWorld);
-//		creatureInstancesList.add(ball);
-//		
-//		for (B2DBody b : creatureInstancesList) {
-//			b.createBody(testWorld);
-//		}
-//		
-//		RevoluteJointDef jointDef = new RevoluteJointDef();
-//		jointDef.initialize(fixture.getBody(), bat.getBody(), creature.fixturePos.getVal());
-//		jointDef.localAnchorB.set(creature.length.getSqVal(), 0);
-//		jointDef.enableLimit = true;
-//		jointDef.lowerAngle = 0.0f;		
-//		creatureJointsList.add((RevoluteJoint) testWorld.createJoint(jointDef));
 	}
 	
 	public void startTest() {
@@ -115,7 +90,14 @@ public class Test {
 			testTimer += dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
 			
-			
+			for (B2DMuscle m : creatureMusclesList) {
+				float cycle = testTimer;
+				while (cycle > cycleLen) {
+					cycle -= cycleLen;
+				}
+				cycle /= cycleLen;
+				m.enableMuscle(m.isActivated(cycle));
+			}
 			
 			if (testTimer > 20.0f && !taskDone) { //abort TEST
 				taskDone = true;

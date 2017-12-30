@@ -149,9 +149,30 @@ public class B2DMuscle {
 		return revoluteJoint;
 	}
 	
+	public void enableMuscle(boolean flag) {
+		float minAngle = -1.0f;
+		float maxAngle = 1.0f;
+		revoluteJoint.enableMotor(true);
+		if (flag) {
+			revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
+		} else {
+			// joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
+			if ((maxAngle < revoluteJoint.getJointAngle())) {
+				revoluteJoint.setMotorSpeed((maxAngle - revoluteJoint.getJointAngle()) * 10.f);
+			} else if (minAngle - 0.01f > revoluteJoint.getJointAngle()) {
+				revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
+			} else {
+				revoluteJoint.enableMotor(false);
+			}
+
+		}
+		
+	}
+	
 	public void destroyRevJoint() {
 		RevoluteJoint.destroy(revoluteJoint);
 	}
+
 	
 	
 	
