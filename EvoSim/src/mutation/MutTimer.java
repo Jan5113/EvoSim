@@ -14,16 +14,20 @@ public class MutTimer extends MutVal {
 		super(val, rng);
 	}
 	
+	public MutTimer(MutVal mutVal_in) {
+		super(mutVal_in.getVal(), mutVal_in.getMutRange());
+	}
+	
 	public float getVal() {
 		return (Math.abs(super.getVal() % 1));
 	}
 	
 	public MutTimer mutate() {
-		return (MutTimer) super.mutate();
+		return new MutTimer(super.mutate());
 	}
 	
 	public MutTimer clone() {
-		return (MutTimer) super.clone();
+		return new MutTimer(super.clone());
 	}
 
 }
