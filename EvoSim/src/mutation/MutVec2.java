@@ -49,8 +49,8 @@ public class MutVec2{
 		MutVal tempDir = diffDir.mutate();
 		MutVal tempLen = diffLen.mutate();
 		return new MutVec2(
-				sigmoid((float) (x + Math.cos(tempDir.getVal()) * tempLen.getSqVal()), defRangeMinXYMaxXY[0], defRangeMinXYMaxXY[2], 10),
-				sigmoid((float) (y + Math.sin(tempDir.getVal()) * tempLen.getSqVal()), defRangeMinXYMaxXY[1], defRangeMinXYMaxXY[3], 10), tempDir, tempLen);
+				sigmoid((float) (x + Math.cos(tempDir.getVal()) * tempLen.getAbsVal()), defRangeMinXYMaxXY[0], defRangeMinXYMaxXY[2], 10),
+				sigmoid((float) (y + Math.sin(tempDir.getVal()) * tempLen.getAbsVal()), defRangeMinXYMaxXY[1], defRangeMinXYMaxXY[3], 10), tempDir, tempLen);
 	}
 	
 	public Vec2 getVal() {

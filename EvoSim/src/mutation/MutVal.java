@@ -42,7 +42,7 @@ public class MutVal {
 		return value;
 	}
 	
-	public float getSqVal() {
+	public float getAbsVal() {
 		return Math.abs(value);
 	}
 	
