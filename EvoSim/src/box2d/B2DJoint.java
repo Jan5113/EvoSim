@@ -31,7 +31,8 @@ public class B2DJoint {
 	}
 	
 	public Vec2 getPos() {
-		return pos.getVal().add(offset);
+		return pos.getVal();
+		//return pos.getVal().add(offset);
 	}
 	
 	public void registerHeadBone(B2DBone boneRef_in) {

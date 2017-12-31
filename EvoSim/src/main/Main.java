@@ -103,7 +103,7 @@ public class Main extends Application{
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
-		mainMultiTest = new MultiTest(10, pop);
+		mainMultiTest = new MultiTest(6, pop);
 		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
 		Layout.defMargin(popScreen);
 		Label popTitle = new Label("Population");

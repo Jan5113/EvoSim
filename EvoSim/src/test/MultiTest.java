@@ -1,6 +1,7 @@
 package test;
 import java.util.ArrayList;
 
+import box2d.B2DBody;
 import population.Creature;
 import population.Population;
 
@@ -192,7 +193,7 @@ public class MultiTest{
 		 * The {@link Test} evaluating the fitness of a given {@link Creature}.
 		 * 
 		 */
-		private final Test test;
+		private Test test;
 		/**
 		 * Number of the {@link TestThread} (for distinction when debugging)
 		 * 
@@ -214,12 +215,13 @@ public class MultiTest{
 		public TestThread(int threadNr) {
 			this.threadNr = threadNr;
 			System.out.println("Creating " +  this.threadNr );
-			test = new Test(pop.getTestGravitation(), (TestWrapper) this, true);
+			test = new Test(pop.getTestGravitation(), (TestWrapper) this);
 		}
 
 		public void run() {
 			System.out.println("Running Thread " + threadNr);
 			running = true;
+			
 			while (creatureQueue.size() > 0) setCreature();
 			
 			System.out.println("Thread " + threadNr + " exiting.");
@@ -247,8 +249,10 @@ public class MultiTest{
 			try {
 				Creature c = creatureQueue.remove(0);
 				if (!c.fitnessEvaulated()) {
+					test.reset();
 					test.setCreature(c);
 					test.startTest();
+					test.step(20.1f, 1.0f);
 				} else {
 					System.out.println("Creature ID " + c.getID() + " already tested!");
 				}
@@ -257,17 +261,22 @@ public class MultiTest{
 			}
 			
 		}
+		
 
 		public void taskDone(Creature creature_in, float calcFitness) {
 			System.out.println("Thread " + threadNr + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 			if (!test.getCreature().fitnessEvaulated()) {
-				test.getCreature().setFitness(calcFitness);
+				creature_in.setFitness(calcFitness);
 			}
-			
-			test.reset();
 		}
 		
-		public void pauseDone(Creature creature_in, float calcFitness) {}
+		public void pauseDone(Creature creature_in, float calcFitness) {
+			
+		}
+		public void stepCallback(int step) {
+			System.out.print(step);
+			System.out.println(step);
+		}
 		
 	}
 

@@ -27,7 +27,7 @@ public class Creature implements Comparable<Creature>{
 		bones = createDefBones();
 		muscles = createDefMuscles();
 		
-		cycleLength = new MutVal(1, 10, 1);
+		cycleLength = new MutVal(2, 1);
 		
 		id = id_in;
 	}
@@ -40,6 +40,18 @@ public class Creature implements Comparable<Creature>{
 		cycleLength = cycleLen_in.clone();
 		
 		id = id_in;
+	}
+	
+	private Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in, MutVal cycleLen_in, float fitness_in, boolean fitnessEval_in) {
+		joints = joints_in;
+		bones = bones_in;
+		muscles = muscles_in;
+		
+		cycleLength = cycleLen_in.clone();
+		
+		id = id_in;
+		fitness.set(fitness_in);
+		fitnessEvaluated = fitnessEval_in;
 	}
 	
 	private B2DJoint[] createDefJoints() {
@@ -67,11 +79,11 @@ public class Creature implements Comparable<Creature>{
 
 	private B2DMuscle[] createDefMuscles() {
 		B2DMuscle[] muscle_def = new B2DMuscle[5];
-		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 0);
-		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 1);
-		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 2);
-		muscle_def[3] = new B2DMuscle(joints[4], bones[3], bones[4], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 3);
-		muscle_def[4] = new B2DMuscle(joints[5], bones[4], bones[5], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 4);
+		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], new MutTimer(0.2f, 1), new MutTimer(0.5f, 1), new MutVal(2.0f, 1.0f), 0);
+		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], new MutTimer(0.3f, 1), new MutTimer(0.7f, 1), new MutVal(2.0f, 1.0f), 1);
+		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], new MutTimer(0.4f, 1), new MutTimer(0.9f, 1), new MutVal(2.0f, 1.0f), 2);
+		muscle_def[3] = new B2DMuscle(joints[4], bones[3], bones[4], new MutTimer(0.2f, 1), new MutTimer(0.2f, 1), new MutVal(2.0f, 1.0f), 3);
+		muscle_def[4] = new B2DMuscle(joints[5], bones[4], bones[5], new MutTimer(0.8f, 1), new MutTimer(0.5f, 1), new MutVal(2.0f, 1.0f), 4);
 		return muscle_def;
 	}
 	
@@ -94,7 +106,8 @@ public class Creature implements Comparable<Creature>{
 	
 	public Float getFitnessFloat() {
 		if (fitnessEvaluated) {
-			return (float) Math.floor(fitness.get()*100)/100;
+			//return (float) Math.floor(fitness.get()*100)/100;
+			return fitness.get();
 		} else {
 			return null;
 		}
@@ -150,5 +163,26 @@ public class Creature implements Comparable<Creature>{
 	
 	public float getCycleLength() {
 		return cycleLength.getAbsVal();
+	}
+	
+	public Creature clone() {
+		B2DJoint[] temp_joints = new B2DJoint[joints.length];
+		B2DBone[] temp_bones = new B2DBone[bones.length];
+		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
+		
+		for (int i = 0; i < temp_joints.length; i++) {
+			temp_joints[i] = joints[i].clone();
+		}
+		for (int i = 0; i < temp_bones.length; i++) {
+			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};
+			temp_bones[i] = bones[i].rereferencedClone(temp_joints[jointIDs[0]], temp_joints[jointIDs[1]]);
+		}
+		for (int i = 0; i < temp_muscles.length; i++) {
+			int jointID = muscles[i].getJointID();
+			int[] boneIDs = {muscles[i].getBones()[0].getID(), muscles[i].getBones()[1].getID()};
+			temp_muscles[i] = muscles[i].rereferencedClone(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]]);
+		}
+		
+		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.clone(), fitness.get(), fitnessEvaluated);
 	}
 }

@@ -17,7 +17,7 @@ import box2d.B2DMuscle;
 import population.Creature;
 
 public class CreatureBuilder {
-	public static void buildCreature(Creature c, World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<B2DMuscle> creatureMuscles_in) {
+	public static void buildCreature(Creature c, World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in) {
 		
 		B2DBone[] bones = c.getBones();
 		for (int i = 0; i < bones.length; i++) {
@@ -30,8 +30,7 @@ public class CreatureBuilder {
 		
 		B2DMuscle[] muscles = c.getMuscles();
 		for (int i = 0; i < muscles.length; i++) {
-			muscles[i].setRevJoint((RevoluteJoint) w.createJoint(buildMuscles(muscles[i], creatureInstances_in)));
-			creatureMuscles_in.add(muscles[i]);
+			revoluteJoints_in.add((RevoluteJoint) w.createJoint(buildMuscles(muscles[i], creatureInstances_in)));
 		}
 		
 	}
@@ -75,6 +74,7 @@ public class CreatureBuilder {
 		jointDef.lowerAngle = -2;
 		jointDef.upperAngle = 2;
 		jointDef.collideConnected = false;
+		jointDef.enableMotor = true;
 		
 		return jointDef;
 	}

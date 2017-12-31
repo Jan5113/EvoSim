@@ -266,6 +266,27 @@ public class Screen extends Canvas {
 				
 			}
 		}
+		
+		
+////		0.80052894|0.4294793 1.7168028°
+//		drawB2DRect(0.80052894f, 0.4294793f, 1.7168028f);
+////		1.1255774|0.7106345 -0.29048485°
+//		drawB2DRect(1.1255774f, 0.7106345f, -0.29048485f);
+////		1.8413798|0.37379968 -0.5891407°
+//		drawB2DRect(1.8413798f, 0.37379968f, -0.5891407f);
+////		2.57377|0.1378852 -0.034136917°
+//		drawB2DRect(2.57377f, 0.1378852f, -0.034136917f);
+////		2.8274097|0.49661186 1.9449595°
+//		drawB2DRect(2.8274097f, 0.49661186f, 1.9449595f);
+////		2.3337162|0.67069155 3.6600554°
+//		drawB2DRect(2.3337162f, 0.67069155f, 3.6600554f);
+//	}
+//	
+//	private void drawB2DRect(float x, float y, float rad) {
+//		drawPxRect(camera.coordWorldToPixels(new Vec2(x,y)),
+//				camera.scalarWorldToPixels(new Vec2(0.4f,0.1f)),
+//				(float) Math.toDegrees(-rad),
+//				Color.RED, false);
 	}
 	
 //************************************************

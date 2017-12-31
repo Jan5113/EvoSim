@@ -2,8 +2,6 @@ package box2d;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.joints.RevoluteJoint;
-
 import mutation.MutTimer;
 import mutation.MutVal;
 
@@ -19,7 +17,6 @@ public class B2DMuscle {
 	private final MutVal rotSpeed;
 	private final int id;
 	private boolean healthy;
-	private RevoluteJoint revoluteJoint;
 	
 	private static float maxTorque = 2.0f;
 	
@@ -53,6 +50,10 @@ public class B2DMuscle {
 	
 	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
 		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
+	}
+	
+	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
 	}
 	
 	private void initialiseMuscle() {
@@ -141,39 +142,39 @@ public class B2DMuscle {
 		return boneDirs;
 	}
 	
-	public void setRevJoint(RevoluteJoint revJoint_in) {
-		revoluteJoint = revJoint_in;
-	}
-	
-	public RevoluteJoint getRevJoint() {
-		return revoluteJoint;
-	}
-	
+//	public void setRevJoint(RevoluteJoint revJoint_in) {
+//		revoluteJoint = revJoint_in;
+//	}
+//	
+//	public RevoluteJoint getRevJoint() {
+//		return revoluteJoint;
+//	}
+//	
 	public void enableMuscle(boolean flag) {
-		float minAngle = -1.0f;
-		float maxAngle = 1.0f;
-		revoluteJoint.enableMotor(true);
-		if (flag) {
-			revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
-		} else {
-			// joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
-			if ((maxAngle < revoluteJoint.getJointAngle())) {
-				revoluteJoint.setMotorSpeed((maxAngle - revoluteJoint.getJointAngle()) * 10.f);
-			} else if (minAngle - 0.01f > revoluteJoint.getJointAngle()) {
-				revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
-			} else {
-				revoluteJoint.enableMotor(false);
-			}
-
-		}
+//		float minAngle = -1.0f;
+//		float maxAngle = 1.0f;
+//		revoluteJoint.enableMotor(true);
+//		if (flag) {
+//			revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
+//		} else {
+//			// joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
+//			if ((maxAngle < revoluteJoint.getJointAngle())) {
+//				revoluteJoint.setMotorSpeed((maxAngle - revoluteJoint.getJointAngle()) * 10.f);
+//			} else if (minAngle - 0.01f > revoluteJoint.getJointAngle()) {
+//				revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
+//			} else {
+//				revoluteJoint.enableMotor(false);
+//			}
+//
+//		}
 		
 	}
 	
-	public void destroyRevJoint() {
-		RevoluteJoint.destroy(revoluteJoint);
-	}
-
-	
+//	public void destroyRevJoint() {
+//		RevoluteJoint.destroy(revoluteJoint);
+//	}
+//
+//	
 	
 	
 	

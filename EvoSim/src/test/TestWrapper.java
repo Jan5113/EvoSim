@@ -37,4 +37,6 @@ public interface TestWrapper {
 	 *            applied!
 	 */
 	public void pauseDone(Creature creature_in, float calcFitness);
+	
+	public void stepCallback(int step);
 }

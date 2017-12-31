@@ -21,27 +21,24 @@ public class TestScreen extends Screen implements TestWrapper{
 	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(resX, resY, scale_in, pos_in);
 		pop = pop_in;
-		test = new Test(pop.getTestGravitation(), (TestWrapper) this, false);
+		test = new Test(pop.getTestGravitation(), (TestWrapper) this);
 		
 		camera.enableFollowX();
 	}
 
 	public void startSingleTest(Creature creature) {
+		//test = new Test(pop.getTestGravitation(), (TestWrapper) this, false);
 		if (creature == null) {
 			System.err.println("No Creature!");
 			return;
 		}
 		
 		if (test.getCreature() != null) {
-			abortTest();
+			test.reset();
 		}
 		test.setCreature(creature);
 		test.startTest();
 		running = true;
-	}
-
-	public void startSingleTest(int creature_index) {
-		startSingleTest(pop.getCreatureByIndex(creature_index));
 	}
 
 	public void refresh(float dt) {
@@ -128,10 +125,9 @@ public class TestScreen extends Screen implements TestWrapper{
 	public void pauseDone(Creature creature_in, float newFitness) {
 		
 		if (autoRepeat) {
-			Creature tempCret = test.getCreature();
 			test.reset();
 			enableViewLock();
-			startSingleTest(tempCret);
+			startSingleTest(creature_in);
 		}
 		
 		if (autoGetNext) {
@@ -201,10 +197,6 @@ public class TestScreen extends Screen implements TestWrapper{
 		autoRepeat = false;
 	}
 	
-	public void abortTest() {
-		test.reset();
-	}
-	
 	public void setFollowOffset(Vec2 offset_in) {
 		followOffset = offset_in.clone();
 	}
@@ -212,5 +204,7 @@ public class TestScreen extends Screen implements TestWrapper{
 	public int getCreatureID () {
 		return test.getCreature().getID();
 	}
+
+	public void stepCallback(int step) {}
 
 }

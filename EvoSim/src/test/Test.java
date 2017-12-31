@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
+
 import box2d.B2DBody;
 import box2d.B2DMuscle;
 import javafx.scene.paint.Color;
@@ -11,10 +13,11 @@ import population.Creature;
 
 public class Test {
 	private World testWorld;
+	private Vec2 gravity;
 	
 	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
-	private ArrayList<B2DMuscle> creatureMusclesList = new ArrayList<B2DMuscle>();
+	private ArrayList<RevoluteJoint> creatureRevoluteJointsList = new ArrayList<RevoluteJoint>();
 	
 	private Creature creature;
 	private float lastFitness = 0.0f;
@@ -26,7 +29,6 @@ public class Test {
 	
 	private static float afterTestLength = 2.0f;
 	private float afterTestTime = 10000.0f;
-	private final boolean fastCalculation;
 	
 	private float dtToRun = 0;
 	private static float dtStepSize = 0.005f;
@@ -34,9 +36,18 @@ public class Test {
 	private final TestWrapper parentWrapper;
 	
 	private float cycleLen;
+	private B2DMuscle[] muscles;
 	
-	public Test (Vec2 gravity_in, TestWrapper testWrapper, boolean fastCalculation) {
-		testWorld = new World(gravity_in);
+	public Test (Vec2 gravity_in, TestWrapper testWrapper) {
+		gravity = gravity_in;
+		
+		initWorld();
+		
+		parentWrapper = testWrapper;
+	}
+	
+	private void initWorld() {
+		testWorld = new World(gravity);
 
 		B2DBody floor = new B2DBody("floor");
 		floor.setUpRect(0.0f, -10.0f, 100.0f, 10.0f, 0.0f, BodyType.STATIC);
@@ -44,15 +55,13 @@ public class Test {
 		floor.setColor(Color.GREENYELLOW);
 		floor.createBody(testWorld);
 		worldInstancesList.add(floor);
-		
-		parentWrapper = testWrapper;
-		this.fastCalculation = fastCalculation;
 	}
 	
 	public void setCreature (Creature creature_in) {
 		creature = creature_in;
 		buildCreature();
 		cycleLen = creature.getCycleLength();
+		muscles = creature.getMuscles();	
 	}
 	
 	public Creature getCreature () {
@@ -62,73 +71,78 @@ public class Test {
 	private  void buildCreature () {
 		if (creature == null) {System.err.println("No Creature set!"); return;}
 		if (testing) {System.err.println("No Creature set!"); return;}
-		
-		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureMusclesList);
+		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureRevoluteJointsList);
 	}
 	
 	public void startTest() {
 		testing = true;
 		taskDone = false;
-		
-		if (fastCalculation) {
-			fastSteps();
-		}
-	}
-	
-	public void fastSteps() {
-		while (!taskDone) {
-			step(dtStepSize, 1);
-		}
 	}
 	
 	public void step (float dt, float speed) {
-		if (!testing) return;
+		if (!testing) {
+			System.err.println(creature.getID() + "NOT TESTING! @" + testTimer);
+			return;
+		}
 		dtToRun += (speed * dt);
+		int steps = 0;
 		
 		while (dtToRun >= dtStepSize) {
 			dtToRun -= dtStepSize;
 			testTimer += dtStepSize;
+			steps ++;
 			testWorld.step(dtStepSize, 10, 10);
-			
-			for (B2DMuscle m : creatureMusclesList) {
+					
+			for (int i = 0; i < muscles.length; i++) {
+				RevoluteJoint r = creatureRevoluteJointsList.get(i);
 				float cycle = testTimer;
 				while (cycle > cycleLen) {
 					cycle -= cycleLen;
 				}
 				cycle /= cycleLen;
-				m.enableMuscle(m.isActivated(cycle));
+				if (muscles[i].isActivated(cycle)) {
+					r.setMotorSpeed(muscles[i].getSpeed());
+				} else {
+					r.setMotorSpeed(-muscles[i].getSpeed());
+				}
 			}
 			
 			if (testTimer > 20.0f && !taskDone) { //abort TEST
 				taskDone = true;
 				//testing = false;
 				//dtToRun = 0.0f;
+				System.out.println(creature.getID() + " " + testTimer);
+//				for (B2DBody b : creatureInstancesList) {
+//					System.out.println(b.getPos().x+"|"+b.getPos().y+" "+b.getAngle()+"°");
+//				}
 				lastFitness = getAveragePosition().x;
-				parentWrapper.taskDone(creature, lastFitness);
+				parentWrapper.taskDone(creature, lastFitness);					
 				afterTestTime = testTimer + afterTestLength;
 			}			
 			
 			if (testTimer > afterTestTime) {
 				parentWrapper.pauseDone(creature, lastFitness);
 			}
-			
+
+			parentWrapper.stepCallback(steps);
 		}
 	}
 	
 	public void reset () {
+		for (RevoluteJoint rj : creatureRevoluteJointsList) {
+			RevoluteJoint.destroy(rj);
+		}
+		creatureRevoluteJointsList.clear();
 		for (B2DBody b : creatureInstancesList) {
 			b.destroy();
 		}
 		creatureInstancesList.clear();
-		for (B2DMuscle m : creatureMusclesList) {
-			m.destroyRevJoint();
-		}
-		creatureMusclesList.clear();
 		testTimer = 0.0f;	
 		dtToRun = 0.0f;
 		testing = false;
 		creature = null;
-		afterTestTime = 100000.0f;
+		afterTestTime = 10000.0f;
+		initWorld();
 	}
 	
 	public Vec2 getAveragePosition() {
@@ -146,5 +160,9 @@ public class Test {
 	
 	public ArrayList<B2DBody> getCreatureInstances () {
 		return creatureInstancesList;
+	}
+	
+	public boolean isTaskDone() {
+		return taskDone;
 	}
 }
