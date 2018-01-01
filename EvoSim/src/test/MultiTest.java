@@ -1,7 +1,5 @@
 package test;
 import java.util.ArrayList;
-
-import box2d.B2DBody;
 import population.Creature;
 import population.Population;
 
