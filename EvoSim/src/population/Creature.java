@@ -55,35 +55,29 @@ public class Creature implements Comparable<Creature>{
 	}
 	
 	private B2DJoint[] createDefJoints() {
-		B2DJoint[] joints_def = new B2DJoint[7];
-		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f), 1), 0);
-		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f), 1), 1);
-		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f), 1), 2);
-		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0.0f, 0.1f), 1), 3);
-		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.8f, 0.1f), 1), 4);
-		joints_def[5] = new B2DJoint(new MutVec2(new Vec2(1.6f, 0.1f), 1), 5);
-		joints_def[6] = new B2DJoint(new MutVec2(new Vec2(2.4f, 0.1f), 1), 6);
+		B2DJoint[] joints_def = new B2DJoint[5];
+		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f), 0.1f), 0);
+		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f), 0.1f), 1);
+		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f), 0.1f), 2);
+		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0.0f, 0.1f), 0.1f), 3);
+		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.8f, 0.1f), 0.1f), 4);
 		return joints_def;
 	}
 
 	private B2DBone[] createDefBones() {
-		B2DBone[] bones_def = new B2DBone[6];
+		B2DBone[] bones_def = new B2DBone[4];
 		bones_def[0] = new B2DBone(joints[0], joints[1], 0);
 		bones_def[1] = new B2DBone(joints[1], joints[2], 1);
 		bones_def[2] = new B2DBone(joints[2], joints[3], 2);
 		bones_def[3] = new B2DBone(joints[3], joints[4], 3);
-		bones_def[4] = new B2DBone(joints[4], joints[5], 4);
-		bones_def[5] = new B2DBone(joints[5], joints[6], 5);
 		return bones_def;
 	}
 
 	private B2DMuscle[] createDefMuscles() {
-		B2DMuscle[] muscle_def = new B2DMuscle[5];
-		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], new MutTimer(0.2f, 1), new MutTimer(0.5f, 1), new MutVal(2.0f, 1.0f), 0);
-		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], new MutTimer(0.3f, 1), new MutTimer(0.7f, 1), new MutVal(2.0f, 1.0f), 1);
-		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], new MutTimer(0.4f, 1), new MutTimer(0.9f, 1), new MutVal(2.0f, 1.0f), 2);
-		muscle_def[3] = new B2DMuscle(joints[4], bones[3], bones[4], new MutTimer(0.2f, 1), new MutTimer(0.2f, 1), new MutVal(2.0f, 1.0f), 3);
-		muscle_def[4] = new B2DMuscle(joints[5], bones[4], bones[5], new MutTimer(0.8f, 1), new MutTimer(0.5f, 1), new MutVal(2.0f, 1.0f), 4);
+		B2DMuscle[] muscle_def = new B2DMuscle[3];
+		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 0);
+		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 1);
+		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 2);
 		return muscle_def;
 	}
 	
@@ -132,7 +126,7 @@ public class Creature implements Comparable<Creature>{
 		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
 		
 		for (int i = 0; i < temp_joints.length; i++) {
-			temp_joints[i] = joints[i].clone();
+			temp_joints[i] = joints[i].mutate();
 		}
 		for (int i = 0; i < temp_bones.length; i++) {
 			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};

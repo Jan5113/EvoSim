@@ -43,6 +43,8 @@ public class CreatureBuilder {
 		B2DBody boneBody = new B2DBody("BONE" + bone.getID());
 		boneBody.setUpRect(pos, new Vec2(bone.getHalfLen(), 0.1f), angle, BodyType.DYNAMIC);
 		
+		boneBody.setGroupIndex(-1);
+		
 		creatureInstances_in.add(boneBody);
 	}
 	
