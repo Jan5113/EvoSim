@@ -20,7 +20,6 @@ public class Creature implements Comparable<Creature>{
 	private final int id;
 	private FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
 	private boolean fitnessEvaluated = false;
-
 	
 	public Creature(int id_in) {
 		joints = createDefJoints();
@@ -56,11 +55,11 @@ public class Creature implements Comparable<Creature>{
 	
 	private B2DJoint[] createDefJoints() {
 		B2DJoint[] joints_def = new B2DJoint[5];
-		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f), 0.1f), 0);
-		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f), 0.1f), 1);
-		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f), 0.1f), 2);
-		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0.0f, 0.1f), 0.1f), 3);
-		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.8f, 0.1f), 0.1f), 4);
+		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f)), 0);
+		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f)), 1);
+		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f)), 2);
+		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0.0f, 0.1f)), 3);
+		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.8f, 0.1f)), 4);
 		return joints_def;
 	}
 
@@ -120,13 +119,13 @@ public class Creature implements Comparable<Creature>{
 	}
 	
 
-	public Creature mutate(int id) {
+	public Creature mutate(int id, int gen) {
 		B2DJoint[] temp_joints = new B2DJoint[joints.length];
 		B2DBone[] temp_bones = new B2DBone[bones.length];
 		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
 		
 		for (int i = 0; i < temp_joints.length; i++) {
-			temp_joints[i] = joints[i].mutate();
+			temp_joints[i] = joints[i].mutate(gen);
 		}
 		for (int i = 0; i < temp_bones.length; i++) {
 			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};
@@ -135,10 +134,10 @@ public class Creature implements Comparable<Creature>{
 		for (int i = 0; i < temp_muscles.length; i++) {
 			int jointID = muscles[i].getJointID();
 			int[] boneIDs = {muscles[i].getBones()[0].getID(), muscles[i].getBones()[1].getID()};
-			temp_muscles[i] = muscles[i].rereferencedMutate(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]]);
+			temp_muscles[i] = muscles[i].rereferencedMutate(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]], gen);
 		}
 		
-		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.mutate());
+		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.mutate(gen));
 	}
 
 	public int compareTo(Creature c) {

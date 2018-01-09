@@ -85,7 +85,7 @@ public class Population {
 		int initialListSize = CreatureList.size();
 		while (CreatureList.size() < populationSize) {
 			for (int i = 0; i < initialListSize; i++) {
-				addCreature(CreatureList.get(i).mutate(currentID));
+				addCreature(CreatureList.get(i).mutate(currentID, generation));
 				currentID ++;
 				if (CreatureList.size() >= populationSize) break;
 			}

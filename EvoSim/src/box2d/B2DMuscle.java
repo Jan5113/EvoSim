@@ -48,8 +48,8 @@ public class B2DMuscle {
 //		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
 //	}
 	
-	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
+	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int gen) {
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(gen), timerOff.mutate(gen), rotSpeed.mutate(gen), id);
 	}
 	
 	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {

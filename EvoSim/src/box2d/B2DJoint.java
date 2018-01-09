@@ -1,8 +1,6 @@
 package box2d;
 import java.util.ArrayList;
-
 import org.jbox2d.common.Vec2;
-
 import mutation.MutVec2;
 
 public class B2DJoint {
@@ -12,8 +10,8 @@ public class B2DJoint {
 	private final int id;
 	private final Vec2 offset;
 	
-	public B2DJoint(Vec2 min, Vec2 max, float rng, int id_in) {
-		pos = new MutVec2(min, max, rng);
+	public B2DJoint(float[] minXY_maxXY, int id_in) {
+		pos = new MutVec2(minXY_maxXY);
 		id = id_in;
 		
 		offset = new Vec2((float) Math.random() / 1000, (float) Math.random() / 1000);
@@ -26,8 +24,8 @@ public class B2DJoint {
 		offset = new Vec2((float) Math.random() / 1000, (float) Math.random() / 1000);
 	}
 	
-	public B2DJoint mutate() {
-		return new B2DJoint(pos.mutate(), id);
+	public B2DJoint mutate(int gen) {
+		return new B2DJoint(pos.mutate(gen), id);
 	}
 	
 	public Vec2 getPos() {

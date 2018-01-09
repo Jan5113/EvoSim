@@ -1,41 +1,45 @@
 package mutation;
-import java.util.Random;
 
 public class MutVal {
 	private final float value;
-	private float mutRange;
-	private Random normDis = new Random();
-	private static float minRangeChange = 0.9f; //between 0 and 1
-	private static float bigMutFactor = 5.0f;
+	private final float min;
+	private final float max;
 	
-	public MutVal(float min, float max, float rng) {
-		if (min > max) max += (min - (min = max)); // swap
-		value = (float) Math.random() * (max - min) + min;
-		mutRange = rng;
+	public MutVal(float min_in, float max_in, float value_in) {
+		if (min_in > max_in) max_in += (min_in - (min_in = max_in)); // swap
+		value = value_in;
+		min = min_in;
+		max = max_in;
 	}
 	
-	public MutVal(float val, float rng) {
-		value = val;
-		mutRange = rng;
+	public MutVal(float min_in, float max_in) {
+		if (min_in > max_in) max_in += (min_in - (min_in = max_in)); // swap
+		min = min_in;
+		max = max_in;
+		value = (float) Math.random()*(max - min) + min;
 	}
 	
-	public MutVal mutate() {
-		float mutFactor = (float) normDis.nextGaussian();
+	public MutVal(MutVal mutVal_in) {
+		min = mutVal_in.getMin();
+		max = mutVal_in.getMax();
+		value = mutVal_in.getVal();
+	}
+	
+	public MutVal mutate(int gen) {
+		float new_val;
+		do {
+			new_val = value;
+			float rand = (float) Math.random() - 0.5f;
+			float genMul = (float) Math.pow(0.99f, gen);
+			float rng = max - min;
+			new_val += rand * genMul * rng;
+		} while (new_val > max || new_val < min);
 		
-		if (normDis.nextFloat() < 0.05) { // 5% chance for bigger mutation 
-			mutFactor *= bigMutFactor;
-		}
-				
-		float rangeChange = Math.abs(mutFactor) + minRangeChange;
-		float diff = mutFactor * mutRange * rangeChange;
-		
-		mutRange *= 0.99999f;
-			
-		return new MutVal(value + diff, Math.abs(diff * rangeChange));
+		return new MutVal(min, max, new_val);
 	}
 	
 	public MutVal clone() {
-		return new MutVal(value, mutRange);
+		return new MutVal(min, max, value);
 	}
 	
 	public float getVal() {
@@ -46,8 +50,12 @@ public class MutVal {
 		return Math.abs(value);
 	}
 	
-	public float getMutRange() {
-		return mutRange;
+	public float getMin() {
+		return min;
+	}
+	
+	public float getMax() {
+		return max;
 	}
 	
 }
