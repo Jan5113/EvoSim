@@ -125,7 +125,8 @@ public class Creature implements Comparable<Creature>{
 		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
 		
 		for (int i = 0; i < temp_joints.length; i++) {
-			temp_joints[i] = joints[i].mutate(gen);
+			//temp_joints[i] = joints[i].mutate(gen);
+			temp_joints[i] = joints[i].clone();
 		}
 		for (int i = 0; i < temp_bones.length; i++) {
 			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};
