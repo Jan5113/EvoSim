@@ -1,5 +1,7 @@
 package mutation;
 
+import java.util.Random;
+
 public class MutVal {
 	private final float value;
 	private final float min;
@@ -26,14 +28,18 @@ public class MutVal {
 	}
 	
 	public MutVal mutate(int gen) {
-		float new_val;
-		do {
-			new_val = value;
-			float rand = (float) Math.random() - 0.5f;
-			float genMul = (float) Math.pow(0.99f, gen);
-			float rng = max - min;
-			new_val += rand * genMul * rng;
-		} while (new_val > max || new_val < min);
+		Random r = new Random();
+		float rand = r.nextFloat();
+		float genMul = (float) Math.pow(0.95f, gen * 0.5f);
+		float rng = (max - min) * 0.5f;
+		float new_val = value + (rand * genMul * rng);
+		
+		if (new_val > max) {
+			new_val = max;
+		}
+		else if (new_val < min) {
+			new_val = min;
+		}
 		
 		return new MutVal(min, max, new_val);
 	}
