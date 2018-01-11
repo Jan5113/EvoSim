@@ -48,7 +48,11 @@ public class Layout {
 	}
 	
 	public static Color getSkycolor() {
-		return Color.color(0.85, 0.90, 0.95);
+		return Color.web("d3e8f8");
+	}
+	
+	public static Color getSkycolorInactive() {
+		return Color.web("bddcf4");
 	}
 	
 	public static void defMargin (Node node) {

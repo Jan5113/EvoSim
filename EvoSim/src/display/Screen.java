@@ -4,16 +4,19 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import box2d.B2DCamera;
 import box2d.ShapeType;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class Screen extends Canvas {
 	private GraphicsContext gc;
 	private Color col_background;
+	private Color col_backgroundInactive;
 	private boolean gridEnabled = true;
 	public B2DCamera camera;
 	private boolean markersEnabled = false;
@@ -47,9 +50,23 @@ public class Screen extends Canvas {
 	public void setBackgroundCol(Color c) {
 		col_background = c;
 	}
+	
+	public void setInactiveBackgroundCol(Color c) {
+		col_backgroundInactive = c;
+	}
 
 	public void clearScreen() {
 		gc.setFill(col_background);
+		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if (gridEnabled) drawGrid();
+		if (infoEnabled != 0) drawInfo();
+		if (markersEnabled) drawMarkers();
+	}
+	
+	public void clearScreen(boolean active) {
+		if (active) gc.setFill(col_background);
+		else gc.setFill(col_backgroundInactive);
+		
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (gridEnabled) drawGrid();
 		if (infoEnabled != 0) drawInfo();
@@ -267,26 +284,6 @@ public class Screen extends Canvas {
 			}
 		}
 		
-		
-////		0.80052894|0.4294793 1.7168028°
-//		drawB2DRect(0.80052894f, 0.4294793f, 1.7168028f);
-////		1.1255774|0.7106345 -0.29048485°
-//		drawB2DRect(1.1255774f, 0.7106345f, -0.29048485f);
-////		1.8413798|0.37379968 -0.5891407°
-//		drawB2DRect(1.8413798f, 0.37379968f, -0.5891407f);
-////		2.57377|0.1378852 -0.034136917°
-//		drawB2DRect(2.57377f, 0.1378852f, -0.034136917f);
-////		2.8274097|0.49661186 1.9449595°
-//		drawB2DRect(2.8274097f, 0.49661186f, 1.9449595f);
-////		2.3337162|0.67069155 3.6600554°
-//		drawB2DRect(2.3337162f, 0.67069155f, 3.6600554f);
-//	}
-//	
-//	private void drawB2DRect(float x, float y, float rad) {
-//		drawPxRect(camera.coordWorldToPixels(new Vec2(x,y)),
-//				camera.scalarWorldToPixels(new Vec2(0.4f,0.1f)),
-//				(float) Math.toDegrees(-rad),
-//				Color.RED, false);
 	}
 	
 //************************************************
@@ -317,6 +314,36 @@ public class Screen extends Canvas {
 				gc.restore();
 			}
 		}
+	}
+	
+//************************************************
+//*		SHOW SCORE
+//************************************************	
+	
+	public void drawScore(float fitness) {
+		float halfWidth = 50;
+		float top = 70;
+		float bottom = 30;
+		float tipc = 0f;
+		
+		Vec2 tip = camera.coordWorldToPixels(new Vec2(fitness, tipc));
+		
+		double[] xPoints = {tip.x - halfWidth, tip.x + halfWidth, tip.x + halfWidth, tip.x, tip.x - halfWidth};
+		double[] yPoints = {tip.y - bottom - top, tip.y - bottom - top, tip.y - bottom, tip.y, tip.y - bottom};
+		
+		gc.save();
+		
+		gc.setFill(Color.web("#4a9ddb"));
+		gc.fillPolygon(xPoints, yPoints, 5);
+		
+		gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+		
+		gc.setFill(Color.RED);
+		gc.setFont(new Font(30));
+		gc.fillText(Math.round(fitness * 10)/10.0f + "m", tip.x, tip.y - bottom - (top/2) , 2 * halfWidth - 10);
+		
+		gc.restore();
 	}
 
 //************************************************

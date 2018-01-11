@@ -15,6 +15,7 @@ public class TestScreen extends Screen implements TestWrapper{
 	private final Population pop;
 	private boolean autoRepeat = false;
 	private boolean autoGetNext = false;
+	private boolean showScore = false;
 	private Vec2 followOffset = new Vec2(0,0);
 	private int currentIndex = 0;
 
@@ -42,7 +43,11 @@ public class TestScreen extends Screen implements TestWrapper{
 	}
 
 	public void refresh(float dt) {
-		clearScreen();
+		clearScreen(!test.isTaskDone());
+		
+		if (showScore && test.getCreature() != null) {
+			if (test.getCreature().fitnessEvaulated()) drawScore(test.getCreature().getFitness());
+		}
 
 		for (B2DBody b : test.getWorldInstances()) {
 			drawBody(b);
@@ -195,6 +200,10 @@ public class TestScreen extends Screen implements TestWrapper{
 	
 	public void disableAutoRepeat() {
 		autoRepeat = false;
+	}
+	
+	public void enableShowScore(boolean show) {
+		showScore = show;
 	}
 	
 	public void setFollowOffset(Vec2 offset_in) {

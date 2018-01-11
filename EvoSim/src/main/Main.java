@@ -85,8 +85,10 @@ public class Main extends Application{
 		bp_test = new BorderPane();
 		mainTestScreen = new TestScreen(900, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Layout.getSkycolor());
+		mainTestScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 		mainTestScreen.enableInfo();
 		mainTestScreen.enableMarkers();
+		mainTestScreen.enableShowScore(true);
 		Layout.defMargin(mainTestScreen);
 		BorderPane.setAlignment(mainTestScreen, Pos.TOP_LEFT);
 
