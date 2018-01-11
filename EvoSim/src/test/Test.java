@@ -27,6 +27,7 @@ public class Test {
 	
 	private float testTimer = 0;
 	
+	private static float testDuration = 15.0f;
 	private static float afterTestLength = 2.0f;
 	private float afterTestTime = 10000.0f;
 	
@@ -96,18 +97,18 @@ public class Test {
 			for (int i = 0; i < muscles.length; i++) {
 				RevoluteJoint r = creatureRevoluteJointsList.get(i);
 				float cycle = testTimer;
-				while (cycle > cycleLen) {
-					cycle -= cycleLen;
-				}
+				cycle = cycle % cycleLen;
 				cycle /= cycleLen;
-				if (muscles[i].isActivated(cycle)) {
-					r.setMotorSpeed(muscles[i].getSpeed());
-				} else {
-					r.setMotorSpeed(-muscles[i].getSpeed());
+				
+				if (muscles[i].isActivated(cycle)) { //Joint is active
+					r.setMotorSpeed((muscles[i].getOnAngle() - r.getJointAngle())*10.f);
+				} else { //Joint is inactive
+					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
 				}
+			
 			}
 			
-			if (testTimer > 15.0f && !taskDone) { //abort TEST
+			if (testTimer > testDuration && !taskDone) { //abort TEST
 				taskDone = true;
 				//testing = false;
 				//dtToRun = 0.0f;

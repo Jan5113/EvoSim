@@ -71,10 +71,7 @@ public class CreatureBuilder {
 		}
 		
 		jointDef.maxMotorTorque = muscle.getTorque();
-		jointDef.motorSpeed = muscle.getSpeed();
-		jointDef.enableLimit = true;
-		jointDef.lowerAngle = -2;
-		jointDef.upperAngle = 2;
+		jointDef.motorSpeed = 0;
 		jointDef.collideConnected = false;
 		jointDef.enableMotor = true;
 		

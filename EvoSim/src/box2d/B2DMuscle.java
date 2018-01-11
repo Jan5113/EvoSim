@@ -14,18 +14,22 @@ public class B2DMuscle {
 	private B2DBoneDir boneBDir;
 	private final MutTimer timerOn;
 	private final MutTimer timerOff;
+	private final MutVal angleOff;
+	private final MutVal angleOnOffset;
 	private final MutVal rotSpeed;
 	private final int id;
 	private boolean healthy;
 	
 	private static float maxTorque = 2.0f;
 	
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timerOn_in, MutTimer timerOff_in, MutVal rotSpeed_in, int id_in) {
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timerOn_in, MutTimer timerOff_in, MutVal rotSpeed_in, MutVal angleOff_in, MutVal angleOnOffset_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
 		timerOn = timerOn_in;
 		timerOff = timerOff_in;
+		angleOff = angleOff_in;
+		angleOnOffset = angleOnOffset_in;
 		rotSpeed = rotSpeed_in;
 		id = id_in;
 		
@@ -38,7 +42,9 @@ public class B2DMuscle {
 		boneB = boneB_in;
 		timerOn = new MutTimer();
 		timerOff = new MutTimer();
-		rotSpeed = new MutVal(-5, 5, 1);
+		rotSpeed = new MutVal(-5, 5);
+		angleOff = new MutVal(0, (float) (2 * Math.PI));
+		angleOnOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
 		id = id_in;
 		
 		initialiseMuscle();
@@ -49,11 +55,11 @@ public class B2DMuscle {
 //	}
 	
 	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int gen) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(gen), timerOff.mutate(gen), rotSpeed.mutate(gen), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(gen), timerOff.mutate(gen), rotSpeed.mutate(gen), angleOff.mutate(gen), angleOnOffset.mutate(gen), id);
 	}
 	
 	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.clone(), timerOff.clone(), rotSpeed.clone(), angleOff.clone(), angleOnOffset.clone(), id);
 	}
 	
 	private void initialiseMuscle() {
@@ -120,9 +126,6 @@ public class B2DMuscle {
 //		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
 //	}
 	
-	public float getSpeed() {
-		return rotSpeed.getVal();
-	}
 	
 	public float getTorque() {
 		return maxTorque;
@@ -140,6 +143,14 @@ public class B2DMuscle {
 	public B2DBoneDir[] getBoneDirs() {
 		B2DBoneDir[] boneDirs = {boneADir, boneBDir};
 		return boneDirs;
+	}
+	
+	public float getOffAngle() {
+		return angleOff.getVal();
+	}
+	
+	public float getOnAngle() {
+		return angleOff.getVal() + angleOnOffset.getVal();
 	}
 	
 //	public void setRevJoint(RevoluteJoint revJoint_in) {

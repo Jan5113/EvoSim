@@ -6,7 +6,6 @@ import box2d.B2DJoint;
 import box2d.B2DMuscle;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import mutation.MutTimer;
 import mutation.MutVal;
 import mutation.MutVec2;
 
@@ -55,11 +54,11 @@ public class Creature implements Comparable<Creature>{
 	
 	private B2DJoint[] createDefJoints() {
 		B2DJoint[] joints_def = new B2DJoint[5];
-		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f)), 0);
-		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f)), 1);
-		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f)), 2);
-		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0.0f, 0.1f)), 3);
-		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.8f, 0.1f)), 4);
+		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-3.2f, 0.1f)), 0);
+		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(-2.4f, 0.1f)), 1);
+		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f)), 2);
+		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(-0.8f, 0.1f)), 3);
+		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(-0.0f, 0.1f)), 4);
 		return joints_def;
 	}
 
@@ -74,9 +73,9 @@ public class Creature implements Comparable<Creature>{
 
 	private B2DMuscle[] createDefMuscles() {
 		B2DMuscle[] muscle_def = new B2DMuscle[3];
-		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 0);
-		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 1);
-		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], new MutTimer(), new MutTimer(), new MutVal(2.0f, 1.0f), 2);
+		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], 0);
+		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], 1);
+		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], 2);
 		return muscle_def;
 	}
 	
