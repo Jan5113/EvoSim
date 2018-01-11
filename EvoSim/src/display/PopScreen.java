@@ -89,8 +89,7 @@ public class PopScreen extends BorderPane {
 		// this.setPadding(new Insets(13));
 		tbv_pop.setPrefWidth(145);
 		tbv_pop.setPrefHeight(10000);
-		tbv_pop.setStyle(
-				"-fx-font-size: 15px;" + "-fx-focus-color: transparent;" + "-fx-background-insets: -1.4, 0, 1, 2;");
+		tbv_pop.getStyleClass().add("tableview");
 		this.setCenter(tbv_pop);
 		
 		isActive = true;

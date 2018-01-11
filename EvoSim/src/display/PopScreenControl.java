@@ -80,7 +80,7 @@ public class PopScreenControl extends BorderPane{
 
 		Layout.gridPane(gp_controls);
 
-		Layout.wideButton(btn_singleAction);
+		Layout.tallButton(btn_singleAction);
 		Layout.button(btn_1G);
 		Layout.button(btn_10G);
 		
@@ -103,6 +103,8 @@ public class PopScreenControl extends BorderPane{
 		switch (pop.getPopStat()) {
 		case S0_NOTCREATED:
 			btn_singleAction.setText("Create Population");
+			btn_1G.setDisable(true);
+			btn_10G.setDisable(true);
 			break;
 		case S1_CREATED_MUTATED:
 			btn_singleAction.setText("Test Creatures");
@@ -138,6 +140,9 @@ public class PopScreenControl extends BorderPane{
 					tasks.remove(0);
 					pop.sortPopulation();
 				}
+				btn_singleAction.setDisable(false);
+				btn_1G.setDisable(false);
+				btn_10G.setDisable(false);
 				popScreen.resetCenter();
 				popScreen.refreshTable();
 			}
@@ -149,6 +154,9 @@ public class PopScreenControl extends BorderPane{
 				case COMPLETE_GEN:
 					popScreen.setProgressBar(testProgressBar);
 					multiTest.testWholePop();
+					btn_singleAction.setDisable(true);
+					btn_1G.setDisable(true);
+					btn_10G.setDisable(true);
 					return;
 				case NEWGEN:
 					pop.nextGen();
@@ -182,6 +190,8 @@ public class PopScreenControl extends BorderPane{
 		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
 			popScreen.refreshTable();
+			btn_1G.setDisable(false);
+			btn_10G.setDisable(false);
 			break;
 		case S1_CREATED_MUTATED: //TEST ONE BY ONE
 			pop.testing();

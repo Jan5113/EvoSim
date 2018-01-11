@@ -12,14 +12,19 @@ public class Layout {
 	private static Insets insetsDef = new Insets(15, 0, 0, 15);
 	private static float HGap = 10;
 	private static float VGap = 10;
-	private static float prefWidth = 80;
+	private static float prefWidth = 100;
 
 	public static void button(Button btn) {
-//		btn.setStyle("-fx-background-color:" + "#000000," + "linear-gradient(#7ebcea, #2f4b8f),"
-//				+ "linear-gradient(#426ab7, #263e75)," + "linear-gradient(#395cab, #223768);"
-//				+ "-fx-background-insets: 0,1,2,3;" + "-fx-background-radius: 0;" + "-fx-padding: 8 4;"
-//				+ "-fx-text-fill: white;" + "-fx-font-size: 12px;");
+		btn.getStyleClass().add("standard-button");
 		btn.setPrefWidth(prefWidth);
+
+	}
+	
+	public static void tallButton(Button btn) {
+		btn.getStyleClass().add("standard-button");
+		btn.getStyleClass().add("large-text");
+		btn.setPrefWidth(2 * prefWidth + HGap);
+		btn.setMinHeight(50);
 
 	}
 

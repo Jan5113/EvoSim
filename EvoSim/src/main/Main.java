@@ -50,6 +50,8 @@ public class Main extends Application{
 		
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
+		
+		scene.getStylesheets().add("style.css");
 
 		setupTestScreen();
 		setupPopScreen();
@@ -131,7 +133,7 @@ public class Main extends Application{
 	}
 
 	private void stageResize(Stage s) {
-		mainTestScreen.setScreenSize((int) s.getWidth()-230, (int) s.getHeight()-230); 
+		mainTestScreen.setScreenSize((int) s.getWidth()-280, (int) s.getHeight()-260); 
 	}
 
 }
