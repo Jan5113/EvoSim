@@ -107,7 +107,7 @@ public class Test {
 				}
 			}
 			
-			if (testTimer > 20.0f && !taskDone) { //abort TEST
+			if (testTimer > 15.0f && !taskDone) { //abort TEST
 				taskDone = true;
 				//testing = false;
 				//dtToRun = 0.0f;
