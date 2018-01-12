@@ -4,8 +4,18 @@
 	-fx-font-size: 14px;
 }
 
+.nopadding-button {
+	-fx-background-color: #7ebcea;
+	-fx-padding: 0 0;
+	-fx-font-size: 14px;
+}
+
 .large-text {
 	-fx-font-size: 18px;
+}
+
+.xl-text {
+	-fx-font-size: 25px;
 }
 
 .standard-button:hover {

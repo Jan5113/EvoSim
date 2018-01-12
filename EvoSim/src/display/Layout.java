@@ -34,7 +34,8 @@ public class Layout {
 	}
 	
 	public static void squareButton(Button btn) {
-		button(btn);
+		btn.getStyleClass().add("nopadding-button");
+		btn.getStyleClass().add("xl-text");
 		btn.setPrefSize(40, 40);
 	}
 	
