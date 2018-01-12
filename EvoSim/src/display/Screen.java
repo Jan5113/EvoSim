@@ -345,6 +345,36 @@ public class Screen extends Canvas {
 		
 		gc.restore();
 	}
+	
+//************************************************
+//*		DRAW TIMER
+//************************************************	
+		
+	public void drawTimer(float time, float duration) {
+		gc.save();
+		time = ((int) (time * 10))/10.0f;
+		duration = ((int) (duration * 10))/10.0f;
+		gc.setFill(Color.BLACK);
+		gc.setFont(new Font(15));
+		gc.setTextAlign(TextAlignment.RIGHT);
+		gc.fillText("Time: " + time + "s /"+ duration + "s", this.getWidth() - 25, 25);
+		gc.restore();
+	}
+	
+	public void drawTimer(float time, float duration, float speed) {
+		gc.save();
+		time = ((int) (time * 10))/10.0f;
+		duration = ((int) (duration * 10))/10.0f;
+		gc.setFill(Color.BLACK);
+		gc.setFont(new Font(15));
+		gc.setTextAlign(TextAlignment.RIGHT);
+		if (speed == 1.0f) {
+			gc.fillText("Time: " + time + "s /"+ duration + "s", this.getWidth() - 25, 25);
+		} else {
+			gc.fillText("Time: " + time + "s /"+ duration + "s\n" + speed + "x Speed", this.getWidth() - 25, 25);
+		}
+		gc.restore();
+	}
 
 //************************************************
 //*		CAMERA NAVIGATION

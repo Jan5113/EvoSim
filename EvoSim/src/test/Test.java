@@ -82,7 +82,6 @@ public class Test {
 	
 	public void step (float dt, float speed) {
 		if (!testing) {
-			System.err.println(creature.getID() + "NOT TESTING! @" + testTimer);
 			return;
 		}
 		dtToRun += (speed * dt);
@@ -110,12 +109,7 @@ public class Test {
 			
 			if (testTimer > testDuration && !taskDone) { //abort TEST
 				taskDone = true;
-				//testing = false;
-				//dtToRun = 0.0f;
 				System.out.println(creature.getID() + " " + testTimer);
-//				for (B2DBody b : creatureInstancesList) {
-//					System.out.println(b.getPos().x+"|"+b.getPos().y+" "+b.getAngle()+"°");
-//				}
 				lastFitness = getAveragePosition().x;
 				parentWrapper.taskDone(creature, lastFitness);					
 				afterTestTime = testTimer + afterTestLength;
@@ -165,5 +159,13 @@ public class Test {
 	
 	public boolean isTaskDone() {
 		return taskDone;
+	}
+	
+	public float getTestTimer() {
+		return testTimer;
+	}
+	
+	public float getTestDuration() {
+		return testDuration;
 	}
 }

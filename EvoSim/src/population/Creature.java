@@ -98,8 +98,8 @@ public class Creature implements Comparable<Creature>{
 	
 	public Float getFitnessFloat() {
 		if (fitnessEvaluated) {
-			//return (float) Math.floor(fitness.get()*100)/100;
-			return fitness.get();
+			return (float) Math.floor(fitness.get()*1000)/1000;
+			//return fitness.get();
 		} else {
 			return null;
 		}

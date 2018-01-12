@@ -11,11 +11,13 @@ public class TestScreen extends Screen implements TestWrapper{
 	private Test test;
 	private float playBackSpeed = 1;
 	private static float maxPlayBackSpeed = 1024.0f;
+	private static float minPlayBackSpeed = 0.01f;
 	private boolean running = false;
 	private final Population pop;
 	private boolean autoRepeat = false;
 	private boolean autoGetNext = false;
 	private boolean showScore = false;
+	private boolean showTimer = false;
 	private Vec2 followOffset = new Vec2(0,0);
 	private int currentIndex = 0;
 
@@ -23,6 +25,14 @@ public class TestScreen extends Screen implements TestWrapper{
 		super(resX, resY, scale_in, pos_in);
 		pop = pop_in;
 		test = new Test(pop.getTestGravitation(), (TestWrapper) this);
+		
+		camera.enableFollowX();
+	}
+	
+	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in) {
+		super(resX, resY, scale_in, pos_in);
+		pop = null;
+		test = new Test(new Vec2(0, -9.81f), (TestWrapper) this);
 		
 		camera.enableFollowX();
 	}
@@ -59,6 +69,8 @@ public class TestScreen extends Screen implements TestWrapper{
 		if (running) test.step(dt, playBackSpeed);
 		
 		if (infoEnabled() != 0) getInfoString();
+		
+		if (showTimer) drawTimer(test.getTestTimer(), test.getTestDuration(), playBackSpeed);
 		
 		refreshFollow(dt, playBackSpeed, test.getAveragePosition(), followOffset, running);
 	}
@@ -101,10 +113,12 @@ public class TestScreen extends Screen implements TestWrapper{
 			resetView();
 			break;
 		case TEST_ONE_BY_ONE:
-			if (pop.getGen() == 1) {
-				currentIndex = 0;
-			} else {
-				currentIndex = 20;
+			if (pop == null) {System.err.println("null Population!"); break;}
+		
+			for (currentIndex = 0; currentIndex < pop.getPopulationSize(); currentIndex++ ) {
+				if (!pop.getCreatureByIndex(currentIndex).fitnessEvaulated()) {
+					break;
+				}
 			}
 			autoGetNext = true;
 			startSingleTest(pop.getCreatureByIndex(currentIndex));
@@ -131,32 +145,40 @@ public class TestScreen extends Screen implements TestWrapper{
 		
 		if (autoRepeat) {
 			test.reset();
-			enableViewLock();
 			startSingleTest(creature_in);
 		}
 		
 		if (autoGetNext) {
-			test.reset();
-			enableViewLock();
-			currentIndex ++;
+			if (pop == null) {System.err.println("null Population!"); return;}
+			while (currentIndex < pop.getPopulationSize()) {
+				if (!pop.getCreatureByIndex(currentIndex).fitnessEvaulated()) {
+					break;
+				}
+				currentIndex++;
+			}
 			if (currentIndex >= pop.getPopulationSize()) {
 				autoGetNext = false;
 				currentIndex = 0;
 				pop.allTested();
+				test.reset();
+				running = false;
 			} else {
+				test.reset();
 				startSingleTest(pop.getCreatureByIndex(currentIndex));
 			}
 		}
 	}
 
 	private void halfPlayBackSpeed() {
-		playBackSpeed *= 0.5f;
+		if (playBackSpeed * 0.5f > minPlayBackSpeed) {
+			playBackSpeed *= 0.5f;			
+		}
 	}
 
 	private void doublePlayBackSpeed() {
-		playBackSpeed *= 2;
-		if (playBackSpeed > maxPlayBackSpeed)
-			playBackSpeed = maxPlayBackSpeed;
+		if (playBackSpeed * 2f <= maxPlayBackSpeed) {
+			playBackSpeed *= 2f;			
+		}
 	}
 
 	public void setPlayBackSpeed(float speed) {
@@ -168,6 +190,7 @@ public class TestScreen extends Screen implements TestWrapper{
 	public void getInfoString() {
 		String infoText = "";
 		if (infoEnabled() == 1) {
+			if (pop == null) {System.err.println("null Population!"); return;}
 			infoText += "Generation " + pop.getGen() + "\n";
 			if (hasCreature()) {
 				infoText += "Creature ID " + test.getCreature().getID() + "\n";
@@ -196,14 +219,19 @@ public class TestScreen extends Screen implements TestWrapper{
 	
 	public void enableAutoRepeat() {
 		autoRepeat = true;
+		autoGetNext = false;
 	}
 	
 	public void disableAutoRepeat() {
 		autoRepeat = false;
 	}
 	
-	public void enableShowScore(boolean show) {
+	public void showScore(boolean show) {
 		showScore = show;
+	}
+	
+	public void showTimer(boolean show) {
+		showTimer = show;
 	}
 	
 	public void setFollowOffset(Vec2 offset_in) {
@@ -215,5 +243,7 @@ public class TestScreen extends Screen implements TestWrapper{
 	}
 
 	public void stepCallback(int step) {}
+
+	
 
 }

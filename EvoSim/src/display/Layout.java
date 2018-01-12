@@ -33,6 +33,11 @@ public class Layout {
 		btn.setPrefWidth(2 * prefWidth + HGap);
 	}
 	
+	public static void squareButton(Button btn) {
+		button(btn);
+		btn.setPrefSize(40, 40);
+	}
+	
 	public static void TwoThirdsButton(Button btn) {
 		button(btn);
 		btn.setPrefWidth(((prefWidth * 2.0f) - HGap)/3.0f);

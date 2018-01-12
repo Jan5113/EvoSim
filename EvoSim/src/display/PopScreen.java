@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import population.Creature;
 import population.Population;
+import population.PopulationStatus;
 import population.TestProgressBar;
 
 public class PopScreen extends BorderPane {
@@ -102,11 +103,10 @@ public class PopScreen extends BorderPane {
 			if (previewScreen != null) {
 
 			} else {
-				previewScreen = new TestScreen(250, 150, 15, new Vec2(-1, 3), pop);
+				previewScreen = new TestScreen(250, 150, 30, new Vec2(-1, 1), pop);
 				previewScreen.startSingleTest(pop.getCreatureByID(selectedIndex.get()));
 				previewScreen.setBackgroundCol(Layout.getSkycolor());
 				previewScreen.enableAutoRepeat();
-				previewScreen.setFollowOffset(new Vec2(-1, 0));
 				previewScreen.enableCompactInfo();
 				previewScreen.disableScrollZoom();
 
@@ -133,7 +133,9 @@ public class PopScreen extends BorderPane {
 	private void onMouseClicked(MouseEvent e) {
 		if (e.getButton().equals(MouseButton.PRIMARY)) {
 			if (e.getClickCount() == 2) {
-				mainTestScreen.enableAutoRepeat();
+				if (pop.getPopStat() != PopulationStatus.S2_TESTING) {
+					mainTestScreen.enableAutoRepeat();
+				}
 				mainTestScreen.startSingleTest(tbv_pop.getSelectionModel().getSelectedItem());
 			}
 		}
