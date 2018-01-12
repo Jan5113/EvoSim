@@ -11,8 +11,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,7 +31,13 @@ public class Main extends Application{
 	private VBox bp_pop;
 	private BorderPane bp_test;
 	private PopScreen popScreen;
+	
+	private Scene scene;
 	public BorderPane root; 
+	private Instructions bp_instr;
+	private BorderPane bp_evo;
+	
+	private Button btn_showInstr;
 	
 	private Population pop = new Population(new Vec2(0.0f, -9.81f));
 	
@@ -41,26 +47,22 @@ public class Main extends Application{
 
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("EvoSim - v"+ version);
-
-		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root, 1200, 700);
+		root = new BorderPane();
+		scene = new Scene(root, 1200, 700);
+		root.setPadding(new Insets(0, 15, 15, 0));
 		scene.setFill(Color.color(0.8, 0.8, 1));
-		
-		primaryStage.setScene(scene);
-		
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> onKeyScreen(e));
-		scene.addEventHandler(KeyEvent.KEY_RELEASED, e -> offKeyScreen(e));
-		
 		scene.getStylesheets().add("style.css");
 
 		setupTestScreen();
 		setupPopScreen();
+		setupButton();
+
+		bp_evo = new BorderPane();
+		bp_evo.setCenter(bp_test);
+		bp_evo.setLeft(bp_pop);
+		bp_evo.setTop(btn_showInstr);
 		
-		root.setPadding(new Insets(0, 15, 15, 0));
-		root.setCenter(bp_test);
-		root.setLeft(bp_pop);
-		
-		primaryStage.show();
+		bp_instr = new Instructions(this);
 		
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
@@ -77,18 +79,42 @@ public class Main extends Application{
 			}
 		}.start();
 
+		setBPInstr();
+		
+		primaryStage.setScene(scene);
 		stageResize(primaryStage);
-
+		
+		primaryStage.show();
 	}
 	
+	private void setupButton() {
+		btn_showInstr = new Button("?");
+		Layout.squareButton(btn_showInstr);
+		Layout.defMargin(btn_showInstr);
+		BorderPane.setAlignment(btn_showInstr, Pos.TOP_RIGHT);
+		btn_showInstr.setOnAction(e -> setBPInstr());
+		btn_showInstr.setTranslateY(0);
+		btn_showInstr.resize(0, 0);
+	}
+	
+	public void setBPEvo() {
+		root.setCenter(bp_evo);
+	}
+
+	public void setBPInstr() {
+		root.setCenter(bp_instr);
+	}
+
 	private void setupTestScreen() {
 		bp_test = new BorderPane();
+		bp_test.setTranslateY(-45);
 		mainTestScreen = new TestScreen(900, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Layout.getSkycolor());
 		mainTestScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 		mainTestScreen.enableInfo();
 		mainTestScreen.enableMarkers();
-		mainTestScreen.enableShowScore(true);
+		mainTestScreen.showTimer(true);
+		mainTestScreen.showScore(true);
 		Layout.defMargin(mainTestScreen);
 		BorderPane.setAlignment(mainTestScreen, Pos.TOP_LEFT);
 
@@ -106,6 +132,7 @@ public class Main extends Application{
 
 	private void setupPopScreen() {
 		bp_pop = new VBox();
+		bp_pop.setTranslateY(-45);
 		popScreen = new PopScreen(pop, mainTestScreen);
 		mainMultiTest = new MultiTest(6, pop);
 		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
@@ -121,21 +148,18 @@ public class Main extends Application{
 		bp_pop.getChildren().add(popScreen);
 	}
 
-	private void offKeyScreen(KeyEvent e) {
-	}
-
-	private void onKeyScreen(KeyEvent e) {
-	}
-
 	private void refreshScreen(float dt) {
 		mainTestScreen.refresh(dt);
 		bp_testControl.refresh();
 		popScreen.refresh(dt);
 		bp_popControl.refresh();
+		
+		bp_instr.refresh(dt);
 	}
 
 	private void stageResize(Stage s) {
-		mainTestScreen.setScreenSize((int) s.getWidth()-280, (int) s.getHeight()-260); 
+		mainTestScreen.setScreenSize((int) s.getWidth()-267, (int) s.getHeight()-265); 
 	}
+
 
 }
