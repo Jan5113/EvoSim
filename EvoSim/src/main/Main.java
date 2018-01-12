@@ -36,6 +36,7 @@ public class Main extends Application{
 	public BorderPane root; 
 	private Instructions bp_instr;
 	private BorderPane bp_evo;
+	private boolean showInstr;
 	
 	private Button btn_showInstr;
 	
@@ -99,10 +100,12 @@ public class Main extends Application{
 	
 	public void setBPEvo() {
 		root.setCenter(bp_evo);
+		showInstr = false;
 	}
 
 	public void setBPInstr() {
 		root.setCenter(bp_instr);
+		showInstr = true;
 	}
 
 	private void setupTestScreen() {
@@ -154,7 +157,7 @@ public class Main extends Application{
 		popScreen.refresh(dt);
 		bp_popControl.refresh();
 		
-		bp_instr.refresh(dt);
+		if (showInstr) bp_instr.refresh(dt);
 	}
 
 	private void stageResize(Stage s) {
