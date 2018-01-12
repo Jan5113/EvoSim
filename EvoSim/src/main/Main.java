@@ -31,7 +31,7 @@ public class Main extends Application{
 	private VBox bp_pop;
 	private BorderPane bp_test;
 	private PopScreen popScreen;
-	public BorderPane root;
+	public BorderPane root; 
 	
 	private Population pop = new Population(new Vec2(0.0f, -9.81f));
 	
