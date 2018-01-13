@@ -126,17 +126,25 @@ public class Test {
 	public void reset () {
 		for (RevoluteJoint rj : creatureRevoluteJointsList) {
 			RevoluteJoint.destroy(rj);
+			rj.destructor();
 		}
 		creatureRevoluteJointsList.clear();
 		for (B2DBody b : creatureInstancesList) {
 			b.destroy();
 		}
+		for (B2DBody b : worldInstancesList) {
+			b.destroy();
+		}
+		worldInstancesList.clear();
 		creatureInstancesList.clear();
 		testTimer = 0.0f;	
 		dtToRun = 0.0f;
 		testing = false;
 		creature = null;
 		afterTestTime = 10000.0f;
+		testWorld.clearForces();
+		//testWorld.getJointList().destructor();
+		
 		initWorld();
 	}
 	

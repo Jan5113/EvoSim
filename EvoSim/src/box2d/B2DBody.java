@@ -708,6 +708,7 @@ public class B2DBody {
 	public void destroy() {
 		if (!isCreated) {System.err.println("B2DBody not created!"); return;}
 		body.getWorld().destroyBody(body);
+		body = null;
 	}
 	
 
