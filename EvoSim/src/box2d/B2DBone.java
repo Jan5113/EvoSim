@@ -42,7 +42,7 @@ public class B2DBone {
 	 * @param jointB_in
 	 * {@code final} reference to the {@link B2DJoint} where the {@link B2DBone} ends
 	 * @param id_in
-	 * Gives this instance a {@code final} name.
+	 * Gives this instance a {@code final} ID.
 	 */
 	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in) {
 		headJoint = jointA_in;
