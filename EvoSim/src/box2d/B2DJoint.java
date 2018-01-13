@@ -5,7 +5,7 @@ import mutation.MutVec2;
 
 /**
  * The {@link B2DJoint} class is comparable to a position vector with
- * {@link B2DBone} connected to it. It has a {@code mutation()} code embedded.
+ * {@link B2DBone} connected to it. It has a {@code mutation()} code implemented.
  *
  */
 public class B2DJoint {
@@ -24,8 +24,8 @@ public class B2DJoint {
 	 */
 	private ArrayList<B2DBone> registeredEndBones = new ArrayList<B2DBone>();
 	/**
-	 * Each {@link B2DBone} can be given an ID. This is used for identification of
-	 * this {@link B2DBone} instance when creating {@link B2DMuscle} instances.
+	 * Each {@link B2DJoint} can be given an ID. This is used for identification of
+	 * this {@link B2DJoint} instance when creating {@link B2DMuscle} instances.
 	 */
 	private final int id;
 	/**

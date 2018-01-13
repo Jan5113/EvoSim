@@ -2,66 +2,227 @@ package box2d;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
+
 import mutation.MutTimer;
 import mutation.MutVal;
+import population.Creature;
+import test.Test;
 
 
+/**
+ * A {@link B2DMuscle} sits on a {@link B2DJoint} and acts as a "rotation"
+ * muscle between two {@link B2DBone} instances connected to the
+ * {@link B2DJoint}. It moves the bones by going back and forth between two
+ * given angles. Two {@link MutTimer} instances determine, when the muscle is
+ * which position. The absolute timing is calculated by using the "internal
+ * clock" ({@code MutVal cycleLength}) of every {@link Creature} by the
+ * {@link Test}
+ * <p>
+ * The {@link B2DMuscle} movement itself is regulated and their torque
+ * ("strength") is limited; the speed is solely determined by the deviation from
+ * the desired angle (hence "regulated"). The {@link B2DMuscle} can make up to
+ * half a rotation (PI rad). It has a {@code mutation()} code implemented
+ * changing the timings and the angles.
+ */
 public class B2DMuscle {
+	/**
+	 * Specifies the {@link B2DJoint} this {@link B2DMuscle} is located in. It can
+	 * only move two {@link B2DBone} instances which are connected (registered) in
+	 * the {@link B2DJoint}.
+	 */
 	private final B2DJoint joint;
+	/**
+	 * First {@link B2DBone} this {@link B2DMuscle} instance is connected to. The
+	 * {@link B2DBone} must be connected to the {@link B2DJoint} {@code joint}.
+	 */
 	private final B2DBone boneA;
+	/**
+	 * Second {@link B2DBone} this {@link B2DMuscle} instance is connected to. The
+	 * {@link B2DBone} must be connected to the {@link B2DJoint} {@code joint}.
+	 */
 	private final B2DBone boneB;
+	/**
+	 * Holds the orientation for {@code boneA}
+	 */
 	private B2DBoneDir boneADir;
+	/**
+	 * Holds the orientation for {@code boneB}
+	 */
 	private B2DBoneDir boneBDir;
-	private final MutTimer timerOn;
-	private final MutTimer timerOff;
-	private final MutVal angleOff;
-	private final MutVal angleOnOffset;
-	private final MutVal rotSpeed;
+	/**
+	 * Determines when this {@link B2DMuscle} moves to the first angle ({@code angle})
+	 */
+	private final MutTimer timer1;
+	/**
+	 * Determines when this {@link B2DMuscle} moves to the second angle ({@code angle + angleOffset})
+	 */
+	private final MutTimer timer2;
+	/**
+	 * Angle between {@code boneA} and {@code boneB} when {@code timer1} is active. Angle in rad between 0 and {@code 2 * PI}.
+	 */
+	private final MutVal angle;
+	/**
+	 * The angle between {@code boneA} and {@code boneB} when {@code timer2} is
+	 * active is {@code angle + angleOffset}. {@code angleOffset} is in rad and
+	 * between {@code -PI} and {@code PI}. This limits the {@link B2DMuscle} to
+	 * only move up to 180°.
+	 */
+	private final MutVal angleOffset;
+	/**
+	 * Each {@link B2DMuscle} can be given an ID. This is used for identification.
+	 */
 	private final int id;
+	/**
+	 * The {@code healthy boolean} is {@code true} when both {@link B2DBone} instances given during
+	 * initialisation are actually connected to the {@link B2DJoint} this instance
+	 * is referenced to and orientated the correct way.
+	 */
 	private boolean healthy;
 	
+	/**
+	 * {@code maxTorque} hold the maximum "strength" a {@link B2DMuscle} is able to
+	 * apply to the {@link B2DBone}s connected to it.
+	 */
 	private static float maxTorque = 2.0f;
 	
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timerOn_in, MutTimer timerOff_in, MutVal rotSpeed_in, MutVal angleOff_in, MutVal angleOnOffset_in, int id_in) {
+	/**
+	 * Creates a new {@link B2DMuscle} with all parameters given. {@code joint_in}
+	 * references the {@link B2DJoint} this instance will connect to.
+	 * {@code boneA_in} and {@code boneB_in} reference the two {@link B2DBone}
+	 * instances this {@code B2DMuscle} will move. {@code timer1_in} and
+	 * {@code timer2_in} are {@link MutTimer} instances, {@code angle_in} and
+	 * {@code angleOffset_in} are {@link MutVal} instances and directly set their
+	 * corresponding value in this new {@link B2DMuscle}.
+	 * <p>
+	 * <strong>Note: </strong> Both bones must be connected (referenced) to the
+	 * {@link B2DJoint} {@code joint_in}. Calling {@code getHealth()} will return
+	 * {@code false} if that's not the case.
+	 * 
+	 * @param joint_in
+	 *            defines the location of the {@link B2DMuscle}
+	 * @param boneA_in
+	 *            defines the first {@link B2DBone} this {@link B2DMuscle} can move
+	 * @param boneB_in
+	 *            defines the second {@link B2DBone} this {@link B2DMuscle} can move
+	 * @param timer1_in
+	 *            defines the time period the {@code B2DMuscle} moves to the first
+	 *            angle
+	 * @param timer2_in
+	 *            defines the time period the {@code B2DMuscle} moves to the second
+	 *            angle
+	 * @param angle_in
+	 *            defines the first angle
+	 * @param angleOffset_in
+	 *            defines the difference between the first and the second angle
+	 *            (maximum difference is PI)
+	 * @param id_in
+	 *            gives this instance a {@code final} ID
+	 */
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
-		timerOn = timerOn_in;
-		timerOff = timerOff_in;
-		angleOff = angleOff_in;
-		angleOnOffset = angleOnOffset_in;
-		rotSpeed = rotSpeed_in;
+		timer1 = timer1_in;
+		timer2 = timer2_in;
+		angle = angle_in;
+		angleOffset = angleOffset_in;
 		id = id_in;
 		
 		initialiseMuscle();
 	}
 	
+	/**
+	 * Creates a new {@link B2DMuscle} instance with new references to
+	 * {@link B2DJoint} and {@link B2DBone} instances. {@code joint_in} references
+	 * the {@link B2DJoint} this instance will connect to. {@code boneA_in} and
+	 * {@code boneB_in} reference the two {@link B2DBone} instances this
+	 * {@code B2DMuscle} will move. The other values for the angles and timings are
+	 * randomly generated.
+	 * <p>
+	 * <strong>Note: </strong> Both bones must be connected (referenced) to the
+	 * {@link B2DJoint} {@code joint_in}. Calling {@code getHealth()} will return
+	 * {@code false} if that's not the case.
+	 * 
+	 * @param joint_in
+	 *            defines the location of the {@link B2DMuscle}
+	 * @param boneA_in
+	 *            defines the first {@link B2DBone} this {@link B2DMuscle} can move
+	 * @param boneB_in
+	 *            defines the second {@link B2DBone} this {@link B2DMuscle} can move
+	 * @param id_in
+	 *            gives this instance a {@code final} ID
+	 */
 	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
-		timerOn = new MutTimer();
-		timerOff = new MutTimer();
-		rotSpeed = new MutVal(-5, 5);
-		angleOff = new MutVal(0, (float) (2 * Math.PI));
-		angleOnOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+		timer1 = new MutTimer();
+		timer2 = new MutTimer();
+		angle = new MutVal(0, (float) (2 * Math.PI));
+		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
 		id = id_in;
 		
 		initialiseMuscle();
 	}
 	
-//	public B2DMuscle mutate() {
-//		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.mutate(), timerOff.mutate(), rotSpeed.mutate(), id);
-//	}
-	
+	/**
+	 * Returns a new {@link B2DMuscle} instance with slightly varied values for the
+	 * contraction times and angles but with new references. {@code joint_in}
+	 * references the {@link B2DJoint} the new instance will connect to.
+	 * {@code boneA_in} and {@code boneB_in} reference the two {@link B2DBone}
+	 * instances the new {@code B2DMuscle} will move. The other values for the
+	 * angles and timings are slightly changed.
+	 * <p>
+	 * <strong>Note: </strong> Both bones must be connected (referenced) to the
+	 * {@link B2DJoint} {@code joint_in}. Calling {@code getHealth()} of the
+	 * returned instance will return {@code false} if that's not the case.
+	 * 
+	 * @param joint_in
+	 *            is the new {@link B2DJoint} of the mutated {@link B2DMuscle}
+	 * @param boneA_in
+	 *            is the new first {@link B2DBone} of the mutated {@link B2DMuscle}
+	 * @param boneB_in
+	 *            is the new second {@link B2DBone} of the mutated {@link B2DMuscle}
+	 * @param gen
+	 *            current generation of the main Population
+	 * @return a new mutated {@link B2DMuscle} with the new references
+	 */
 	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int gen) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.mutate(gen), timerOff.mutate(gen), rotSpeed.mutate(gen), angleOff.mutate(gen), angleOnOffset.mutate(gen), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.mutate(gen), timer2.mutate(gen), angle.mutate(gen), angleOffset.mutate(gen), id);
 	}
-	
+
+	/**
+	 * Returns a new {@link B2DMuscle} instance with identical values for the
+	 * contraction times and angles but with new references. {@code joint_in}
+	 * references the {@link B2DJoint} the new instance will connect to.
+	 * {@code boneA_in} and {@code boneB_in} reference the two {@link B2DBone}
+	 * instances the new {@code B2DMuscle} will move. The other values for the
+	 * angles and timings are directly copied to the new {@link B2DMuscle} instance.
+	 * <p>
+	 * <strong>Note: </strong> Both bones must be connected (referenced) to the
+	 * {@link B2DJoint} {@code joint_in}. Calling {@code getHealth()} of the
+	 * returned instance will return {@code false} if that's not the case.
+	 * 
+	 * @param joint_in
+	 *            is the new {@link B2DJoint} of the cloned {@link B2DMuscle}
+	 * @param boneA_in
+	 *            is the new first {@link B2DBone} of the cloned {@link B2DMuscle}
+	 * @param boneB_in
+	 *            is the new second {@link B2DBone} of the cloned {@link B2DMuscle}
+	 * @return a cloned {@link B2DMuscle} with new references
+	 */
 	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timerOn.clone(), timerOff.clone(), rotSpeed.clone(), angleOff.clone(), angleOnOffset.clone(), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.clone(), timer2.clone(), angle.clone(), angleOffset.clone(), id);
 	}
 	
+	/**
+	 * This method initialises the values for the {@link B2DBone} orientation.
+	 * Furthermore it checks, if the {@link B2DBone} instances are actually
+	 * connected to the {@link B2DJoint} given during initialisation. A negative
+	 * will result in an error message. This method is called only when creating a
+	 * new {@link B2DMuscle} instance.
+	 */
 	private void initialiseMuscle() {
 		boolean[] checkBones = {false, false};
 		ArrayList<B2DBone> headBones = joint.getRegisteredHeadBones();
@@ -94,282 +255,139 @@ public class B2DMuscle {
 		}
 	}
 	
+	/**
+	 * This method returns {@code true} only if the {@link B2DMuscle} had been
+	 * initialised correctly. That being that both {@link B2DBone} instances given
+	 * during initialisation are actually connected and registered in the
+	 * {@link B2DJoint} given.
+	 * <p>
+	 * If it returns {@code false} one or both {@link B2DBone} instances are not
+	 * connected to the {@link B2DJoint} instance given during initialisation.
+	 * 
+	 * @return
+	 */
 	public boolean getHealth() {
 		return healthy;
 	}
 	
+	/**
+	 * Returns the {@code int} given during initialisation of this {@link B2DMuscle}
+	 * instance.
+	 * 
+	 * @return ID of the {@link B2DMuscle}
+	 */
 	public int getID() {
 		return id;
 	}
 	
+	/**
+	 * Returns the ID of the {@link B2DJoint} given during initialisation of this
+	 * {@link B2DMuscle} instance.
+	 * 
+	 * @return ID of the referenced {@link B2DJoint}
+	 */
 	public int getJointID() {
 		return joint.getID();
 	}
 	
+	/**
+	 * Returns whether this {@link B2DMuscle} is active at the time given.
+	 * {@code percentOfCycle} is a {@code float} between {@code 0.0f} and
+	 * {@code 1.0} and states the modulo of the {@link Creature}s cycle length and
+	 * the time passed. It is calculated by:
+	 * <p>
+	 * ({@code cycleLength % timePassed)/cycleLength}).
+	 * <p>
+	 * The {@link MutTimer} values of this {@link B2DMuscle} instance are between
+	 * {@code 0.0f} and {@code 1.0} as well. If {@code percentOfCycle} has last
+	 * surpassed the first timer the method returns {@code true}, otherwise it
+	 * returns {@code false}
+	 * 
+	 * @param percentOfCycle
+	 * "percentage" of the {@link Creature}s "inner clock" {@code cycleLength}
+	 * @return
+	 * whether this {@link B2DMuscle} is active at the time given
+	 * 
+	 */
 	public boolean isActivated(float percentOfCycle) {
-		if (timerOn.getVal() < timerOff.getVal()) {
-			if (percentOfCycle > timerOn.getVal() && percentOfCycle < timerOff.getVal()) {
+		if (timer1.getVal() < timer2.getVal()) {
+			if (percentOfCycle > timer1.getVal() && percentOfCycle < timer2.getVal()) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			if (percentOfCycle < timerOn.getVal() && percentOfCycle > timerOff.getVal()) {
+			if (percentOfCycle < timer1.getVal() && percentOfCycle > timer2.getVal()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
 	}
-	
-//	public B2DMuscle clone() {
-//		return new B2DMuscle(joint.clone(), boneA.clone(), boneB.clone(), timerOn.clone(), timerOff.clone(), rotSpeed.clone(), id);
-//	}
-	
-	
+		
+	/**
+	 * Gives the static maximum torque or "strength" of {@link B2DMuscle}
+	 * 
+	 * @return torque for {@link RevoluteJoint}
+	 */
 	public float getTorque() {
 		return maxTorque;
 	}
 
+	/**
+	 * Gives an {@link B2DBone[2]} array with the {@link B2DBone} instances this
+	 * {@link B2DMuscle} moves.
+	 * <p>
+	 * {@code [boneA, boneB]}
+	 * 
+	 * @return references to the {@link B2DBone}s affected by this {@link B2DMuscle}
+	 */
 	public B2DBone[] getBones() {
 		B2DBone[] bones = {boneA, boneB};
 		return bones;
 	}
 	
+	/**
+	 * Gives a {@link Vec2} vector of the current position of this {@link B2DMuscle}
+	 * instance. It corresponds to its {@link B2DJoint} position.
+	 * 
+	 * @return the current position vector of the {@link B2DMuscle}
+	 * 
+	 */
 	public Vec2 getPos() {
 		return joint.getPos();
 	}
 	
+	/**
+	 * Gives an {@link B2DBoneDir[2]} array with the orientation of the {@link B2DBone} instances this
+	 * {@link B2DMuscle} moves.
+	 * <p>
+	 * {@code [boneDirA, boneDirB]}
+	 * 
+	 * @return orientation of {@link B2DBone}s referenced in this {@link B2DMuscle} instance
+	 */
 	public B2DBoneDir[] getBoneDirs() {
 		B2DBoneDir[] boneDirs = {boneADir, boneBDir};
 		return boneDirs;
 	}
 	
+	/**
+	 * Gives the angle (in rad) between {@code boneA} and {@code boneB} (CCW) when
+	 * {@code timer1} is active.
+	 * 
+	 * @return angle when {@code isActive()} is {@code true}
+	 */
 	public float getOffAngle() {
-		return angleOff.getVal();
+		return angle.getVal();
 	}
 	
+	/**
+	 * Gives the angle (in rad) between {@code boneA} and {@code boneB} (CCW) when
+	 * {@code timer2} is active.
+	 * 
+	 * @return angle when {@code isActive()} is {@code false}
+	 */
 	public float getOnAngle() {
-		return angleOff.getVal() + angleOnOffset.getVal();
+		return angle.getVal() + angleOffset.getVal();
 	}
-	
-//	public void setRevJoint(RevoluteJoint revJoint_in) {
-//		revoluteJoint = revJoint_in;
-//	}
-//	
-//	public RevoluteJoint getRevJoint() {
-//		return revoluteJoint;
-//	}
-//	
-	public void enableMuscle(boolean flag) {
-//		float minAngle = -1.0f;
-//		float maxAngle = 1.0f;
-//		revoluteJoint.enableMotor(true);
-//		if (flag) {
-//			revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
-//		} else {
-//			// joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
-//			if ((maxAngle < revoluteJoint.getJointAngle())) {
-//				revoluteJoint.setMotorSpeed((maxAngle - revoluteJoint.getJointAngle()) * 10.f);
-//			} else if (minAngle - 0.01f > revoluteJoint.getJointAngle()) {
-//				revoluteJoint.setMotorSpeed((minAngle - revoluteJoint.getJointAngle()) * 10.f);
-//			} else {
-//				revoluteJoint.enableMotor(false);
-//			}
-//
-//		}
-		
-	}
-	
-//	public void destroyRevJoint() {
-//		RevoluteJoint.destroy(revoluteJoint);
-//	}
-//
-//	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	private B2DBody fixedAnchor1;
-//	private B2DBody fixedAnchor2;
-//	private Vec2 anchorOffset1;
-//	private Vec2 anchorOffset2;
-//	private RevoluteJoint revJoint1;
-//	private RevoluteJoint revJoint2;
-//	private RevoluteJointDef revJointDef1;
-//	private RevoluteJointDef revJointDef2;
-//	private PrismaticJoint muscle;
-//	private PrismaticJointDef jointDef;
-//	
-//	private final float maxLen;
-//	private final float minLen;
-//	
-//	private boolean active = false;
-//	
-//	private boolean isCreated = false;
-//	
-//	public B2DMuscle(float min, float max) {
-//		maxLen = max;
-//		minLen = min;
-//		setDefaultJointDef();
-//	}
-//	
-//	public B2DMuscle() { //default length
-//		maxLen = 3.5f;
-//		minLen = 2.0f;
-//		setDefaultJointDef();
-//	}
-//	
-//	
-//	public void setMuscleForce(float force) {
-//		if (isCreated) {System.err.println("B2DMuscle already created!"); return;}
-//		jointDef.maxMotorForce = force;
-//	}
-//	
-//	public void setDefaultJointDef () {
-//		if (isCreated) {System.err.println("B2DMuscle already created!"); return;}
-//		jointDef = new PrismaticJointDef();
-//		jointDef.lowerTranslation = 0.0f;
-//		jointDef.upperTranslation = 100.0f;
-//		jointDef.enableLimit = true;
-//		jointDef.maxMotorForce = 10f;
-//		jointDef.motorSpeed = 0f;
-//		jointDef.enableMotor = true;
-//	}
-//	
-//	public void setOffset1(Vec2 offset_in) {
-//		if (isCreated) {System.err.println("B2DMuscle already created!"); return;}
-//		anchorOffset1 = offset_in;
-//	}
-//	
-//	public void setOffset2(Vec2 offset_in) {
-//		if (isCreated) {System.err.println("B2DMuscle already created!"); return;}
-//		anchorOffset2 = offset_in;
-//	}
-//	
-//	public void setOffsets(Vec2 offset1_in, Vec2 offset2_in) {
-//		if (isCreated) {System.err.println("B2DMuscle already created!"); return;}
-//		anchorOffset1 = offset1_in;
-//		anchorOffset2 = offset2_in;
-//	}
-//	
-//	public void create(B2DBody anchor1, B2DBody anchor2, World world) {		
-//		if (!anchor1.isCreated() || !anchor2.isCreated()) {System.err.println("Create bodies before creating muscle!"); return;}
-//		
-//		Vec2 muscleDir = B2DCamera.rotateVec2(new Vec2(1, 0), B2DCamera.getRotation(anchor2.getPos().sub(anchor1.getPos())));
-//		fixedAnchor1.setUpPoint(anchor1.getPos());
-//		fixedAnchor1.setAngle(B2DCamera.getRotation(muscleDir));
-//		fixedAnchor2.setUpPoint(anchor2.getPos());
-//		fixedAnchor2.setAngle(B2DCamera.getRotation(muscleDir));
-//		
-//		anchorOffset1 = B2DCamera.rotateVec2(anchorOffset1, anchor1.getAngle());
-//		revJointDef1.initialize(anchor1.getBody(), fixedAnchor1.getBody(), anchor1.getBody().getWorldCenter().add(anchorOffset1));	
-//		revJoint1 = (RevoluteJoint) world.createJoint(revJointDef1);
-//
-//		anchorOffset2 = B2DCamera.rotateVec2(anchorOffset2, anchor2.getAngle());
-//		revJointDef2.initialize(anchor2.getBody(), fixedAnchor2.getBody(), anchor2.getBody().getWorldCenter().add(anchorOffset2));	
-//		revJoint2 = (RevoluteJoint) world.createJoint(revJointDef2);
-//		
-//		jointDef.initialize(fixedAnchor1.getBody(), fixedAnchor2.getBody(), fixedAnchor1.getBody().getWorldCenter(), muscleDir);
-//		muscle = (PrismaticJoint) world.createJoint(jointDef);
-//		
-//		isCreated = true;
-//	}
-//	
-//	public void enable() {
-//		active = true;
-//	}
-//	
-//	public void disable() {
-//		active = false;
-//	}
-//	
-//	public void toggle() {
-//		active = !active;
-//	}
-//	
-//	public void destroy() {
-//		if (!isCreated) System.err.println("B2DMuscle not created!");
-//		Joint.destroy(revJoint1);
-//		Joint.destroy(revJoint2);
-//		Joint.destroy(muscle);
-//		fixedAnchor1.destroy();
-//		fixedAnchor2.destroy();
-//	}
-//	
-//	public void update() {
-//		muscle.enableMotor(true);
-//		if (active) {
-//			muscle.setMotorSpeed((minLen - muscle.getJointTranslation())*10.f);
-//		} else {
-////			joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
-//			if ((maxLen < muscle.getJointTranslation())) {
-//				muscle.setMotorSpeed((maxLen- muscle.getJointTranslation())*10.f);
-//			} else if (minLen - 0.01f > muscle.getJointTranslation()) {
-//				muscle.setMotorSpeed((minLen - muscle.getJointTranslation())*10.f);
-//			} else {
-//				muscle.enableMotor(false);
-//			}
-//			
-//		}
-//	}
-	
-	/*
-	
-	world = new World(v2_gravity);
-	al_cubes.add(new B2DCube(0f, 0.2f, 2.0f, 0.1f, BodyType.STATIC, world));	
-	
-	B2DCube tempCubeStat = new B2DCube(new Vec2(0f, 4.0f), new Vec2(0.2f, 0.2f), new Vec2(0f, 0f),  (float) 1.2f, BodyType.STATIC, world);
-	B2DCube tempCubeDyn = new B2DCube(new Vec2(0f, 4.0f), new Vec2(1f, 0.2f),	new Vec2(0f, 0f), (float) 1.2f, BodyType.DYNAMIC, world);
-	PrismaticJointDef jointDef = new PrismaticJointDef();
-	Vec2 worldAxis = ConvertUnits.rotateVec2(new Vec2(0.0f, -1.0f), (float) 1.2f);
-	jointDef.initialize(tempCubeStat.getB2D(), tempCubeDyn.getB2D(), tempCubeStat.getB2D().getWorldCenter(), worldAxis);
-	jointDef.lowerTranslation = 2.0f;
-	jointDef.upperTranslation = 100.0f;
-	jointDef.enableLimit = true;
-	jointDef.maxMotorForce = 100f;
-	jointDef.motorSpeed = 0f;
-	jointDef.enableMotor = true; 
-	//jointDef.localAnchorA.set(0.1f,0.1f);
-	//jointDef.localAnchorB.set(-0.1f,0.1f);
-	joint = (PrismaticJoint) world.createJoint(jointDef);
-	joint.setLimits(0f, 100.0f);
-	al_cubes.add(tempCubeStat);
-	al_cubes.add(tempCubeDyn);
-	
-	
-	{
-
-		float maxLen = 2.5f;
-		float minLen = 1.0f;
-
-		joint.enableMotor(true);
-		if (countTime % 2 == 0) {
-			joint.setMotorSpeed((minLen - joint.getJointTranslation())*10.f);
-		} else {
-//			joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
-			if ((maxLen < joint.getJointTranslation())) {
-				joint.setMotorSpeed((maxLen- joint.getJointTranslation())*10.f);
-			} else if (minLen - 0.01f > joint.getJointTranslation()) {
-				joint.setMotorSpeed((minLen - joint.getJointTranslation())*10.f);
-			} else {
-				joint.enableMotor(false);
-			}
-			
-		}
-		System.out.println(joint.getMotorSpeed());
-	}
-	
-	*/
 }
