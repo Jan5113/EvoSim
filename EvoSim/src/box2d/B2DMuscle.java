@@ -265,6 +265,7 @@ public class B2DMuscle {
 	 * connected to the {@link B2DJoint} instance given during initialisation.
 	 * 
 	 * @return
+	 * {@code true} is setup correctly
 	 */
 	public boolean getHealth() {
 		return healthy;
@@ -335,7 +336,7 @@ public class B2DMuscle {
 	}
 
 	/**
-	 * Gives an {@link B2DBone[2]} array with the {@link B2DBone} instances this
+	 * Gives an {@link B2DBone}{@code [2]} array with the {@link B2DBone} instances this
 	 * {@link B2DMuscle} moves.
 	 * <p>
 	 * {@code [boneA, boneB]}
@@ -359,12 +360,13 @@ public class B2DMuscle {
 	}
 	
 	/**
-	 * Gives an {@link B2DBoneDir[2]} array with the orientation of the {@link B2DBone} instances this
-	 * {@link B2DMuscle} moves.
+	 * Gives an {@link B2DBoneDir}{@code [2]} array with the orientation of the
+	 * {@link B2DBone} instances this {@link B2DMuscle} moves.
 	 * <p>
 	 * {@code [boneDirA, boneDirB]}
 	 * 
-	 * @return orientation of {@link B2DBone}s referenced in this {@link B2DMuscle} instance
+	 * @return orientation of {@link B2DBone}s referenced in this {@link B2DMuscle}
+	 *         instance
 	 */
 	public B2DBoneDir[] getBoneDirs() {
 		B2DBoneDir[] boneDirs = {boneADir, boneBDir};

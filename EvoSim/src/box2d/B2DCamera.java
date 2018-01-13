@@ -245,7 +245,7 @@ public class B2DCamera {
 	 * <i>Example:</i> Use this method to move a {@link B2DBody} by a x and y
 	 * distance dragged on screen.
 	 * 
-	 * @param px_f
+	 * @param px_vec
 	 *            input pixel scalar pair (Vec2 instance)
 	 * @return converted Box2D-World scalar pair (Vec2 instance)
 	 */
@@ -447,18 +447,18 @@ public class B2DCamera {
 	}
 
 	/**
-	 * Disables the follow feature for the x-axis. The {@link B2DCamera} does not
-	 * track any given coordinate or object in the x-axis. This method does not
-	 * affect the y-axis.
+	 * Gives {@code true} when the {@link B2DCamera} is following in the x-axis.
+	 * 
+	 * @return follow feature is enabled for the x-axis
 	 */
 	public boolean followXEnabled() {
 		return followXEnabled;
 	}
 
 	/**
-	 * Disables the follow feature for the y-axis. The {@link B2DCamera} does not
-	 * track any given coordinate or object in the y-axis. This method does not
-	 * affect the x-axis.
+	 * Gives {@code true} when the {@link B2DCamera} is following in the y-axis.
+	 * 
+	 * @return follow feature is enabled for the y-axis
 	 */
 	public boolean followYEnabled() {
 		return followYEnabled;

@@ -69,6 +69,11 @@ public class PopScreenControl extends BorderPane{
 	 * @param multiTest_in
 	 *            reference to the {@link MultiTest} instance this
 	 *            {@link PlayBackControls} should have control over.
+	 * @param popScreen_in
+	 *            reference to the {@link PopScreen} instance this
+	 *            {@link PlayBackControls} should have control over.
+	 * @param pop_in
+	 *            reference to the main {@link Population}
 	 */
 	public PopScreenControl(TestScreen testScreen_in, MultiTest multiTest_in, PopScreen popScreen_in, Population pop_in) {
 		multiTest = multiTest_in;

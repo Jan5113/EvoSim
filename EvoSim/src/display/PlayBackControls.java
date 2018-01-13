@@ -49,9 +49,6 @@ public class PlayBackControls extends BorderPane {
 	 * @param testScreen_in
 	 *            reference to the {@link TestScreen} instance this
 	 *            {@link PlayBackControls} should have control over.
-	 * @param multiTest_in
-	 *            reference to the {@link MultiTest} instance this
-	 *            {@link PlayBackControls} should have control over.
 	 */
 	public PlayBackControls(TestScreen testScreen_in) {
 		testScreen = testScreen_in;

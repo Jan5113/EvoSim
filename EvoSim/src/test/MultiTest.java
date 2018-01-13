@@ -47,8 +47,6 @@ public class MultiTest{
 	 * 
 	 * @param threads
 	 *            Number of threads, simultaneous running tests
-	 * @param gravity_in
-	 *            The acceleration of the {@link Test} instances
 	 * @param pop_in
 	 *            Reference to the the main {@link Population}
 	 * 
@@ -207,8 +205,8 @@ public class MultiTest{
 		 * sets the name of the thread; for distinction when debugging. Test is
 		 * initialised by the values provided by {@link TestThread}.
 		 * 
-		 * @param threadName
-		 *            string for name
+		 * @param threadNr
+		 *            {@code int} for identification
 		 */
 		public TestThread(int threadNr) {
 			this.threadNr = threadNr;
