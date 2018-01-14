@@ -27,7 +27,7 @@ public class MultiTest{
 	 * have to be calculated. {@link TestThread} calculates an {@code Creature} at
 	 * an time after removing its reference form the {@code creatureQueue}.
 	 */
-	private ArrayList<Creature> creatureQueue = new ArrayList<Creature>();
+	private volatile ArrayList<Creature> creatureQueue = new ArrayList<Creature>();
 	/**
 	 * {@code testArray} holds the instances of {@link TestThread}. The number of
 	 * instances, i.e. the number of CPU cores used, has to specified in the
@@ -245,10 +245,9 @@ public class MultiTest{
 			try {
 				Creature c = creatureQueue.remove(0);
 				if (!c.fitnessEvaulated()) {
-					test.reset();
 					test.setCreature(c);
 					test.startTest();
-					test.step(20.1f, 1.0f);
+					test.step(15.1f, 1.0f);
 				} else {
 					System.out.println("Creature ID " + c.getID() + " already tested!");
 				}
@@ -264,14 +263,14 @@ public class MultiTest{
 			if (!test.getCreature().fitnessEvaulated()) {
 				creature_in.setFitness(calcFitness);
 			}
+			test.reset();
 		}
 		
 		public void pauseDone(Creature creature_in, float calcFitness) {
 			
 		}
 		public void stepCallback(int step) {
-			System.out.print(step);
-			System.out.println(step);
+			System.out.println("");
 		}
 		
 	}

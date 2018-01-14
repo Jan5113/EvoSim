@@ -69,7 +69,7 @@ public class Test {
 		return creature;
 	}
 	
-	private  void buildCreature () {
+	private void buildCreature () {
 		if (creature == null) {System.err.println("No Creature set!"); return;}
 		if (testing) {System.err.println("No Creature set!"); return;}
 		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureRevoluteJointsList);
@@ -84,15 +84,14 @@ public class Test {
 		if (!testing) {
 			return;
 		}
-		dtToRun += (speed * dt);
+		dtToRun = dtToRun + (speed * dt);
 		int steps = 0;
 		
 		while (dtToRun >= dtStepSize) {
-			dtToRun -= dtStepSize;
-			testTimer += dtStepSize;
-			steps ++;
+			dtToRun = dtToRun - dtStepSize;
+			testTimer = testTimer + dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
-					
+				
 			for (int i = 0; i < muscles.length; i++) {
 				RevoluteJoint r = creatureRevoluteJointsList.get(i);
 				float cycle = testTimer;
@@ -109,7 +108,6 @@ public class Test {
 			
 			if (testTimer > testDuration && !taskDone) { //abort TEST
 				taskDone = true;
-				System.out.println(creature.getID() + " " + testTimer);
 				lastFitness = getAveragePosition().x;
 				parentWrapper.taskDone(creature, lastFitness);					
 				afterTestTime = testTimer + afterTestLength;
@@ -120,6 +118,7 @@ public class Test {
 			}
 
 			parentWrapper.stepCallback(steps);
+			steps++;
 		}
 	}
 	
