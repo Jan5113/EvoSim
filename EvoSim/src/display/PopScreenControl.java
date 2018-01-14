@@ -44,7 +44,7 @@ public class PopScreenControl extends BorderPane{
 	
 	private final PopScreen popScreen;
 	
-	private TestProgressBar testProgressBar = new TestProgressBar();
+	private TestProgressBar testProgressBar;
 	
 	private ArrayList<PopulationTask> tasks = new ArrayList<PopulationTask>();
 
@@ -80,6 +80,8 @@ public class PopScreenControl extends BorderPane{
 		testScreen = testScreen_in;
 		pop = pop_in;
 		popScreen = popScreen_in;
+		
+		testProgressBar = new TestProgressBar();
 
 		this.setCenter(gp_controls);
 
@@ -134,7 +136,7 @@ public class PopScreenControl extends BorderPane{
 		}
 		
 		if (multiTest.getTestStatus() == MultiTestStatus.TESTING || multiTest.getTestStatus() == MultiTestStatus.FIXING) {
-			testProgressBar.update(1.0f - ((float) multiTest.getQueue().size() / (float) pop.getPopulationSize()));
+			testProgressBar.update(multiTest.getQueue().size(), tasks);
 		}
 		else {
 			if (multiTest.getTestStatus() == MultiTestStatus.DONE) {
@@ -148,6 +150,8 @@ public class PopScreenControl extends BorderPane{
 				btn_singleAction.setDisable(false);
 				btn_1G.setDisable(false);
 				btn_10G.setDisable(false);
+				btn_1G.setText("1 Gen");
+				btn_10G.setText("10 Gen");
 				popScreen.removeProgressBar();
 				popScreen.refreshTable();
 			}
@@ -160,8 +164,10 @@ public class PopScreenControl extends BorderPane{
 					popScreen.setProgressBar(testProgressBar);
 					multiTest.testWholePop();
 					btn_singleAction.setDisable(true);
-					btn_1G.setDisable(true);
-					btn_10G.setDisable(true);
+//					btn_1G.setDisable(true);
+//					btn_10G.setDisable(true);
+					btn_1G.setText("+ 1 Gen");
+					btn_10G.setText("+ 10 Gen");
 					return;
 				case NEWGEN:
 					pop.nextGen();
@@ -194,6 +200,7 @@ public class PopScreenControl extends BorderPane{
 		switch (pop.getPopStat()) {
 		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
+			testProgressBar.setPopSize(pop.getPopulationSize());
 			popScreen.refreshTable();
 			btn_1G.setDisable(false);
 			btn_10G.setDisable(false);
@@ -207,6 +214,7 @@ public class PopScreenControl extends BorderPane{
 			testScreen.resetSpeed();
 			testScreen.resetView();
 			tasks.add(PopulationTask.CALC_GEN);
+			testProgressBar.setGens(tasks);
 			break;
 		case S3_TESTED: // SORT
 			pop.sortPopulation();
@@ -237,6 +245,7 @@ public class PopScreenControl extends BorderPane{
 		tasks.add(PopulationTask.NEXT_KILL_MUT);
 		tasks.add(PopulationTask.CALC_GEN);
 		tasks.add(PopulationTask.SORT);
+		testProgressBar.setGens(tasks);
 	}
 	
 	private void do10Gen() {
@@ -251,6 +260,7 @@ public class PopScreenControl extends BorderPane{
 			tasks.add(PopulationTask.CALC_GEN);
 			tasks.add(PopulationTask.SORT);
 		}
+		testProgressBar.setGens(tasks);
 	}
 
 }

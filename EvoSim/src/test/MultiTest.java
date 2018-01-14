@@ -249,9 +249,9 @@ public class MultiTest{
 					test.startTest();
 					test.step(15.1f, 1.0f);
 				} else {
-					System.out.println("Creature ID " + c.getID() + " already tested!");
+					//System.out.println("Creature ID " + c.getID() + " already tested!");
 				}
-			} catch (ArrayIndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				System.err.println("Out of ArrayBounds");
 			}
 			
