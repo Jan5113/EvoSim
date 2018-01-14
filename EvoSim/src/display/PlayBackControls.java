@@ -22,8 +22,7 @@ public class PlayBackControls extends BorderPane {
 
 	/**
 	 * {@code testScreen} is a reference to the {@link TestScreen} instance this
-	 * {@link PlayBackControls} instance has control over. This class communicates
-	 * with the {@code TestScreen} via {@link ControlFuncTest} enums.
+	 * {@link PlayBackControls} instance has control over.
 	 */
 	private final TestScreen testScreen;
 

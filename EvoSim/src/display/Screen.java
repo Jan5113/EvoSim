@@ -452,6 +452,8 @@ public class Screen extends Canvas {
 	 * 
 	 * @param pos_in
 	 *            moves the {@link B2DCamera}
+	 *            @param viewLock
+	 *            locks translation directions
 	 */
 	public void addPos(Vec2 pos_in, boolean viewLock) {
 		camera.addPosLock(pos_in, viewLock);
