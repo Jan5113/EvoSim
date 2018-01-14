@@ -85,7 +85,7 @@ public class PopScreenControl extends BorderPane{
 
 		Layout.gridPane(gp_controls);
 
-		Layout.tallButton(btn_singleAction);
+		Layout.tallwideButton(btn_singleAction);
 		Layout.button(btn_1G);
 		Layout.button(btn_10G);
 		

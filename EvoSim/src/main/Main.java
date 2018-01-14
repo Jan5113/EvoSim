@@ -8,7 +8,6 @@ import display.PopScreenControl;
 import display.TestScreen;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -50,9 +49,9 @@ public class Main extends Application{
 		primaryStage.setTitle("EvoSim - v"+ version);
 		root = new BorderPane();
 		scene = new Scene(root, 1200, 700);
-		root.setPadding(new Insets(0, 15, 15, 0));
 		scene.setFill(Color.color(0.8, 0.8, 1));
-		scene.getStylesheets().add("style.css");
+		Layout.setCSS(scene);
+		Layout.rootPadding(root);
 
 		setupTestScreen();
 		setupPopScreen();
@@ -91,7 +90,7 @@ public class Main extends Application{
 	private void setupButton() {
 		btn_showInstr = new Button("?");
 		Layout.squareButton(btn_showInstr);
-		Layout.defMargin(btn_showInstr);
+		Layout.defaultMargin(btn_showInstr);
 		BorderPane.setAlignment(btn_showInstr, Pos.TOP_RIGHT);
 		btn_showInstr.setOnAction(e -> setBPInstr());
 		btn_showInstr.setTranslateY(0);
@@ -118,14 +117,13 @@ public class Main extends Application{
 		mainTestScreen.enableMarkers();
 		mainTestScreen.showTimer(true);
 		mainTestScreen.showScore(true);
-		Layout.defMargin(mainTestScreen);
+		Layout.defaultMargin(mainTestScreen);
 		BorderPane.setAlignment(mainTestScreen, Pos.TOP_LEFT);
 
 		bp_testControl = new PlayBackControls(mainTestScreen);
-		Layout.defMargin(bp_testControl);
 		
 		Label testTitle = new Label("Creature preview");
-		Layout.defMargin(testTitle);
+		Layout.defaultMargin(testTitle);
 		Layout.labelTitle(testTitle);
 		
 		bp_test.setCenter(mainTestScreen);
@@ -139,12 +137,10 @@ public class Main extends Application{
 		popScreen = new PopScreen(pop, mainTestScreen);
 		mainMultiTest = new MultiTest(6, pop);
 		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
-		Layout.defMargin(popScreen);
+		Layout.defaultMargin(popScreen);
 		Label popTitle = new Label("Population");
-		Layout.defMargin(popTitle);
+		Layout.defaultMargin(popTitle);
 		Layout.labelTitle(popTitle);
-		
-		Layout.defMargin(bp_popControl);
 		
 		bp_pop.getChildren().add(popTitle);
 		bp_pop.getChildren().add(bp_popControl);

@@ -37,13 +37,13 @@ public class Instructions extends BorderPane {
 		BorderPane buttons = new BorderPane();
 		Layout.button(btn_next);
 		Layout.button(btn_prev);
-		Layout.defMargin(btn_next);
-		Layout.defMargin(btn_prev);
+		Layout.defaultMargin(btn_next);
+		Layout.defaultMargin(btn_prev);
 		buttons.setLeft(btn_prev);
 		buttons.setCenter(btn_next);
 
 		Layout.button(btn_showEvo);
-		Layout.defMargin(btn_showEvo);
+		Layout.defaultMargin(btn_showEvo);
 		BorderPane.setAlignment(btn_next, Pos.CENTER_RIGHT);
 		btn_showEvo.setOnAction(e -> {btn_showEvo.setText("Close"); main.setBPEvo();});
 		buttons.setRight(btn_showEvo);
