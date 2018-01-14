@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import population.Creature;
 import population.Population;
 import population.PopulationStatus;
 import population.PopulationTask;
@@ -13,13 +14,16 @@ import test.MultiTest;
 import test.MultiTestStatus;
 
 /**
- * The {@link PlayBackControls} class is a {@link BorderPane} which holds all
- * the buttons. It takes references of the elements it controls such as
- * {@link TestScreen} instances or {@link MultiTest} instances. All the commands
- * are then handed over to the correspondent reference.
+ * The {@link PopScreenControl} class is a {@link BorderPane} which holds all
+ * the buttons for the control of {@link PopScreen} and {@link Population}. It
+ * takes references of the elements it controls such as the {@link PopScreen}
+ * instance or {@link MultiTest} instances. It handles the {@link Population}
+ * and with it the mutation procedure. Clicking a button adds a
+ * {@link PopulationTask} to a task queue and is then executed.
  * <p>
  * <strong>NOTE:</strong> The refresh() method has to be called every frame to
- * ensure the correct labelling of some "dynamic" buttons.
+ * ensure the correct labelling of some "dynamic" buttons and the execution of
+ * the {@link PopulationTask}s.
  * <p>
  * This class uses the {@link Layout} class for the way of displaying the
  * elements.
@@ -35,17 +39,33 @@ public class PopScreenControl extends BorderPane{
 	
 	/**
 	 * {@code testScreen} is a reference to the {@link TestScreen} instance this
-	 * {@link PopScreenControl} instance has control over. This class communicates
-	 * with the {@code TestScreen} via {@link ControlFuncTest} enums.
+	 * {@link PopScreenControl} instance has control over. It is needed to display
+	 * {@link Creature} instances in the main {@link TestScreen}
 	 */
 	private final TestScreen testScreen;
 	
+	/**
+	 * {@code pop} holds the reference to the main {@link Population} this instance 
+	 * is controlling.
+	 */
 	private final Population pop;
 	
+	/**
+	 * {@code popScreen} hold the reference to the main {@link PopScreen}. This is mainly
+	 * used for {@code refresh()} and applying the {@link TestProgressBar}.
+	 */
 	private final PopScreen popScreen;
 	
+	/**
+	 * {@code testProgressBar} is a progress bar that is being shown when the {@link MultiTest}
+	 * is performing calculations. It displays the progress of the calculation.
+	 */
 	private TestProgressBar testProgressBar;
 	
+	/**
+	 * This queue holds {@link PopulationTask} enums. All tasks are added to the
+	 * queue and are then later processed in the order they were added.
+	 */
 	private ArrayList<PopulationTask> tasks = new ArrayList<PopulationTask>();
 
 	/**
@@ -55,25 +75,36 @@ public class PopScreenControl extends BorderPane{
 	GridPane gp_controls = new GridPane();
 
 	// Playback Controls
+	/**
+	 * This button adds the next action which can be performed on the
+	 * {@link Population} to the queue.
+	 */
 	Button btn_singleAction = new Button("Test");
+	/**
+	 * This button adds multiple actions to the queue to calculate one entire generation. 
+	 */
 	Button btn_1G = new Button("1 Gen");
+	/**
+	 * This button adds multiple actions to the queue to calculate ten entire generations. 
+	 */
 	Button btn_10G = new Button("10 Gens");
 	
 	/**
-	 * Initialises the new {@link PlayBackControls} instance with references to the
-	 * elements it controls.
+	 * Initialises the new {@link PopScreenControl} instance with references to the
+	 * elements it controls. The layout is initialised and EventListeners are added.
 	 * 
 	 * @param testScreen_in
 	 *            reference to the {@link TestScreen} instance this
-	 *            {@link PlayBackControls} should have control over.
+	 *            {@link PopScreenControl} should have control over.
 	 * @param multiTest_in
 	 *            reference to the {@link MultiTest} instance this
-	 *            {@link PlayBackControls} should have control over.
+	 *            {@link PopScreenControl} should have control over.
 	 * @param popScreen_in
 	 *            reference to the {@link PopScreen} instance this
-	 *            {@link PlayBackControls} should have control over.
+	 *            {@link PopScreenControl} should have control over.
 	 * @param pop_in
-	 *            reference to the main {@link Population}
+	 *            reference to the main {@link Population} this
+	 *            {@link PopScreenControl} controls.
 	 */
 	public PopScreenControl(TestScreen testScreen_in, MultiTest multiTest_in, PopScreen popScreen_in, Population pop_in) {
 		multiTest = multiTest_in;
@@ -101,9 +132,17 @@ public class PopScreenControl extends BorderPane{
 	}
 
 	/**
-	 * Handles the labelling of "dynamic" buttons. Those are buttons which change
-	 * their labelling depending on the status of the elements this
-	 * {@link PlayBackControls} instance has control over.
+	 * Handles the labelling of "dynamic" buttons and execution of
+	 * {@link PopulationTask}s from the {@code tasks} queue. All the tasks currently
+	 * in the queue are executed (in the order they were added) and then removed
+	 * from the queue.
+	 * <p>
+	 * If a calculation using {@link MultiTest} is running, no more tasks are being
+	 * executed.
+	 * <p>
+	 * If a calculation using {@link MultiTest} is done, the {@link TestProgressBar}
+	 * is removed automatically from the {@link PopScreen} referenced during
+	 * initialisation.
 	 */
 	public void refresh() {
 		
@@ -194,9 +233,13 @@ public class PopScreenControl extends BorderPane{
 		}
 	}
 	
-	private void singleAction() {
-		System.out.println(pop.getPopStat());
-		
+	/**
+	 * This method is called, when the multi-purpose button had been pressed. It
+	 * automatically looks for the next step the {@link Population} has to go
+	 * through and executes the code right away or adds it to the {@code task}
+	 * queue.
+	 */
+	private void singleAction() {		
 		switch (pop.getPopStat()) {
 		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
@@ -234,6 +277,15 @@ public class PopScreenControl extends BorderPane{
 		}
 	}
 	
+	/**
+	 * This method is called when one whole generation should be calculated.
+	 * {@link PopulationTask} commands are added to the {@code tasks} queue to
+	 * calculate an entire generation. The current generation is completed and the
+	 * commands for mutations, sorting etc. is added in the correct order to the
+	 * queue.
+	 * <p>
+	 * The {@link TestProgressBar} is shown by executing this method.
+	 */
 	private void do1Gen() {
 		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
 			tasks.add(PopulationTask.COMPLETE_GEN);
@@ -248,9 +300,19 @@ public class PopScreenControl extends BorderPane{
 		testProgressBar.setGens(tasks);
 	}
 	
+	/**
+	 * This method is called when 10 whole generations should be calculated.
+	 * {@link PopulationTask} commands are added to the {@code tasks} queue to
+	 * calculate 10 entire generations. The current generation is completed and the
+	 * commands for mutations, sorting etc. is added in the correct order to the
+	 * queue.
+	 * <p>
+	 * The {@link TestProgressBar} is shown by executing this method.
+	 */
 	private void do10Gen() {
 		if (pop.getPopStat() == PopulationStatus.S1_CREATED_MUTATED) {
 			tasks.add(PopulationTask.COMPLETE_GEN);
+			tasks.add(PopulationTask.SORT);
 		}
 		if (pop.getPopStat() == PopulationStatus.S3_TESTED) {
 			tasks.add(PopulationTask.SORT);
