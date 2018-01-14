@@ -92,7 +92,7 @@ public class Layout {
 	
 	/**
 	 * Sets the CSS styling for the given {@link Button} and sets its dimensions to
-	 * {@code 40px} by {@code 40px}. The font-size is increased to only fit one
+	 * {@code 32px} by {@code 32px}. The font-size is increased to only fit one
 	 * character into the element. (Use-case e.g.: help button)
 	 * <p>
 	 * <strong>NOTE: </strong> {@code defaultInsets()} are not being applied!
@@ -103,7 +103,7 @@ public class Layout {
 	public static void squareButton(Button btn) {
 		btn.getStyleClass().add("nopadding-button");
 		btn.getStyleClass().add("xl-text");
-		btn.setPrefSize(40, 40);
+		btn.setMinSize(32, 32);
 	}
 	
 	/**

@@ -37,7 +37,7 @@ public class Main extends Application{
 	private BorderPane bp_evo;
 	private boolean showInstr;
 	
-	private Button btn_showInstr;
+	private BorderPane bp_showInstr;
 	
 	private Population pop = new Population(new Vec2(0.0f, -9.81f));
 	
@@ -60,7 +60,9 @@ public class Main extends Application{
 		bp_evo = new BorderPane();
 		bp_evo.setCenter(bp_test);
 		bp_evo.setLeft(bp_pop);
-		bp_evo.setTop(btn_showInstr);
+		bp_evo.getChildren().add(bp_showInstr);
+		bp_showInstr.setTranslateX(0);
+		bp_showInstr.setTranslateY(0);
 		
 		bp_instr = new Instructions(this);
 		
@@ -88,13 +90,12 @@ public class Main extends Application{
 	}
 	
 	private void setupButton() {
-		btn_showInstr = new Button("?");
+		Button btn_showInstr = new Button("?");
 		Layout.squareButton(btn_showInstr);
 		Layout.defaultMargin(btn_showInstr);
-		BorderPane.setAlignment(btn_showInstr, Pos.TOP_RIGHT);
 		btn_showInstr.setOnAction(e -> setBPInstr());
-		btn_showInstr.setTranslateY(0);
-		btn_showInstr.resize(0, 0);
+		bp_showInstr = new BorderPane();
+		bp_showInstr.setCenter(btn_showInstr);
 	}
 	
 	public void setBPEvo() {
@@ -109,7 +110,6 @@ public class Main extends Application{
 
 	private void setupTestScreen() {
 		bp_test = new BorderPane();
-		bp_test.setTranslateY(-45);
 		mainTestScreen = new TestScreen(900, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Layout.getSkycolor());
 		mainTestScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
@@ -133,7 +133,6 @@ public class Main extends Application{
 
 	private void setupPopScreen() {
 		bp_pop = new VBox();
-		bp_pop.setTranslateY(-45);
 		popScreen = new PopScreen(pop, mainTestScreen);
 		mainMultiTest = new MultiTest(6, pop);
 		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
@@ -156,7 +155,8 @@ public class Main extends Application{
 	}
 
 	private void stageResize(Stage s) {
-		mainTestScreen.setScreenSize((int) s.getWidth()-267, (int) s.getHeight()-265); 
+		mainTestScreen.setScreenSize((int) s.getWidth()-272, (int) s.getHeight()-265); 
+		bp_showInstr.setTranslateX((int) s.getWidth() - 79);
 	}
 
 
