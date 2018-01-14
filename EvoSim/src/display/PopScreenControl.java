@@ -148,7 +148,7 @@ public class PopScreenControl extends BorderPane{
 				btn_singleAction.setDisable(false);
 				btn_1G.setDisable(false);
 				btn_10G.setDisable(false);
-				popScreen.resetCenter();
+				popScreen.removeProgressBar();
 				popScreen.refreshTable();
 			}
 			
