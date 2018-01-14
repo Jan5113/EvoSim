@@ -200,12 +200,12 @@ public class PopScreenControl extends BorderPane{
 			break;
 		case S1_CREATED_MUTATED: //TEST ONE BY ONE
 			pop.testing();
-			testScreen.manageCommand(ControlFuncTest.TEST_ONE_BY_ONE);
+			testScreen.testOneByOne();;
 			break;
 		case S2_TESTING: //SKIP
-			testScreen.manageCommand(ControlFuncTest.STOP);
-			testScreen.manageCommand(ControlFuncTest.SPEED1X);
-			testScreen.manageCommand(ControlFuncTest.RESETVIEW);
+			testScreen.stop();
+			testScreen.resetSpeed();
+			testScreen.resetView();
 			tasks.add(PopulationTask.CALC_GEN);
 			break;
 		case S3_TESTED: // SORT

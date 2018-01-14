@@ -75,59 +75,57 @@ public class TestScreen extends Screen implements TestWrapper{
 		refreshFollow(dt, playBackSpeed, test.getAveragePosition(), followOffset, running);
 	}
 
-	public void manageCommand(ControlFuncTest cf) {
-		switch (cf) {
-		case PLAYPAUSE:
-			if (hasCreature()) {
-				running = !running;
-			}
-
-			if (running) {
-				System.out.println("PLAY");
-			}
-			else
-				System.out.println("PAUSE");
-			break;
-		case STOP:
-			running = false;
-			break;
-		case START:
-			running = true;
-			break;
-		case FAST:
-			doublePlayBackSpeed();
-			System.out.println("SPEED: " + playBackSpeed);
-			break;
-		case SLOW:
-			halfPlayBackSpeed();
-			System.out.println("SPEED: " + playBackSpeed);
-			break;
-		case SPEED1X:
-			setPlayBackSpeed(1.0f);
-			System.out.println("SPEED: " + playBackSpeed);
-			break;
-		case TOGGLEVIEW:
-			toggleViewLock(test.getAveragePosition(), running);
-			break;
-		case RESETVIEW:
-			resetView();
-			break;
-		case TEST_ONE_BY_ONE:
-			if (pop == null) {System.err.println("null Population!"); break;}
-		
-			for (currentIndex = 0; currentIndex < pop.getPopulationSize(); currentIndex++ ) {
-				if (!pop.getCreatureByIndex(currentIndex).fitnessEvaulated()) {
-					break;
-				}
-			}
-			autoGetNext = true;
-			startSingleTest(pop.getCreatureByIndex(currentIndex));
-			break;
-		default:
-			System.err.println("CONTROL FUNC ENUM ERROR!");
-			break;
+	public void playPause() {
+		if (hasCreature()) {
+			running = !running;
 		}
+
+		if (running) {
+			System.out.println("PLAY");
+		}
+		else
+			System.out.println("PAUSE");
 	}
+	
+	public void stop() {
+		running = false;
+	}
+	
+	public void start() {
+		running = true;
+	}
+	
+	public void fast() {
+		doublePlayBackSpeed();
+		System.out.println("SPEED: " + playBackSpeed);
+	}
+	
+	public void slow() {
+		halfPlayBackSpeed();
+		System.out.println("SPEED: " + playBackSpeed);
+	}
+	
+	public void resetSpeed() {
+		setPlayBackSpeed(1.0f);
+		System.out.println("SPEED: " + playBackSpeed);
+	}
+	
+	public void toggleView() {
+		toggleViewLock(test.getAveragePosition(), running);
+	}
+	
+	public void testOneByOne() {
+		if (pop == null) {System.err.println("null Population!"); return;}
+		
+		for (currentIndex = 0; currentIndex < pop.getPopulationSize(); currentIndex++ ) {
+			if (!pop.getCreatureByIndex(currentIndex).fitnessEvaulated()) {
+				break;
+			}
+		}
+		autoGetNext = true;
+		startSingleTest(pop.getCreatureByIndex(currentIndex));
+	}
+	
 
 	public boolean isTestRunning() {
 		return running;

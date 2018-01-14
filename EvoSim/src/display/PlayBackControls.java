@@ -74,12 +74,12 @@ public class PlayBackControls extends BorderPane {
 		gp_controls.add(btn_toggleView, 3, 0);
 		gp_controls.add(btn_resetView, 3, 1);
 
-		btn_playpause.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.PLAYPAUSE));
-		btn_fast.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.FAST));
-		btn_slow.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.SLOW));
-		btn_1x.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.SPEED1X));
-		btn_toggleView.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.TOGGLEVIEW));
-		btn_resetView.setOnAction(e -> testScreen.manageCommand(ControlFuncTest.RESETVIEW));
+		btn_playpause.setOnAction(e -> testScreen.playPause());
+		btn_fast.setOnAction(e -> testScreen.fast());
+		btn_slow.setOnAction(e -> testScreen.slow());
+		btn_1x.setOnAction(e -> testScreen.resetSpeed());
+		btn_toggleView.setOnAction(e -> testScreen.toggleView());
+		btn_resetView.setOnAction(e -> testScreen.resetView());
 	}
 
 	/**
