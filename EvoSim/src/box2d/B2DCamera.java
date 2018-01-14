@@ -363,6 +363,31 @@ public class B2DCamera {
 		
 	}
 	
+
+	/**
+	 * Takes Box2D World {@link Vec2} vector and moves this {@link B2DCamera}
+	 * instance by this vector. If {@code respectLockDirs} is {@code true} the
+	 * {@link B2DCamera} will only move in free directions.
+	 * 
+	 * @param pos_in
+	 *            moves this {@code B2DCamera} instance
+	 * @param respectLockDirs
+	 *            moves only in unlocked directions if {@code true}
+	 */
+	public void addPosLock(Vec2 pos_in, boolean respectLockDirs) {
+		if (respectLockDirs) {
+			if (followXEnabled) {
+				addPos(new Vec2(0.0f, pos_in.y));
+			}
+			if (followYEnabled) {
+				addPos(new Vec2(pos_in.x, 0.0f));
+			}
+		} else {
+			addPos(pos_in);
+		}
+		
+	}
+	
 	/**
 	 * Returns the current position of this {@link B2DCamera} instance. The
 	 * coordinates are given in Box2D coordinates as a {@link Vec2} vector.
