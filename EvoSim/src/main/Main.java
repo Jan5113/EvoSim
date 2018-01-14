@@ -137,7 +137,6 @@ public class Main extends Application{
 		popScreen = new PopScreen(pop, mainTestScreen);
 		mainMultiTest = new MultiTest(6, pop);
 		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
-		Layout.defaultMargin(popScreen);
 		Label popTitle = new Label("Population");
 		Layout.defaultMargin(popTitle);
 		Layout.labelTitle(popTitle);

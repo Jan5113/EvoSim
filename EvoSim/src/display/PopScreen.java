@@ -149,6 +149,7 @@ public class PopScreen extends BorderPane {
 		tbv_pop.setPrefHeight(10000);
 		tbv_pop.getStyleClass().add("tableview");
 		this.setCenter(tbv_pop);
+		Layout.defaultMargin(tbv_pop);
 
 		isActive = true;
 	}
@@ -198,8 +199,8 @@ public class PopScreen extends BorderPane {
 	private void onMouseMoved(MouseEvent e) {
 
 		if (mouseHover && previewScreen != null) {
-			previewScreen.setTranslateX(e.getX() + 2);
-			previewScreen.setTranslateY(e.getY() + 2);
+			previewScreen.setTranslateX(e.getX() + 17);
+			previewScreen.setTranslateY(e.getY() + 17);
 		}
 	}
 
