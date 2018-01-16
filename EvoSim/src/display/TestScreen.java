@@ -332,6 +332,23 @@ public class TestScreen extends Screen implements TestWrapper {
 	public void showMuscles(boolean show) {
 		showMuscles = show;
 	}
+	
+	/**
+	 * Calling this method will toggle the display of muscles of the active
+	 * {@link Creature}.
+	 */
+	public void showMuscles() {
+		showMuscles = !showMuscles;
+	}
+	
+	/**
+	 * Returns {@code true} if the muscles are being rendered
+	 * 
+	 * @return muscles are enabled
+	 */
+	public boolean musclesEnabled() {
+		return showMuscles;
+	}
 
 	/**
 	 * Returns {@code true} if the the {@link TestScreen} is currently running. If

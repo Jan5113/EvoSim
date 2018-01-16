@@ -40,6 +40,7 @@ public class PlayBackControls extends BorderPane {
 	Button btn_1x = new Button("1x");
 	Button btn_toggleView = new Button("Unlock View");
 	Button btn_resetView = new Button("Reset View");
+	Button btn_toggleMuscles = new Button("Show Muscles");
 	
 	/**
 	 * Initialises the new {@link PlayBackControls} instance with references to the
@@ -63,6 +64,7 @@ public class PlayBackControls extends BorderPane {
 		Layout.TwoThirdsButton(btn_1x);
 		Layout.button(btn_toggleView);
 		Layout.button(btn_resetView);
+		Layout.button(btn_toggleMuscles);
 
 		this.setTop(lbl_playback);
 		gp_controls.add(btn_playpause, 0, 0, 3, 1);
@@ -71,6 +73,7 @@ public class PlayBackControls extends BorderPane {
 		gp_controls.add(btn_1x, 1, 1);
 		gp_controls.add(btn_toggleView, 3, 0);
 		gp_controls.add(btn_resetView, 3, 1);
+		gp_controls.add(btn_toggleMuscles, 4, 0);
 
 		btn_playpause.setOnAction(e -> testScreen.playPause());
 		btn_fast.setOnAction(e -> testScreen.fast());
@@ -78,6 +81,7 @@ public class PlayBackControls extends BorderPane {
 		btn_1x.setOnAction(e -> testScreen.resetSpeed());
 		btn_toggleView.setOnAction(e -> testScreen.toggleView());
 		btn_resetView.setOnAction(e -> testScreen.resetView());
+		btn_toggleMuscles.setOnAction(e -> testScreen.showMuscles());
 	}
 
 	/**
@@ -95,6 +99,11 @@ public class PlayBackControls extends BorderPane {
 			btn_toggleView.setText("Unlock View");
 		else
 			btn_toggleView.setText("Lock View");
+		
+		if (testScreen.musclesEnabled())
+			btn_toggleMuscles.setText("Hide Muscles");
+		else
+			btn_toggleMuscles.setText("Show Muscles");
 	}
 
 }
