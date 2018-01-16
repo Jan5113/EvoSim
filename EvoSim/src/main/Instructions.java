@@ -69,15 +69,15 @@ public class Instructions extends BorderPane {
 	
 	public void updateButtons() {
 		if (currentPage == 0) {
-			btn_prev.setDisable(true);
-			btn_next.setDisable(false);
+			btn_prev.setVisible(false);
+			btn_next.setVisible(true);
 		}
 		else if (currentPage + 1 == pages.length) {
-			btn_next.setDisable(true);
-			btn_prev.setDisable(false);
+			btn_next.setVisible(false);
+			btn_prev.setVisible(true);
 		} else {
-			btn_prev.setDisable(false);
-			btn_next.setDisable(false);
+			btn_prev.setVisible(true);
+			btn_next.setVisible(true);
 		}
 	}
 	
@@ -89,8 +89,9 @@ public class Instructions extends BorderPane {
 
 	private static BorderPane getPage1() {
 		BorderPane page = new BorderPane();
+		page.setId("EvoSim");
+		
 		page.setCenter(new Label("Hi there! \n Page 1"));
-		page.setId("Start");
 		return page;
 	}
 
@@ -108,7 +109,7 @@ public class Instructions extends BorderPane {
 		testScreen = new TestScreen(300, 200, 30, new Vec2(0,0));
 		testScreen.startSingleTest(new Creature(0));
 		testScreen.setBackgroundCol(Layout.getSkycolor());
-		testScreen.enableAutoRepeat();
+		//testScreen.enableAutoRepeat();
 		testScreen.showScore(true);
 		testScreen.showTimer(true);
 		testScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());

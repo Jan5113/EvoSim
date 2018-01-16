@@ -1,6 +1,7 @@
 package display;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
 import box2d.B2DCamera;
@@ -84,6 +85,11 @@ public class TestScreen extends Screen implements TestWrapper {
 	 * Can be set to {@code true} to display the test timer on the {@link Screen}
 	 */
 	private boolean showTimer = false;
+	/**
+	 * Can be set to {@code true} to display the muscles and the activity on the
+	 * {@link Screen}
+	 */
+	private boolean showMuscles = false;
 	/**
 	 * This {@link Vec2} specifies the offset for the camera follow feature from the
 	 * centre of the {@link Creature}.
@@ -200,6 +206,11 @@ public class TestScreen extends Screen implements TestWrapper {
 		for (B2DBody b : test.getCreatureInstances()) {
 			drawBody(b);
 		}
+		if (showMuscles) {
+			for (RevoluteJoint rj : test.getRevoluteJoints()) {
+				drawMuscle(rj);
+			}
+		}
 
 		if (running)
 			test.step(dt, playBackSpeed);
@@ -310,6 +321,16 @@ public class TestScreen extends Screen implements TestWrapper {
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * Calling this method will enable/disable the muscles of the active
+	 * {@link Creature}. It also shows their activity.
+	 * 
+	 * @param show
+	 */
+	public void showMuscles(boolean show) {
+		showMuscles = show;
 	}
 
 	/**

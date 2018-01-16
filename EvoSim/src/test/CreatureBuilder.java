@@ -14,6 +14,7 @@ import box2d.B2DBoneDir;
 import box2d.B2DCamera;
 import box2d.B2DJoint;
 import box2d.B2DMuscle;
+import javafx.scene.paint.Color;
 import population.Creature;
 
 public class CreatureBuilder {
@@ -42,6 +43,8 @@ public class CreatureBuilder {
 		
 		B2DBody boneBody = new B2DBody("BONE" + bone.getID());
 		boneBody.setUpRect(pos, new Vec2(bone.getHalfLen(), 0.1f), angle, BodyType.DYNAMIC);
+		boneBody.setFill(true);
+		boneBody.setColor(Color.DODGERBLUE);
 		
 		boneBody.setGroupIndex(-1);
 		
@@ -74,6 +77,7 @@ public class CreatureBuilder {
 		jointDef.motorSpeed = 0;
 		jointDef.collideConnected = false;
 		jointDef.enableMotor = true;
+		jointDef.userData = muscle;
 		
 		return jointDef;
 	}

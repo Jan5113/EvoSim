@@ -175,4 +175,8 @@ public class Test {
 	public float getTestDuration() {
 		return testDuration;
 	}
+
+	public ArrayList<RevoluteJoint> getRevoluteJoints() {
+		return creatureRevoluteJointsList;
+	}
 }

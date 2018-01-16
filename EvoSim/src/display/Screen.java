@@ -2,9 +2,13 @@ package display;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
+import box2d.B2DBone;
+import box2d.B2DBoneDir;
 import box2d.B2DCamera;
+import box2d.B2DMuscle;
 import box2d.ShapeType;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -12,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import population.Creature;
@@ -286,7 +291,8 @@ public class Screen extends Canvas {
 	
 	/**
 	 * This method draws a {@link B2DBody} with the {@link BodyType} {@code POINT}
-	 * to the according coordinates on the {@link Screen}. It is rendered as an "X" with the {@link B2DBody} dimensions as length.
+	 * to the according coordinates on the {@link Screen}. It is rendered as an "X"
+	 * with the {@link B2DBody} dimensions as length.
 	 *
 	 * @param point
 	 *            is drawn on the {@link Screen} as a cross
@@ -296,6 +302,52 @@ public class Screen extends Canvas {
 		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor());
 		dim = new Vec2 (dim.x, -dim.y);
 		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor());
+	}
+	
+	/**
+	 * This method draws a line between two {@link B2DBone}s. The colour varies form white to 
+	 * red, depending on the angle between the Bones.
+	 * 
+	 * @param muscle
+	 */
+	public void drawMuscle(RevoluteJoint muscle) {
+		Vec2 pxpointA;
+		Vec2 pxpointB;
+		if (((B2DMuscle) muscle.getUserData()).getBoneDirs()[0] == B2DBoneDir.END) {
+			pxpointA = camera.coordWorldToPixels(
+					muscle.getBodyA().getPosition().add(
+							B2DCamera.rotateVec2(muscle.getLocalAnchorA().add(new Vec2(0.3f, 0).negate()),
+									muscle.getBodyA().getAngle())));
+		} else {
+			pxpointA = camera.coordWorldToPixels(
+					muscle.getBodyA().getPosition().add(
+							B2DCamera.rotateVec2(muscle.getLocalAnchorA().add(new Vec2(-0.3f, 0).negate()),
+									muscle.getBodyA().getAngle())));
+		}
+		if (((B2DMuscle) muscle.getUserData()).getBoneDirs()[1] == B2DBoneDir.HEAD) {
+			pxpointB = camera.coordWorldToPixels(
+					muscle.getBodyB().getPosition().add(
+							B2DCamera.rotateVec2(muscle.getLocalAnchorB().add(new Vec2(-0.3f, 0).negate()),
+									muscle.getBodyB().getAngle())));
+		} else {
+			pxpointB = camera.coordWorldToPixels(
+					muscle.getBodyB().getPosition().add(
+							B2DCamera.rotateVec2(muscle.getLocalAnchorB().add(new Vec2(0.3f, 0).negate()),
+									muscle.getBodyB().getAngle())));
+		}
+		float angl = muscle.getJointAngle();
+		float angl0 = ((B2DMuscle) muscle.getUserData()).getOffAngle();
+		float angl1 = ((B2DMuscle) muscle.getUserData()).getOnAngle();
+		float col = Math.abs((angl - angl0) / (angl1 - angl0));
+		if (col > 1) col = 1;
+		if (col < 0) col = 0;
+		gc.save();
+		gc.setLineWidth(camera.scalarWorldToPixels(0.05f));
+		gc.setLineCap(StrokeLineCap.ROUND);
+		gc.setStroke(Color.color(1, col, col));
+		gc.strokeLine(pxpointA.x, pxpointA.y, pxpointB.x, pxpointB.y);
+		gc.restore();
+		//drawPxCircle(pxpoint.x, pxpoint.y, camera.scalarWorldToPixels(0.05f), camera.scalarWorldToPixels(0.05f), Color.color(col,0,0), true);
 	}
 	
 	//************************************************
