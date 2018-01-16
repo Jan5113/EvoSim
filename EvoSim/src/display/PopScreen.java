@@ -257,7 +257,7 @@ public class PopScreen extends BorderPane {
 
 	/**
 	 * Replaces the {@link TableView} with a {@link TestProgressBar}. This method is
-	 * called to show the progress at the bottom of this {@link BorderPane} when a
+	 * called to show the progress at the top of this {@link BorderPane} when a
 	 * {@link MultiTest} calculation is performed. Once the calculation is done, the
 	 * bar has to be removed manually by calling {@code removeProgressBar()}
 	 * <p>
@@ -265,7 +265,7 @@ public class PopScreen extends BorderPane {
 	 * screen due to NullPointer errors otherwise.
 	 * 
 	 * @param testProgressBar_in
-	 *            is added at the bottom of this instance
+	 *            is added at the top of this instance
 	 */
 	public void setProgressBar(TestProgressBar testProgressBar_in) {
 		isActive = false;
