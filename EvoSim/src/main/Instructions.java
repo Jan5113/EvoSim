@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import population.Creature;
 
 public class Instructions extends BorderPane {
@@ -90,8 +91,17 @@ public class Instructions extends BorderPane {
 	private static BorderPane getPage1() {
 		BorderPane page = new BorderPane();
 		page.setId("EvoSim");
-		
-		page.setCenter(new Label("Hi there! \n Page 1"));
+		Label lbl = new Label(
+				"Ob Darwinismus oder Survival of the Fittest, jeder hat schon mal in irgendeiner "
+				+ "Form vor der Evolution gehört: Eine komplexe, mehr oder weniger von Zufällen "
+				+ "gesteuerte Entwicklung, aus welcher wir entstanden sein sollen.\n\nMit dem Projekt "
+				+ "EvoSim haben wir es uns zur Aufgabe gemacht, genau einen solchen Prozess, die "
+				+ "Evolution, zu simulieren.");
+		lbl.setWrapText(true);
+		lbl.setMaxWidth(600);
+		lbl.setFont(new Font(24));
+		Layout.defaultMargin(lbl);
+		page.setCenter(lbl);
 		return page;
 	}
 
