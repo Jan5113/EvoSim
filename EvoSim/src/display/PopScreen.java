@@ -269,7 +269,7 @@ public class PopScreen extends BorderPane {
 	 */
 	public void setProgressBar(TestProgressBar testProgressBar_in) {
 		isActive = false;
-		this.setBottom(testProgressBar_in);
+		this.setTop(testProgressBar_in);
 	}
 
 	/**
@@ -278,7 +278,7 @@ public class PopScreen extends BorderPane {
 	 * 
 	 */
 	public void removeProgressBar() {
-		this.getChildren().remove(this.getBottom());
+		this.getChildren().remove(this.getTop());
 		isActive = true;
 	}
 }
