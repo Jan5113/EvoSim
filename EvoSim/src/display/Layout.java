@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import test.Test;
@@ -52,7 +53,7 @@ public class Layout {
 	 */
 	public static void button(Button btn) {
 		btn.getStyleClass().add("standard-button");
-		btn.setPrefWidth(prefWidth);
+		btn.setMinWidth(prefWidth);
 	}
 	
 	/**
@@ -184,6 +185,7 @@ public class Layout {
 	public static void defaultMargin (Node node) {
 		BorderPane.setMargin(node, new Insets(gap, 0, 0, gap));
 		VBox.setMargin(node, new Insets(gap, 0, 0, gap));
+		HBox.setMargin(node, new Insets(gap, 0, 0, gap));
 	}
 	
 	/**
@@ -227,9 +229,22 @@ public class Layout {
 	public static void labelBigTitle(Label l) {
 		l.setStyle("-fx-font-size: 30px;");
 		Layout.defaultMargin(l);
+		l.autosize();
 	}
 
 	public static void setBackgroundCol(Node n) {
-		n.setStyle("-fx-background-color: d3e8f8");
+		n.setStyle("-fx-background-color: d3e8f8;");
+	}
+
+	public static void italics(Label label) {
+		label.setStyle("-fx-font-style: italic;");
+	}
+	
+	public static void setSize(Label l, int px) {
+		l.setStyle("-fx-font-size: " + px + "px;");
+	}
+	
+	public static void setBold(Label l) {
+		l.setStyle("-fx-font-weight: bold");
 	}
 }

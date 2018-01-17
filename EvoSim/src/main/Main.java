@@ -20,7 +20,7 @@ import population.Population;
 import test.MultiTest;
 
 public class Main extends Application{
-	private static String version = "0.1.0";
+	private static String version = "1.0.0";
 	
 	private long lastNanoTime;
 	private TestScreen mainTestScreen;

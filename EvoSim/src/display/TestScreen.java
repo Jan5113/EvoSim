@@ -377,7 +377,6 @@ public class TestScreen extends Screen implements TestWrapper {
 
 		if (autoGetNext) {
 			if (pop == null) {
-				System.err.println("null Population!");
 				return;
 			}
 
@@ -412,7 +411,6 @@ public class TestScreen extends Screen implements TestWrapper {
 		String infoText = "";
 		if (infoEnabled() == 1) {
 			if (pop == null) {
-				System.err.println("null Population!");
 				return;
 			}
 			infoText += "Generation " + pop.getGen() + "\n";
