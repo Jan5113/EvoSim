@@ -102,9 +102,9 @@ public class PopScreen extends BorderPane {
 			row.hoverProperty().addListener((observable) -> {
 
 				final Creature cret = row.getItem();
-				row.setId("" + cret.getID());
+
 				if (row.isHover() && cret != null) {
-					selectedIndex.set(Integer.parseInt(row.getId()));
+					selectedIndex.set(row.getIndex());
 				} else {
 					selectedIndex.set(-1);
 				}
@@ -125,12 +125,12 @@ public class PopScreen extends BorderPane {
 		});
 
 		TableColumn<Creature, Integer> tclm_creatureID = new TableColumn<>("ID");
-		tclm_creatureID.setPrefWidth(50);
+		tclm_creatureID.setPrefWidth(95);
 		tclm_creatureID.setCellValueFactory(new PropertyValueFactory<Creature, Integer>("ID"));
 		tclm_creatureID.setSortable(false);
 
 		TableColumn<Creature, Float> tclm_creatureFitness = new TableColumn<>("Fitness");
-		tclm_creatureFitness.setPrefWidth(100);
+		tclm_creatureFitness.setPrefWidth(95);
 		tclm_creatureFitness.setCellValueFactory(new PropertyValueFactory<Creature, Float>("FitnessFloat"));
 		tclm_creatureFitness.setSortable(false);
 
@@ -170,9 +170,9 @@ public class PopScreen extends BorderPane {
 			mouseHover = true;
 			if (previewScreen == null) {
 				previewScreen = new TestScreen(250, 150, 30, new Vec2(-1, 1), pop);
-				previewScreen.startSingleTest(pop.getCreatureByID(selectedIndex.get()));
-				//previewScreen.startSingleTest(tbv_pop.getItems().get(selectedIndex.get()));
+				previewScreen.startSingleTest(tbv_pop.getItems().get(selectedIndex.get()));
 				previewScreen.setBackgroundCol(Layout.getSkycolor());
+				previewScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 				previewScreen.enableAutoRepeat();
 				previewScreen.enableCompactInfo();
 				previewScreen.disableScrollZoom();
@@ -231,8 +231,6 @@ public class PopScreen extends BorderPane {
 	 *            delta time: time (in seconds) since last frame
 	 */
 	public void refresh(float dt) {
-//		if (!isActive)
-//			return;
 		if (previewScreen != null && mouseHover)
 			previewScreen.refresh(dt);
 	}

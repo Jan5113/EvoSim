@@ -101,6 +101,7 @@ public class Layout {
 	 *            is set a small square with button styling and increased font-size
 	 */
 	public static void squareButton(Button btn) {
+		btn.getStyleClass().add("standard-button");
 		btn.getStyleClass().add("nopadding-button");
 		btn.getStyleClass().add("xl-text");
 		btn.setMinSize(32, 32);
@@ -206,5 +207,29 @@ public class Layout {
 	 */
 	public static void setCSS(Scene s) {
 		s.getStylesheets().add("style.css");
+	}
+
+	/**
+	 * This method sets a default layout for a {@link Label}
+	 * <p>
+	 * <strong>NOTE: </strong> {@code defaultInsets()} are applied!
+	 * 
+	 * @param l
+	 *            {@link Label} in
+	 */
+	public static void instrLabel(Label l) {
+		defaultMargin(l);
+		l.setWrapText(true);
+		l.setStyle("-fx-font-size: 16px;");
+		
+	}
+
+	public static void labelBigTitle(Label l) {
+		l.setStyle("-fx-font-size: 30px;");
+		Layout.defaultMargin(l);
+	}
+
+	public static void setBackgroundCol(Node n) {
+		n.setStyle("-fx-background-color: d3e8f8");
 	}
 }
