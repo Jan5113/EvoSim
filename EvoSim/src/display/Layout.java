@@ -43,8 +43,8 @@ public class Layout {
 	private static float prefWidth = 100;
 
 	/**
-	 * Sets the CSS styling for the given {@link Button} and sets its width to the
-	 * preferred element width.
+	 * Sets the CSS styling for the given {@link Button} and sets its preferred
+	 * width to the preferred element width.
 	 * <p>
 	 * <strong>NOTE: </strong> {@code defaultInsets()} are not being applied!
 	 * 
@@ -52,6 +52,20 @@ public class Layout {
 	 *            is set to default width and styling
 	 */
 	public static void button(Button btn) {
+		btn.getStyleClass().add("standard-button");
+		btn.setPrefWidth(prefWidth);
+	}
+	
+	/**
+	 * Sets the CSS styling for the given {@link Button} and sets its minimum width to the
+	 * preferred element width.
+	 * <p>
+	 * <strong>NOTE: </strong> {@code defaultInsets()} are not being applied!
+	 * 
+	 * @param btn
+	 *            is set to default width and styling
+	 */
+	public static void fixedButton(Button btn) {
 		btn.getStyleClass().add("standard-button");
 		btn.setMinWidth(prefWidth);
 	}

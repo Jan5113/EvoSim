@@ -453,7 +453,7 @@ public class Instructions extends BorderPane {
 		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i] = new Button();
-			Layout.button(btns[i]);
+			Layout.fixedButton(btns[i]);
 			btns[i].setMouseTransparent(true);
 		}
 
@@ -576,7 +576,7 @@ public class Instructions extends BorderPane {
 		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i] = new Button();
-			Layout.button(btns[i]);
+			Layout.fixedButton(btns[i]);
 			btns[i].setMouseTransparent(true);
 			Layout.defaultMargin(btns[i]);
 		}
@@ -627,7 +627,7 @@ public class Instructions extends BorderPane {
 		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i] = new Button();
-			Layout.button(btns[i]);
+			Layout.fixedButton(btns[i]);
 			btns[i].setMouseTransparent(true);
 			Layout.defaultMargin(btns[i]);
 		}
@@ -683,7 +683,7 @@ public class Instructions extends BorderPane {
 		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i] = new Button();
-			Layout.button(btns[i]);
+			Layout.fixedButton(btns[i]);
 			btns[i].setMouseTransparent(true);
 			Layout.defaultMargin(btns[i]);
 		}
