@@ -20,8 +20,8 @@ import javafx.scene.text.Font;
 import population.Creature;
 
 public class Instructions extends BorderPane {
-	BorderPane[] pages = new BorderPane[11];
-	Label[] titles = new Label[11];
+	BorderPane[] pages = new BorderPane[12];
+	Label[] titles = new Label[12];
 	int currentPage = 0;
 	
 	private Button btn_next = new Button("Next >");
@@ -134,6 +134,7 @@ public class Instructions extends BorderPane {
 		pages[8] = getPage9();
 		pages[9] = getPage10();
 		pages[10] = getPage11();
+		pages[11] = getPage12();
 		
 		for (int i = 0; i < pages.length; i++) {
 			titles[i] = new Label(pages[i].getId());
@@ -706,6 +707,71 @@ public class Instructions extends BorderPane {
 	}
 	
 	private static BorderPane getPage11() {
+		BorderPane page = new BorderPane();
+		Label[] lbls = new Label[5];
+		Button[] btns = new Button[1];
+		Label title = new Label("Wie haben sich die Kreaturen entwickelt?");
+		page.setId("5. Beobachtung");
+		Layout.labelBigTitle(title);
+		
+		for (int i = 0; i < lbls.length; i++) {
+			lbls[i] = new Label();
+			Layout.instrLabel(lbls[i]);
+		}	
+		
+		lbls[0].setText("Wenn die Entwicklung einen Wert erreicht hat, bei dem die Entwicklung stagniert, "
+				+ "ist das der Punkt, wo Ihr euch selber kurz Gedanken machen solltet. Wie haben sich "
+				+ "Eure Kreaturen entwickelt? Was haben Sie sich \"überlegt\"? Denn jedes Mal findet "
+				+ "die Evolution einen anderen Weg zum Ziel!");
+		lbls[1].setText("Wählt die beste Kreatur der Population mit Doppelklick aus und lasst die Wiedergabe "
+				+ "langsamer laufen. Was könnt ihr beobachten?");
+		lbls[2].setText("Wie übertragen die Kreaturen die Kraft auf den Boden? \n"
+				+ "Wie verankern sie sich? \n"
+				+ "Wie lösen sie sich wieder vom Boden? \n"
+				+ "Haben sich Schwungarme oder andere Bewegunsmuster entwickelt?");
+		lbls[3].setText("Das war es auch schon von EvoSim! Wir hoffen, dass es euch einen Einblick in "
+				+ "die Prinzipien der Evolution und den genetischen Algorithmen gegeben hat. Bei Fragen oder "
+				+ "Interesse stehen wir Euch natürlich gerne zur Verfügung.");
+		lbls[4].setText("Nils Schlatter und Jan Obermeier, G3E");
+
+		Layout.italics(lbls[2]);
+		Layout.italics(lbls[4]);
+		
+		ImageView img_evolution = new ImageView();
+		try {
+			img_evolution = new ImageView(new Image(new FileInputStream("./resources/evolution.png")));
+			HBox.setMargin(img_evolution, new Insets(40, 0, 0, 40));
+			img_evolution.setFitWidth(200); 
+			img_evolution.setPreserveRatio(true);
+		} catch (Exception e) {
+			System.err.println("File IO Error! No image found!");
+		}
+		
+		HBox hb_evo = new HBox(img_evolution);
+		hb_evo.setAlignment(Pos.CENTER);
+		
+		for (int i = 0; i < btns.length; i++) {
+			btns[i] = new Button();
+			Layout.fixedButton(btns[i]);
+			btns[i].setMouseTransparent(true);
+			Layout.defaultMargin(btns[i]);
+		}
+
+		btns[0].setText(">");
+		
+		HBox hb_btns = new HBox(btns[0], lbls[1]);
+		hb_btns.setAlignment(Pos.CENTER);
+		
+		VBox vb = new VBox();
+		vb.getChildren().addAll(lbls[0], hb_btns, lbls[2], hb_evo, lbls[3], lbls[4]);
+		
+		page.setTop(title);
+		page.setCenter(vb);
+		Layout.rootPadding(page);
+		return page;
+	}
+	
+	private static BorderPane getPage12() {
 		BorderPane page = new BorderPane();
 		Label[] lbls = new Label[2];
 		Label title = new Label("Über den Sinn und Unsinn dieses Projekts");
