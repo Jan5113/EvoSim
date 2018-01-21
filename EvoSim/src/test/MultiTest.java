@@ -253,6 +253,8 @@ public class MultiTest{
 				}
 			} catch (IndexOutOfBoundsException e) {
 				System.err.println("Out of ArrayBounds");
+			} catch (NullPointerException e) {
+				
 			}
 			
 		}
