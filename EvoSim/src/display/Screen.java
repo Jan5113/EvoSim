@@ -738,10 +738,14 @@ public class Screen extends Canvas {
 		gc.save();
 		time = ((int) (time * 10))/10.0f;
 		duration = ((int) (duration * 10))/10.0f;
-		gc.setFill(Color.BLACK);
-		gc.setFont(new Font(15));
+		if (time >= duration) {
+			gc.setFill(Color.RED);
+		} else {
+			gc.setFill(Color.BLACK);
+		}
+		gc.setFont(new Font(20));
 		gc.setTextAlign(TextAlignment.RIGHT);
-		gc.fillText("Time: " + time + "s / "+ duration + "s", this.getWidth() - 25, 25);
+		gc.fillText("Time: " + time + "s / "+ duration + "s", this.getWidth() - 25, 30);
 		gc.restore();
 	}
 	
@@ -767,13 +771,17 @@ public class Screen extends Canvas {
 		gc.save();
 		time = ((int) (time * 10))/10.0f;
 		duration = ((int) (duration * 10))/10.0f;
-		gc.setFill(Color.BLACK);
-		gc.setFont(new Font(15));
+		if (time >= duration) {
+			gc.setFill(Color.RED);
+		} else {
+			gc.setFill(Color.BLACK);
+		}
+		gc.setFont(new Font(20));
 		gc.setTextAlign(TextAlignment.RIGHT);
 		if (speed == 1.0f) {
-			gc.fillText("Time: " + time + "s / "+ duration + "s", this.getWidth() - 25, 25);
+			gc.fillText("Time: " + time + "s / "+ duration + "s", this.getWidth() - 25, 30);
 		} else {
-			gc.fillText("Time: " + time + "s / "+ duration + "s\n" + speed + "x Speed", this.getWidth() - 25, 25);
+			gc.fillText("Time: " + time + "s / "+ duration + "s\n" + speed + "x Speed", this.getWidth() - 25, 30);
 		}
 		gc.restore();
 	}
