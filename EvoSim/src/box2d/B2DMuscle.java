@@ -84,7 +84,7 @@ public class B2DMuscle {
 	 * {@code maxTorque} hold the maximum "strength" a {@link B2DMuscle} is able to
 	 * apply to the {@link B2DBone}s connected to it.
 	 */
-	private static float maxTorque = 2.0f;
+	private static float maxTorque = 5.0f;
 	
 	/**
 	 * Creates a new {@link B2DMuscle} with all parameters given. {@code joint_in}
