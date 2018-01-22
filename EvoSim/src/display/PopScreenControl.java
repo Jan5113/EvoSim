@@ -72,22 +72,22 @@ public class PopScreenControl extends BorderPane{
 	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons and
 	 * arranges them accordingly.
 	 */
-	GridPane gp_controls = new GridPane();
+	private GridPane gp_controls = new GridPane();
 
 	// Playback Controls
 	/**
 	 * This button adds the next action which can be performed on the
 	 * {@link Population} to the queue.
 	 */
-	Button btn_singleAction = new Button("Test");
+	private Button btn_singleAction = new Button("Test");
 	/**
 	 * This button adds multiple actions to the queue to calculate one entire generation. 
 	 */
-	Button btn_1G = new Button("1 Gen");
+	private Button btn_1G = new Button("1 Gen");
 	/**
 	 * This button adds multiple actions to the queue to calculate ten entire generations. 
 	 */
-	Button btn_10G = new Button("10 Gens");
+	private Button btn_10G = new Button("10 Gens");
 	
 	/**
 	 * Initialises the new {@link PopScreenControl} instance with references to the

@@ -20,9 +20,9 @@ import javafx.scene.text.Font;
 import population.Creature;
 
 public class Instructions extends BorderPane {
-	BorderPane[] pages = new BorderPane[12];
-	Label[] titles = new Label[12];
-	int currentPage = 0;
+	private BorderPane[] pages = new BorderPane[12];
+	private Label[] titles = new Label[12];
+	private int currentPage = 0;
 	
 	private Button btn_next = new Button("Next >");
 	private Button btn_prev = new Button("< Back");

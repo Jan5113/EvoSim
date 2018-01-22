@@ -30,17 +30,17 @@ public class PlayBackControls extends BorderPane {
 	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons and
 	 * arranges them accordingly.
 	 */
-	GridPane gp_controls = new GridPane();
+	private GridPane gp_controls = new GridPane();
 
 	// Playback Controls
-	Label lbl_playback = new Label("Playback");
-	Button btn_playpause = new Button("Play");
-	Button btn_fast = new Button(">>>");
-	Button btn_slow = new Button(">");
-	Button btn_1x = new Button("1x");
-	Button btn_toggleView = new Button("Unlock View");
-	Button btn_resetView = new Button("Reset View");
-	Button btn_toggleMuscles = new Button("Show Muscles");
+	private Label lbl_playback = new Label("Playback");
+	private Button btn_playpause = new Button("Play");
+	private Button btn_fast = new Button(">>>");
+	private Button btn_slow = new Button(">");
+	private Button btn_1x = new Button("1x");
+	private Button btn_toggleView = new Button("Unlock View");
+	private Button btn_resetView = new Button("Reset View");
+	private Button btn_toggleMuscles = new Button("Show Muscles");
 	
 	/**
 	 * Initialises the new {@link PlayBackControls} instance with references to the
