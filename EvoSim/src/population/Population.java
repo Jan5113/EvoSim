@@ -1,5 +1,8 @@
 package population;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.jbox2d.common.Vec2;
@@ -34,6 +37,7 @@ public class Population {
 			currentID++;
 			addCreature(tempC);
 		}
+		flushGenLog();
 		popStat = PopulationStatus.S1_CREATED_MUTATED;
 		System.out.println("Population of " + populationSize + " successfully generated!");
 	}
@@ -59,6 +63,7 @@ public class Population {
 	public void sortPopulation () {
 		if (popStat != PopulationStatus.S3_TESTED) {System.err.println("Incorrect PopStatus @ sortPop " + popStat); return;}
 		Collections.sort(CreatureList);
+		exportGeneration();
 		popStat = PopulationStatus.S4_SORTED;
 	}
 
@@ -186,6 +191,29 @@ public class Population {
 	
 	public IntegerProperty fitnessSetProperty() {
 		return fitnessSet;
+	}
+	
+	private void flushGenLog() {
+		try(PrintWriter out = new PrintWriter("genExport.txt")){
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void exportGeneration() {
+		File file = new File("genExport.txt");
+		try(PrintWriter out = new PrintWriter(new FileWriter(file, true))){
+			out.println("");
+			out.print("Generation" + getGen() + ":");
+			for (Creature c : CreatureList) {
+			    out.print(" " + c.getFitness());
+			}
+			System.out.println("Export successful!");
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
