@@ -775,10 +775,13 @@ public class Instructions extends BorderPane {
 		}
 
 		lbls[0].setText("EvoSim haben wir im Rahmen des Projektunterrichts zum Thema «Bewegung» "
-				+ "konzipiert, gestaltet und programmiert.");
-		lbls[1].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, G3E, 2018");
+				+ "konzipiert, programmiert und gestaltet.");
+		lbls[1].setText("Falls Ihr selber einen Blick in den Code werfen wollt, könnt Ihr diesen "
+				+ "unter https://github.com/Jan5113/EvoSim.git abrufen.");
+		lbls[2].setText("Fun-Fact:\nEvoSim enthält 6838 Zeilen Code in insgesamt 28 Java-Klassen");
+		lbls[3].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, G3E, 2018");
 
-		Layout.italics(lbls[1]);
+		Layout.italics(lbls[2]);
 
 		ImageView img_evolution = new ImageView();
 		try {
@@ -794,7 +797,7 @@ public class Instructions extends BorderPane {
 		hb_evo.setAlignment(Pos.CENTER);
 
 		VBox vb = new VBox();
-		vb.getChildren().addAll(lbls[0], lbls[1], hb_evo);
+		vb.getChildren().addAll(lbls[0], lbls[1], lbls[2], lbls[3], hb_evo);
 
 		page.setTop(title);
 		page.setCenter(vb);
