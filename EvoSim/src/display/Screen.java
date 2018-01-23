@@ -309,6 +309,7 @@ public class Screen extends Canvas {
 	 * red, depending on the angle between the Bones.
 	 * 
 	 * @param muscle
+	 * {@link B2DMuscle} to be drawn
 	 */
 	public void drawMuscle(RevoluteJoint muscle) {
 		Vec2 pxpointA;

@@ -328,6 +328,7 @@ public class TestScreen extends Screen implements TestWrapper {
 	 * {@link Creature}. It also shows their activity.
 	 * 
 	 * @param show
+	 * {@code true} shows muscle
 	 */
 	public void showMuscles(boolean show) {
 		showMuscles = show;
