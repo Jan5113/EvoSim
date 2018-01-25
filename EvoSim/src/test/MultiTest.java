@@ -272,7 +272,7 @@ public class MultiTest{
 			
 		}
 		public void stepCallback(int step) {
-			System.out.println("");
+			//System.out.println("");
 		}
 		
 	}
