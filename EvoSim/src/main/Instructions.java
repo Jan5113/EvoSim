@@ -1,8 +1,6 @@
 package main;
 
-import java.io.FileInputStream;
 import org.jbox2d.common.Vec2;
-
 import display.Layout;
 import display.TestScreen;
 import javafx.geometry.Insets;
@@ -178,7 +176,7 @@ public class Instructions extends BorderPane {
 
 		ImageView img_evolution = new ImageView();
 		try {
-			img_evolution = new ImageView(new Image(new FileInputStream("src/main/evolution.png")));
+			img_evolution = new ImageView(new Image("evolution.png"));
 			HBox.setMargin(img_evolution, new Insets(40, 0, 0, 15));
 			img_evolution.setFitWidth(600);
 			img_evolution.setPreserveRatio(true);
@@ -388,7 +386,7 @@ public class Instructions extends BorderPane {
 
 		ImageView evoSim_UI = new ImageView();
 		try {
-			evoSim_UI = new ImageView(new Image(new FileInputStream("src/main/user_interface.png")));
+			evoSim_UI = new ImageView(new Image("user_interface.png"));
 			VBox.setMargin(evoSim_UI, new Insets(40, 0, 0, 15));
 			evoSim_UI.setFitWidth(600);
 			evoSim_UI.setPreserveRatio(true);
@@ -460,7 +458,7 @@ public class Instructions extends BorderPane {
 
 		ImageView evoSim_UI = new ImageView();
 		try {
-			evoSim_UI = new ImageView(new Image(new FileInputStream("src/main/user_interface2.png")));
+			evoSim_UI = new ImageView(new Image("user_interface2.png"));
 			VBox.setMargin(evoSim_UI, new Insets(15, 0, 0, 15));
 			evoSim_UI.setFitWidth(775);
 			evoSim_UI.setPreserveRatio(true);
@@ -730,7 +728,7 @@ public class Instructions extends BorderPane {
 
 		ImageView img_evolution = new ImageView();
 		try {
-			img_evolution = new ImageView(new Image(new FileInputStream("src/main/evolution.png")));
+			img_evolution = new ImageView(new Image("evolution.png"));
 			HBox.setMargin(img_evolution, new Insets(40, 0, 0, 40));
 			img_evolution.setFitWidth(200);
 			img_evolution.setPreserveRatio(true);
@@ -764,7 +762,7 @@ public class Instructions extends BorderPane {
 
 	private static BorderPane getPage12() {
 		BorderPane page = new BorderPane();
-		Label[] lbls = new Label[2];
+		Label[] lbls = new Label[4];
 		Label title = new Label("Über den Sinn und Unsinn dieses Projekts");
 		page.setId("About");
 		Layout.labelBigTitle(title);
@@ -785,8 +783,8 @@ public class Instructions extends BorderPane {
 
 		ImageView img_evolution = new ImageView();
 		try {
-			img_evolution = new ImageView(new Image(new FileInputStream("src/main/evolution2.png")));
-			HBox.setMargin(img_evolution, new Insets(150, 0, 0, 15));
+			img_evolution = new ImageView(new Image("evolution2.png"));
+			HBox.setMargin(img_evolution, new Insets(50, 0, 0, 15));
 			img_evolution.setFitWidth(700);
 			img_evolution.setPreserveRatio(true);
 		} catch (Exception e) {
