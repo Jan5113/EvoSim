@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
 import box2d.B2DMuscle;
+import box2d.ShapeType;
 import javafx.scene.paint.Color;
 import population.Creature;
 
@@ -105,10 +106,10 @@ public class Test {
 				}
 			
 			}
-			
-			if (testTimer > testDuration && !taskDone) { //abort TEST
+			float headHeight = getHeadHeight();
+			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST
 				taskDone = true;
-				lastFitness = getAveragePosition().x;
+				lastFitness = getAveragePosition().x * headHeight*headHeight*headHeight;
 				parentWrapper.taskDone(creature, lastFitness);					
 				afterTestTime = testTimer + afterTestLength;
 			}			
@@ -118,6 +119,7 @@ public class Test {
 			}
 
 			parentWrapper.stepCallback(steps);
+			System.out.println("teststep");
 			steps++;
 		}
 	}
@@ -145,6 +147,15 @@ public class Test {
 		//testWorld.getJointList().destructor();
 		
 		initWorld();
+	}
+	
+	private float getHeadHeight() {
+		for (B2DBody b: creatureInstancesList) {
+			if(b.getShapeType() == ShapeType.CIRCLE) {
+			return b.getPos().y;
+			}
+		}
+		return 1;
 	}
 	
 	public Vec2 getAveragePosition() {

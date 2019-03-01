@@ -14,6 +14,7 @@ import box2d.B2DBoneDir;
 import box2d.B2DCamera;
 import box2d.B2DJoint;
 import box2d.B2DMuscle;
+import box2d.ShapeType;
 import javafx.scene.paint.Color;
 import population.Creature;
 
@@ -39,10 +40,15 @@ public class CreatureBuilder {
 	private static void buildBone(B2DBone bone, ArrayList<B2DBody> creatureInstances_in) {
 		B2DJoint[] joints = bone.getJoints();
 		Vec2 pos = joints[0].getPos().add(joints[1].getPos()).mul(0.5f);
-		float angle = B2DCamera.getRotation(joints[1].getPos().add(joints[0].getPos().negate()));
 		
 		B2DBody boneBody = new B2DBody("BONE" + bone.getID());
-		boneBody.setUpRect(pos, new Vec2(bone.getHalfLen(), 0.1f), angle, BodyType.DYNAMIC);
+		if (bone.getShapeType() == ShapeType.RECT) {
+			float angle = B2DCamera.getRotation(joints[1].getPos().add(joints[0].getPos().negate()));
+			boneBody.setUpRect(pos, new Vec2(bone.getHalfLen(), bone.getShapeArg()), angle, BodyType.DYNAMIC);
+		} else if (bone.getShapeType() == ShapeType.CIRCLE) {
+			boneBody.setUpCircle(pos, bone.getShapeArg(), 0, BodyType.DYNAMIC);
+		}
+		
 		boneBody.setFill(true);
 		boneBody.setColor(Color.DODGERBLUE);
 		

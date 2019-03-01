@@ -34,6 +34,10 @@ public class B2DBone {
 	 */
 	private final float halfLength;
 	
+	private final ShapeType shapeType;
+	
+	private final float shapeArg;
+	
 	/**
 	 * Creates a new {@link B2DBone} instance connecting the {@link B2DJoint} given.
 	 * 
@@ -44,7 +48,7 @@ public class B2DBone {
 	 * @param id_in
 	 * Gives this instance a {@code final} ID.
 	 */
-	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in) {
+	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in, float width) {
 		headJoint = jointA_in;
 		endJoint = jointB_in;
 		id = id_in;
@@ -53,7 +57,25 @@ public class B2DBone {
 
 		headJoint.registerHeadBone(this);
 		endJoint.registerEndBone(this);
+		
+		shapeType = ShapeType.RECT;
+		shapeArg = width;
 	}
+	
+	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in, ShapeType shape, float shapeArg) {
+		headJoint = jointA_in;
+		endJoint = jointB_in;
+		id = id_in;
+		
+		halfLength = (endJoint.getPos().add(headJoint.getPos().negate()).length()) * 0.5f;
+
+		headJoint.registerHeadBone(this);
+		endJoint.registerEndBone(this);
+		
+		shapeType = shape;
+		this.shapeArg = shapeArg;
+	}
+	
 	
 	/**
 	 * Returns an array[2] with the reference to the head-{@link B2DJoint} at
@@ -83,7 +105,7 @@ public class B2DBone {
 	 * a clone of this {@link B2DBone} instance with replaced {@link B2DJoint} references
 	 */
 	public B2DBone rereferencedClone(B2DJoint jointA_in, B2DJoint jointB_in) {
-		return new B2DBone(jointA_in, jointB_in, id);
+		return new B2DBone(jointA_in, jointB_in, id, shapeType, shapeArg);
 	}
 	
 	/**
@@ -122,5 +144,13 @@ public class B2DBone {
 	 */
 	public Vec2 getLocalEnd() {
 		return new Vec2(halfLength, 0);
+	}
+	
+	public ShapeType getShapeType() {
+		return shapeType;
+	}
+	
+	public float getShapeArg() {
+		return shapeArg;
 	}
 }

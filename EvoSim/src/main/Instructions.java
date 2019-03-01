@@ -275,7 +275,6 @@ public class Instructions extends BorderPane {
 		testScreen[0].startSingleTest(tutorialCret);
 		testScreen[0].setBackgroundCol(Layout.getSkycolor());
 		testScreen[0].setInactiveBackgroundCol(Layout.getSkycolor());
-		testScreen[0].showMuscles(true);
 
 		Layout.defaultMargin(testScreen[0]);
 
