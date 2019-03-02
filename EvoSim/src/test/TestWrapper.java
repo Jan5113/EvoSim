@@ -21,7 +21,7 @@ public interface TestWrapper {
 	 *            Calculated fitness value for the {@link Creature}, NOT (yet)
 	 *            applied!
 	 */
-	public void taskDone(Creature creature_in, float calcFitness);
+	public void taskDone(Creature creature_in, float calcFitness, float calcDist);
 
 	/**
 	 * The {@code pauseDone()} method is called a defined time
@@ -36,7 +36,7 @@ public interface TestWrapper {
 	 *            Calculated fitness value for the {@link Creature}, NOT (yet)
 	 *            applied!
 	 */
-	public void pauseDone(Creature creature_in, float calcFitness);
+	public void pauseDone(Creature creature_in, float calcFitness, float calcDist);
 	
 	public void stepCallback(int step);
 }

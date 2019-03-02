@@ -260,15 +260,15 @@ public class MultiTest{
 		}
 		
 
-		public void taskDone(Creature creature_in, float calcFitness) {
+		public void taskDone(Creature creature_in, float calcFitness, float  calcDistance) {
 			System.out.println("Thread " + threadNr + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 			if (!test.getCreature().fitnessEvaulated()) {
-				creature_in.setFitness(calcFitness);
+				creature_in.setFitness(calcFitness, calcDistance);
 			}
 			test.reset();
 		}
 		
-		public void pauseDone(Creature creature_in, float calcFitness) {
+		public void pauseDone(Creature creature_in, float calcFitness, float calcDistnace) {
 			
 		}
 		public void stepCallback(int step) {

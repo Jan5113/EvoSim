@@ -197,7 +197,7 @@ public class TestScreen extends Screen implements TestWrapper {
 
 		if (showScore && test.getCreature() != null) {
 			if (test.getCreature().fitnessEvaulated())
-				drawScore(test.getCreature().getFitness());
+				drawScore(test.getCreature().getDistance());
 		}
 
 		for (B2DBody b : test.getWorldInstances()) {
@@ -361,15 +361,15 @@ public class TestScreen extends Screen implements TestWrapper {
 		return running;
 	}
 
-	public void taskDone(Creature creature_in, float calcFitness) {
+	public void taskDone(Creature creature_in, float calcFitness, float calcDist) {
 		System.out.println("ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
 
 		if (!test.getCreature().fitnessEvaulated()) {
-			test.getCreature().setFitness(calcFitness);
+			test.getCreature().setFitness(calcFitness, calcDist);
 		}
 	}
 
-	public void pauseDone(Creature creature_in, float newFitness) {
+	public void pauseDone(Creature creature_in, float newFitness, float calcDist) {
 
 		if (autoRepeat) {
 			test.reset();
@@ -404,7 +404,7 @@ public class TestScreen extends Screen implements TestWrapper {
 	 * draw function.
 	 * <p>
 	 * If {@code infoEnabled(1)} was called information for the current generation,
-	 * creature ID and its fitness is added to toe string <br>
+	 * creature ID and its fitness is added to the string <br>
 	 * If {@code infoEnabled(2)} was called information only the creature ID and its
 	 * fitness is added to the string
 	 */
@@ -418,18 +418,22 @@ public class TestScreen extends Screen implements TestWrapper {
 			if (hasCreature()) {
 				infoText += "Creature ID " + test.getCreature().getID() + "\n";
 				if (test.getCreature().fitnessEvaulated()) {
-					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
+					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "\n";
+					infoText += "Distance: " + Math.round(test.getCreature().getDistance() * 10.0f) / 10.0f + "m";
 				} else {
 					infoText += "Fitness: -";
+					infoText += "Distance: -";
 				}
 			}
 		} else if (infoEnabled() == 2) {
 			if (hasCreature()) {
 				infoText += "Creature ID " + test.getCreature().getID() + "\n";
 				if (test.getCreature().fitnessEvaulated()) {
-					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "m";
+					infoText += "Fitness: " + Math.round(test.getCreature().getFitness() * 10.0f) / 10.0f + "\n";
+					infoText += "Distance: " + Math.round(test.getCreature().getDistance() * 10.0f) / 10.0f + "m";
 				} else {
 					infoText += "Fitness: -";
+					infoText += "Distance: -";
 				}
 			}
 		}

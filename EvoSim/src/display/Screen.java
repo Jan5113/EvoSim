@@ -692,13 +692,13 @@ public class Screen extends Canvas {
 	 * @param fitness
 	 *            x-distance from the origin, fitness
 	 */
-	public void drawScore(float fitness) {
+	public void drawScore(float distance) {
 		float halfWidth = 50;
 		float top = 70;
 		float bottom = 30;
 		float tipc = 0f;
 		
-		Vec2 tip = camera.coordWorldToPixels(new Vec2(fitness, tipc));
+		Vec2 tip = camera.coordWorldToPixels(new Vec2(distance, tipc));
 		
 		double[] xPoints = {tip.x - halfWidth, tip.x + halfWidth, tip.x + halfWidth, tip.x, tip.x - halfWidth};
 		double[] yPoints = {tip.y - bottom - top, tip.y - bottom - top, tip.y - bottom, tip.y, tip.y - bottom};
@@ -713,7 +713,7 @@ public class Screen extends Canvas {
 		
 		gc.setFill(Color.RED);
 		gc.setFont(new Font(30));
-		gc.fillText(Math.round(fitness * 10)/10.0f + "m", tip.x, tip.y - bottom - (top/2) , 2 * halfWidth - 10);
+		gc.fillText(Math.round(distance * 10)/10.0f + "m", tip.x, tip.y - bottom - (top/2) , 2 * halfWidth - 10);
 		
 		gc.restore();
 	}

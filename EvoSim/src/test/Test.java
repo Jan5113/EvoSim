@@ -22,6 +22,7 @@ public class Test {
 	
 	private Creature creature;
 	private float lastFitness = 0.0f;
+	private float lastDistance = 0.0f;
 	
 	private boolean testing = false;
 	private boolean taskDone = true;
@@ -109,13 +110,14 @@ public class Test {
 			float headHeight = getHeadHeight();
 			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST
 				taskDone = true;
-				lastFitness = getAveragePosition().x * headHeight*headHeight*headHeight;
-				parentWrapper.taskDone(creature, lastFitness);					
+				lastDistance = getAveragePosition().x;
+				lastFitness = lastDistance * headHeight*headHeight*headHeight;
+				parentWrapper.taskDone(creature, lastFitness, lastDistance);					
 				afterTestTime = testTimer + afterTestLength;
 			}			
 			
 			if (testTimer > afterTestTime) {
-				parentWrapper.pauseDone(creature, lastFitness);
+				parentWrapper.pauseDone(creature, lastFitness, lastDistance);
 			}
 
 			parentWrapper.stepCallback(steps);

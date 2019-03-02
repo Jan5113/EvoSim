@@ -19,6 +19,7 @@ public class Creature implements Comparable<Creature>{
 	
 	private final int id;
 	private FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
+	private float distance = -1000.0f;
 	private boolean fitnessEvaluated = false;
 	
 	public Creature(int id_in) {
@@ -45,7 +46,7 @@ public class Creature implements Comparable<Creature>{
 		id = id_in;
 	}
 	
-	private Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in, MutVal cycleLen_in, float fitness_in, boolean fitnessEval_in) {
+	private Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in, MutVal cycleLen_in, float fitness_in, float distance_in, boolean fitnessEval_in) {
 		joints = joints_in;
 		bones = bones_in;
 		muscles = muscles_in;
@@ -54,6 +55,7 @@ public class Creature implements Comparable<Creature>{
 		
 		id = id_in;
 		fitness.set(fitness_in);
+		distance = distance_in;
 		fitnessEvaluated = fitnessEval_in;
 	}
 
@@ -130,12 +132,13 @@ public class Creature implements Comparable<Creature>{
 		return muscle_def;
 	}
 	
-	public void setFitness(float fitness_in) {
+	public void setFitness(float fitness_in, float distance_in) {
 		if (fitnessEvaluated) {
 			System.err.println("Can't overwrite fitness!");
 			return;
 		}
 		fitness.set(fitness_in);
+		distance = distance_in;
 		fitnessEvaluated = true;
 	}
 	
@@ -150,6 +153,19 @@ public class Creature implements Comparable<Creature>{
 	public Float getFitnessFloat() {
 		if (fitnessEvaluated) {
 			return (float) Math.floor(fitness.get()*1000)/1000;
+			//return fitness.get();
+		} else {
+			return null;
+		}
+	}
+	
+	public float getDistance() {
+		return distance;
+	}
+	
+	public Float getDistnaceFloat() {
+		if (fitnessEvaluated) {
+			return (float) Math.floor(distance*1000)/1000;
 			//return fitness.get();
 		} else {
 			return null;
@@ -227,6 +243,6 @@ public class Creature implements Comparable<Creature>{
 			temp_muscles[i] = muscles[i].rereferencedClone(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]]);
 		}
 		
-		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.clone(), fitness.get(), fitnessEvaluated);
+		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
 	}
 }
