@@ -1,4 +1,6 @@
 package population;
+import java.io.Serializable;
+
 import org.jbox2d.common.Vec2;
 
 import box2d.B2DBone;
@@ -10,7 +12,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import mutation.MutVal;
 import mutation.MutVec2;
 
-public class Creature implements Comparable<Creature>{
+public class Creature  implements Serializable, Comparable<Creature>{
+	private static final long serialVersionUID = 1L;
 	private final B2DJoint[] joints;
 	private final B2DBone[] bones;
 	private final B2DMuscle[] muscles;
@@ -18,8 +21,9 @@ public class Creature implements Comparable<Creature>{
 	private final MutVal cycleLength;
 	
 	private final int id;
-	private FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
+	private transient FloatProperty fitness = new SimpleFloatProperty(-1000.0f);
 	private float distance = -1000.0f;
+	private float fitness_ser = -1000.f;
 	private boolean fitnessEvaluated = false;
 	
 	public Creature(int id_in) {
@@ -55,6 +59,7 @@ public class Creature implements Comparable<Creature>{
 		
 		id = id_in;
 		fitness.set(fitness_in);
+		fitness_ser = fitness_in;
 		distance = distance_in;
 		fitnessEvaluated = fitnessEval_in;
 	}
@@ -138,6 +143,7 @@ public class Creature implements Comparable<Creature>{
 			return;
 		}
 		fitness.set(fitness_in);
+		fitness_ser = fitness_in;
 		distance = distance_in;
 		fitnessEvaluated = true;
 	}
@@ -244,5 +250,9 @@ public class Creature implements Comparable<Creature>{
 		}
 		
 		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
+	}
+	
+	public void initProperty() {
+		fitness = new SimpleFloatProperty(fitness_ser);
 	}
 }

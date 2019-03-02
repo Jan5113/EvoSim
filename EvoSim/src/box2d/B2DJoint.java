@@ -1,4 +1,5 @@
 package box2d;
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import mutation.MutVec2;
@@ -8,7 +9,8 @@ import mutation.MutVec2;
  * {@link B2DBone} connected to it. It has a {@code mutation()} code implemented.
  *
  */
-public class B2DJoint {
+public class B2DJoint implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Holds the position of this {@link B2DJoint} as a {@link Vec2} vector.
 	 */

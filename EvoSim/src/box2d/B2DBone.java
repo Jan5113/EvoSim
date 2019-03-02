@@ -1,5 +1,7 @@
 package box2d;
 
+import java.io.Serializable;
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
@@ -15,7 +17,8 @@ import org.jbox2d.dynamics.World;
  * bone.
  *
  */
-public class B2DBone {
+public class B2DBone implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Holds a reference to the joint this {@link B2DBone} is connected to with its head.
 	 */

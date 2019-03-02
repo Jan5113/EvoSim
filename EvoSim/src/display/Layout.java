@@ -119,7 +119,7 @@ public class Layout {
 		btn.getStyleClass().add("standard-button");
 		btn.getStyleClass().add("nopadding-button");
 		btn.getStyleClass().add("xl-text");
-		btn.setMinSize(32, 32);
+		btn.setMinSize(35, 35);
 	}
 	
 	/**
@@ -132,7 +132,7 @@ public class Layout {
 	 * @param btn
 	 *            is set to 2/3 width with button styling
 	 */
-	public static void TwoThirdsButton(Button btn) {
+	public static void twoThirdsButton(Button btn) {
 		button(btn);
 		btn.setPrefWidth(((prefWidth * 2.0f) - HGap)/3.0f);
 	}

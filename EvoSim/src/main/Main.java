@@ -6,6 +6,7 @@ import display.PlayBackControls;
 import display.PopScreen;
 import display.PopScreenControl;
 import display.TestScreen;
+import fileMgr.FileIO;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -20,7 +21,7 @@ import population.Population;
 import test.MultiTest;
 
 public class Main extends Application{
-	private static String version = "1.0.0";
+	private static String version = "1.1";
 	
 	private long lastNanoTime;
 	private TestScreen mainTestScreen;
@@ -31,6 +32,7 @@ public class Main extends Application{
 	private BorderPane bp_test;
 	private PopScreen popScreen;
 	
+	private Stage primaryStage;
 	private Scene scene;
 	public BorderPane root; 
 	private Instructions bp_instr;
@@ -46,6 +48,11 @@ public class Main extends Application{
 	}
 
 	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
+		setup();
+	}
+	
+	private void setup() {
 		primaryStage.setTitle("EvoSim - v"+ version);
 		root = new BorderPane();
 		scene = new Scene(root, 1200, 700);
@@ -63,6 +70,7 @@ public class Main extends Application{
 		bp_evo.getChildren().add(bp_showInstr);
 		bp_showInstr.setTranslateX(0);
 		bp_showInstr.setTranslateY(0);
+		bp_showInstr.setMinWidth(210);
 		
 		bp_instr = new Instructions(this);
 		
@@ -94,8 +102,32 @@ public class Main extends Application{
 		Layout.squareButton(btn_showInstr);
 		Layout.defaultMargin(btn_showInstr);
 		btn_showInstr.setOnAction(e -> setBPInstr());
+		
+		Button btn_save = new Button("Save");
+		Layout.twoThirdsButton(btn_save);
+		Layout.defaultMargin(btn_save);
+		btn_save.setOnAction(e -> FileIO.safePopulation(pop));
+		
+		Button btn_load = new Button("Load");
+		Layout.twoThirdsButton(btn_load);
+		Layout.defaultMargin(btn_load);
+		btn_load.setOnAction(e -> {
+			Population pop_in = FileIO.loadPopulation();
+			if (pop_in != null) {
+				pop = pop_in;
+				pop.initProperty();
+				setup();
+				setBPEvo();
+				System.out.println("Loaded Population");
+			} else {
+				System.out.println("Couldn't load Population");
+			}
+		});
+		
 		bp_showInstr = new BorderPane();
-		bp_showInstr.setCenter(btn_showInstr);
+		bp_showInstr.setLeft(btn_save);
+		bp_showInstr.setCenter(btn_load);
+		bp_showInstr.setRight(btn_showInstr);
 	}
 	
 	public void setBPEvo() {
@@ -156,7 +188,7 @@ public class Main extends Application{
 
 	private void stageResize(Stage s) {
 		mainTestScreen.setScreenSize((int) s.getWidth()-272, (int) s.getHeight()-265); 
-		bp_showInstr.setTranslateX((int) s.getWidth() - 79);
+		bp_showInstr.setTranslateX((int) s.getWidth() - 243);
 	}
 
 

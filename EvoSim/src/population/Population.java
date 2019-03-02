@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.jbox2d.common.Vec2;
@@ -12,13 +13,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class Population {
+public class Population implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int populationSize;
 	private int generation = 1;
 	private int currentID = 0;
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
-	private final Vec2 testGrav;
-	private IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
+	private Vec2 testGrav;
+	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
 	private PopulationStatus popStat = PopulationStatus.S0_NOTCREATED;
 	
 	private static float killVal = 0.8f;
@@ -213,6 +215,13 @@ public class Population {
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void initProperty() {
+		fitnessSet = new SimpleIntegerProperty(-1);
+		for (Creature c : CreatureList) {
+			c.initProperty();
 		}
 	}
 	

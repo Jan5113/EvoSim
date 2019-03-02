@@ -59,9 +59,9 @@ public class PlayBackControls extends BorderPane {
 
 		Layout.labelTitle(lbl_playback);
 		Layout.wideButton(btn_playpause);
-		Layout.TwoThirdsButton(btn_fast);
-		Layout.TwoThirdsButton(btn_slow);
-		Layout.TwoThirdsButton(btn_1x);
+		Layout.twoThirdsButton(btn_fast);
+		Layout.twoThirdsButton(btn_slow);
+		Layout.twoThirdsButton(btn_1x);
 		Layout.button(btn_toggleView);
 		Layout.button(btn_resetView);
 		Layout.button(btn_toggleMuscles);

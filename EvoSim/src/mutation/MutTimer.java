@@ -1,8 +1,10 @@
 package mutation;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class MutTimer extends MutVal {
+public class MutTimer extends MutVal implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public MutTimer() {
 		super(0, 1);

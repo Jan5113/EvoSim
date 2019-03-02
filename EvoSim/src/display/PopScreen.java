@@ -245,8 +245,9 @@ public class PopScreen extends BorderPane {
 	 * </ul>
 	 */
 	public void refreshTable() {
-		if (!isActive)
+		if (!isActive) {
 			return;
+		}
 		ObservableList<Creature> tableCreatures = FXCollections.observableArrayList(pop.getArrayList());
 		tbv_pop.setItems(tableCreatures);
 		selectedIndex.set(-1);

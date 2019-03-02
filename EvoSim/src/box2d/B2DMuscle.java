@@ -1,4 +1,5 @@
 package box2d;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
@@ -25,7 +26,8 @@ import test.Test;
  * half a rotation (PI rad). It has a {@code mutation()} code implemented
  * changing the timings and the angles.
  */
-public class B2DMuscle {
+public class B2DMuscle implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Specifies the {@link B2DJoint} this {@link B2DMuscle} is located in. It can
 	 * only move two {@link B2DBone} instances which are connected (registered) in

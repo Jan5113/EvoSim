@@ -1,8 +1,10 @@
 package mutation;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class MutVal {
+public class MutVal implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private final float value;
 	private final float min;
 	private final float max;

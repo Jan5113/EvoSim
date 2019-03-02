@@ -1,7 +1,11 @@
 package mutation;
+import java.io.Serializable;
+
 import org.jbox2d.common.Vec2;
 
-public class MutVec2{
+
+public class MutVec2 implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private float[] defRangeMinXYMaxXY = {-2, 0, 0, 2};
 	
 	private MutVal x;
@@ -44,7 +48,7 @@ public class MutVec2{
 		y = y_in;
 		defRangeMinXYMaxXY = minXY_maxXY;
 		
-		offset = offset_in;
+		offset = new Vec2(offset_in);
 	}
 	
 	public MutVec2(MutVal x_in, MutVal y_in, float[] minXY_maxXY) {
