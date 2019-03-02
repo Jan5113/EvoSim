@@ -126,14 +126,14 @@ public class Creature  implements Serializable, Comparable<Creature>{
 
 	private B2DMuscle[] createHumanoidMuscles() {
 		B2DMuscle[] muscle_def = new B2DMuscle[8];
-		muscle_def[0] = new B2DMuscle(joints[1], bones[8], bones[1], 0); //hip l
-		muscle_def[1] = new B2DMuscle(joints[1], bones[8], bones[4], 1); //hip r
-		muscle_def[2] = new B2DMuscle(joints[2], bones[1], bones[2], 2); //knee l
-		muscle_def[3] = new B2DMuscle(joints[2], bones[4], bones[5], 3); //knee r
-		muscle_def[4] = new B2DMuscle(joints[3], bones[2], bones[3], 4); //ankle l
-		muscle_def[5] = new B2DMuscle(joints[3], bones[5], bones[6], 5); //ankle r
-		muscle_def[6] = new B2DMuscle(joints[0], bones[7], bones[0], 6); //head
-		muscle_def[7] = new B2DMuscle(joints[5], bones[0], bones[8], 7); //stomach
+		muscle_def[0] = new B2DMuscle(joints[1], bones[8], bones[1], -2.0f, 2.0f, 0); //hip l
+		muscle_def[1] = new B2DMuscle(joints[1], bones[8], bones[4], -2.0f, 2.0f, 1); //hip r
+		muscle_def[2] = new B2DMuscle(joints[2], bones[1], bones[2], -2.5f, 0.1f, 2); //knee l
+		muscle_def[3] = new B2DMuscle(joints[2], bones[4], bones[5], -2.5f, 0.1f, 3); //knee r
+		muscle_def[4] = new B2DMuscle(joints[3], bones[2], bones[3], -1.5f, 1.5f, 4); //ankle l
+		muscle_def[5] = new B2DMuscle(joints[3], bones[5], bones[6], -1.5f, 1.5f, 5); //ankle r
+		muscle_def[6] = new B2DMuscle(joints[0], bones[7], bones[0], -1.6f, -1.5f, 6); //head
+		muscle_def[7] = new B2DMuscle(joints[5], bones[0], bones[8], -1.0f, 1.0f, 7); //stomach
 		return muscle_def;
 	}
 	

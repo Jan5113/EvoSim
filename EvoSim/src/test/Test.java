@@ -111,7 +111,7 @@ public class Test {
 			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST
 				taskDone = true;
 				lastDistance = getAveragePosition().x;
-				lastFitness = lastDistance * headHeight*headHeight*headHeight;
+				lastFitness = lastDistance * headHeight;
 				parentWrapper.taskDone(creature, lastFitness, lastDistance);					
 				afterTestTime = testTimer + afterTestLength;
 			}			

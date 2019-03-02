@@ -61,16 +61,22 @@ public class B2DMuscle implements Serializable {
 	 */
 	private final MutTimer timer2;
 	/**
-	 * Angle between {@code boneA} and {@code boneB} when {@code timer1} is active. Angle in rad between 0 and {@code 2 * PI}.
+	 * Angle (percentage between {@code angleMin} and {@code angleMax}) between {@code boneA}
+	 * and {@code boneB} when {@code timer1} is active. Angle in rad between 0 and 1.
 	 */
 	private final MutVal angle;
 	/**
 	 * The angle between {@code boneA} and {@code boneB} when {@code timer2} is
 	 * active is {@code angle + angleOffset}. {@code angleOffset} is in rad and
-	 * between {@code -PI} and {@code PI}. This limits the {@link B2DMuscle} to
+	 * between {@code -0.5} and {@code 0.5}. This limits the {@link B2DMuscle} to
 	 * only move up to 180°.
 	 */
 	private final MutVal angleOffset;
+	
+	private final float angleMin;
+	
+	private final float angleMax;
+	
 	/**
 	 * Each {@link B2DMuscle} can be given an ID. This is used for identification.
 	 */
@@ -121,7 +127,7 @@ public class B2DMuscle implements Serializable {
 	 * @param id_in
 	 *            gives this instance a {@code final} ID
 	 */
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in, int id_in) {
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in, float angleMin_in, float angleMax_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -129,6 +135,8 @@ public class B2DMuscle implements Serializable {
 		timer2 = timer2_in;
 		angle = angle_in;
 		angleOffset = angleOffset_in;
+		angleMin = angleMin_in;
+		angleMax = angleMax_in;
 		id = id_in;
 		
 		initialiseMuscle();
@@ -161,8 +169,25 @@ public class B2DMuscle implements Serializable {
 		boneB = boneB_in;
 		timer1 = new MutTimer();
 		timer2 = new MutTimer();
-		angle = new MutVal(0, (float) (2 * Math.PI));
+		angle = new MutVal(0, 1);
 		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+		angleMin = (float) (-Math.PI);
+		angleMax = (float) (3*Math.PI);
+		id = id_in;
+		
+		initialiseMuscle();
+	}
+
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, float minAngle, float maxAngle, int id_in) {
+		joint = joint_in;
+		boneA = boneA_in;
+		boneB = boneB_in;
+		timer1 = new MutTimer();
+		timer2 = new MutTimer();
+		angle = new MutVal(0, 1);
+		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+		angleMin = (float) (minAngle);
+		angleMax = (float) (maxAngle);
 		id = id_in;
 		
 		initialiseMuscle();
@@ -191,7 +216,7 @@ public class B2DMuscle implements Serializable {
 	 * @return a new mutated {@link B2DMuscle} with the new references
 	 */
 	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int gen) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.mutate(gen), timer2.mutate(gen), angle.mutate(gen), angleOffset.mutate(gen), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.mutate(gen), timer2.mutate(gen), angle.mutate(gen), angleOffset.mutate(gen), angleMin, angleMax, id);
 	}
 
 	/**
@@ -215,7 +240,7 @@ public class B2DMuscle implements Serializable {
 	 * @return a cloned {@link B2DMuscle} with new references
 	 */
 	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.clone(), timer2.clone(), angle.clone(), angleOffset.clone(), id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.clone(), timer2.clone(), angle.clone(), angleOffset.clone(), angleMin, angleMax, id);
 	}
 	
 	/**
@@ -382,7 +407,7 @@ public class B2DMuscle implements Serializable {
 	 * @return angle when {@code isActive()} is {@code true}
 	 */
 	public float getOffAngle() {
-		return angle.getVal();
+		return angleMin + angle.getVal() * (angleMax - angleMin);
 	}
 	
 	/**
@@ -392,6 +417,9 @@ public class B2DMuscle implements Serializable {
 	 * @return angle when {@code isActive()} is {@code false}
 	 */
 	public float getOnAngle() {
-		return angle.getVal() + angleOffset.getVal();
+		float offAngle = getOffAngle() + angleOffset.getVal();
+		if (offAngle < angleMin) return angleMin;
+		else if (offAngle > angleMax) return angleMax;
+		return offAngle;
 	}
 }

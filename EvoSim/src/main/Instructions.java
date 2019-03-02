@@ -775,8 +775,8 @@ public class Instructions extends BorderPane {
 				+ "konzipiert, programmiert und gestaltet.");
 		lbls[1].setText("Falls Ihr selber einen Blick in den Code werfen wollt, könnt Ihr diesen "
 				+ "unter https://github.com/Jan5113/EvoSim.git abrufen.");
-		lbls[2].setText("Fun-Fact:\nEvoSim enthält 6838 Zeilen Code in insgesamt 28 Java-Klassen");
-		lbls[3].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, G3E, 2018");
+		lbls[2].setText("Fun-Fact:\nEvoSim enthält 7238 Zeilen Code in insgesamt 33 Java-Klassen");
+		lbls[3].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, 2019");
 
 		Layout.italics(lbls[2]);
 
