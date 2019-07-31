@@ -29,7 +29,6 @@ public class CreatureBuilder {
 		for (B2DBody b : creatureInstances_in) {
 			b.createBody(w);
 		}
-		
 		B2DMuscle[] muscles = c.getMuscles();
 		for (int i = 0; i < muscles.length; i++) {
 			revoluteJoints_in.add((RevoluteJoint) w.createJoint(buildMuscles(muscles[i], creatureInstances_in)));
@@ -82,7 +81,7 @@ public class CreatureBuilder {
 		jointDef.maxMotorTorque = muscle.getTorque();
 		jointDef.motorSpeed = 0;
 		jointDef.collideConnected = false;
-		jointDef.enableMotor = true;
+		jointDef.enableMotor = muscle.isEnabled();
 		jointDef.userData = muscle;
 		
 		return jointDef;

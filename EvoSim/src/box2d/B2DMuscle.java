@@ -95,6 +95,8 @@ public class B2DMuscle implements Serializable {
 	 */
 	private final float maxTorque;
 	
+	private final boolean enabled;
+	
 	/**
 	 * Creates a new {@link B2DMuscle} with all parameters given. {@code joint_in}
 	 * references the {@link B2DJoint} this instance will connect to.
@@ -130,7 +132,7 @@ public class B2DMuscle implements Serializable {
 	 */
 	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
 			MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in,
-			float angleMin_in, float angleMax_in, float maxTorque_in, int id_in) {
+			float angleMin_in, float angleMax_in, float maxTorque_in, boolean enabled_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -142,6 +144,7 @@ public class B2DMuscle implements Serializable {
 		angleMax = angleMax_in;
 		id = id_in;
 		maxTorque = maxTorque_in;
+		enabled = enabled_in;
 		
 		initialiseMuscle();
 	}
@@ -168,7 +171,7 @@ public class B2DMuscle implements Serializable {
 	 *            gives this instance a {@code final} ID
 	 */
 	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
-			float maxTorque_in, int id_in) {
+			float maxTorque_in, boolean enabled_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -180,12 +183,13 @@ public class B2DMuscle implements Serializable {
 		angleMax = (float) (3*Math.PI);
 		id = id_in;
 		maxTorque = maxTorque_in;
+		enabled = enabled_in;
 		
 		initialiseMuscle();
 	}
 
 	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
-			float minAngle, float maxAngle, float maxTorque_in, int id_in) {
+			float minAngle, float maxAngle, float maxTorque_in, boolean enabled_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -197,6 +201,7 @@ public class B2DMuscle implements Serializable {
 		angleMax = (float) (maxAngle);
 		id = id_in;
 		maxTorque = maxTorque_in;
+		enabled = enabled_in;
 		
 		initialiseMuscle();
 	}
@@ -213,6 +218,7 @@ public class B2DMuscle implements Serializable {
 		angleMax = (float) (protM.angleMax);
 		id = protM.ID;
 		maxTorque = protM.torque;
+		enabled = protM.enabled;
 		
 		initialiseMuscle();
 	}
@@ -243,7 +249,7 @@ public class B2DMuscle implements Serializable {
 		return new B2DMuscle(joint_in, boneA_in, boneB_in,
 				timer1.mutate(gen), timer2.mutate(gen),
 				angle.mutate(gen), angleOffset.mutate(gen),
-				angleMin, angleMax, maxTorque, id);
+				angleMin, angleMax, maxTorque, enabled, id);
 	}
 
 	/**
@@ -270,7 +276,7 @@ public class B2DMuscle implements Serializable {
 		return new B2DMuscle(joint_in, boneA_in, boneB_in,
 				timer1.clone(), timer2.clone(),
 				angle.clone(), angleOffset.clone(),
-				angleMin, angleMax, maxTorque, id);
+				angleMin, angleMax, maxTorque, enabled, id);
 	}
 	
 	/**
@@ -451,5 +457,9 @@ public class B2DMuscle implements Serializable {
 		if (offAngle < angleMin) return angleMin;
 		else if (offAngle > angleMax) return angleMax;
 		return offAngle;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
 	}
 }

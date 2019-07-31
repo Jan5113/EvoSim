@@ -10,6 +10,7 @@ public class ProtoMuscle {
 	public float torque = 5.0f;
 	public float angleMin = (float) (-Math.PI);
 	public float angleMax = (float) (3*Math.PI);
+	public boolean enabled = true;
 	
 	public ProtoMuscle(int joint, int boneA, int boneB, int id_in, ProtoCreature pc_in) {
 		IDBoneA = boneA;

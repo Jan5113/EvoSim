@@ -20,8 +20,8 @@ public class ProtoCreature {
 	
 	public ProtoCreature(boolean initHumanoid) {
 		if (initHumanoid) {
-			createHumanoid();
-			//createTest();
+			//createHumanoid();
+			createTest();
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class ProtoCreature {
 	
 	public void createTest() {
 		addJoint(new Vec2(-1f, 0.1f)); 
-		addJoint(new Vec2(-0.5f, 1.6f)); 
+		addJoint(new Vec2(-0.5f, 0.6f)); 
 		addJoint(new Vec2(0f, 0.1f));
 		
 		addBone(0, 1);

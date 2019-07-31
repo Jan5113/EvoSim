@@ -105,7 +105,6 @@ public class Test {
 				} else { //Joint is inactive
 					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
 				}
-			
 			}
 			float headHeight = getHeadHeight();
 			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST

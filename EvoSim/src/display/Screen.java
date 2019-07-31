@@ -367,18 +367,18 @@ public class Screen extends Canvas {
 
 	public void drawProtoJoint(ProtoJoint j) {
 		Color c = Color.color(1, 0, 0);
-//		Vec2 dim = new Vec2(0.1f, 0.1f);
-//		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
-//		dim = new Vec2 (dim.x, -dim.y);
-//		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
-		Vec2 pos = camera.coordWorldToPixels(j.pos);
-		float rad = camera.scalarWorldToPixels(0.05f);
-		float angl = (float) Math.toDegrees(0);
-		drawPxLineCircle(pos.x, pos.y, rad, angl, c, true);
+		Vec2 dim = new Vec2(0.1f, 0.1f);
+		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
+		dim = new Vec2 (dim.x, -dim.y);
+		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
+//		Vec2 pos = camera.coordWorldToPixels(j.pos);
+//		float rad = camera.scalarWorldToPixels(0.05f);
+//		float angl = (float) Math.toDegrees(0);
+//		drawPxLineCircle(pos.x, pos.y, rad, angl, c, true);
 	}
 
 	public void drawProtoBone(ProtoBone b) {
-		Color c = Color.color(0.5, 0.5, 1);
+		Color c = Color.DODGERBLUE;
 		boolean fill = false;
 		
 		switch (b.shapetype) {
