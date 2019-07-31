@@ -1,6 +1,8 @@
 package main;
 import org.jbox2d.common.Vec2;
 
+import creatureCreator.CreatorControls;
+import creatureCreator.CreatorScreen;
 import display.Layout;
 import display.PlayBackControls;
 import display.PopScreen;
@@ -26,8 +28,10 @@ public class Main extends Application{
 	private long lastNanoTime;
 	private TestScreen mainTestScreen;
 	private MultiTest mainMultiTest;
+	private CreatorScreen mainCreatorScreen;
 	private PlayBackControls bp_testControl;
 	private PopScreenControl bp_popControl;
+	private CreatorControls bp_creatorControl;
 	private VBox bp_pop;
 	private BorderPane bp_test;
 	private PopScreen popScreen;
@@ -60,7 +64,7 @@ public class Main extends Application{
 		Layout.setCSS(scene);
 		Layout.rootPadding(root);
 
-		setupTestScreen();
+		setupMainScreen();
 		setupPopScreen();
 		setupButton();
 
@@ -139,8 +143,21 @@ public class Main extends Application{
 		root.setCenter(bp_instr);
 		showInstr = true;
 	}
+	
+	public void openCreator() {
+		((Label) bp_test.getTop()).setText("Creature configurator");
+		bp_test.setCenter(mainCreatorScreen);
+		bp_test.setBottom(bp_creatorControl);
+		
+	}
+	
+	public void closeCreator() {
+		((Label) bp_test.getTop()).setText("Creature preview");
+		bp_test.setCenter(mainTestScreen);
+		bp_test.setBottom(bp_testControl);
+	}
 
-	private void setupTestScreen() {
+	private void setupMainScreen() {
 		bp_test = new BorderPane();
 		mainTestScreen = new TestScreen(900, 500, 70, new Vec2(0.0f, 3.0f), pop);
 		mainTestScreen.setBackgroundCol(Layout.getSkycolor());
@@ -154,20 +171,33 @@ public class Main extends Application{
 
 		bp_testControl = new PlayBackControls(mainTestScreen);
 		
-		Label testTitle = new Label("Creature preview");
+		Label testTitle = new Label("Title");
 		Layout.defaultMargin(testTitle);
 		Layout.labelTitle(testTitle);
-		
-		bp_test.setCenter(mainTestScreen);
-		bp_test.setBottom(bp_testControl);
 		bp_test.setTop(testTitle);
+		
+		
+		mainCreatorScreen = new CreatorScreen(900, 500, 70, new Vec2(-0.5f, 1.0f));
+		mainCreatorScreen.setBackgroundCol(Layout.getSkycolor());
+		mainCreatorScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
+		mainCreatorScreen.disableInfo();
+		mainCreatorScreen.disableMarkers();
+		mainCreatorScreen.disableGird();
+		mainCreatorScreen.disableViewLock();
+		mainCreatorScreen.camera.setZoom(150f);
+		Layout.defaultMargin(mainCreatorScreen);
+		BorderPane.setAlignment(mainCreatorScreen, Pos.TOP_LEFT);
+		
+		bp_creatorControl = new CreatorControls(mainCreatorScreen);
+		
+		closeCreator();		
 	}
 
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
 		mainMultiTest = new MultiTest(6, pop);
-		bp_popControl = new PopScreenControl(mainTestScreen, mainMultiTest, popScreen, pop);
+		bp_popControl = new PopScreenControl(this, mainTestScreen, mainMultiTest, mainCreatorScreen, popScreen, pop);
 		Label popTitle = new Label("Population");
 		Layout.defaultMargin(popTitle);
 		Layout.labelTitle(popTitle);
@@ -180,6 +210,7 @@ public class Main extends Application{
 	private void refreshScreen(float dt) {
 		mainTestScreen.refresh(dt);
 		bp_testControl.refresh();
+		mainCreatorScreen.refresh();
 		popScreen.refresh(dt);
 		bp_popControl.refresh();
 		
@@ -188,6 +219,7 @@ public class Main extends Application{
 
 	private void stageResize(Stage s) {
 		mainTestScreen.setScreenSize((int) s.getWidth()-272, (int) s.getHeight()-265); 
+		mainCreatorScreen.setScreenSize((int) s.getWidth()-272, (int) s.getHeight()-265); 
 		bp_showInstr.setTranslateX((int) s.getWidth() - 243);
 	}
 

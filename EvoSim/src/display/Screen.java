@@ -10,6 +10,9 @@ import box2d.B2DBoneDir;
 import box2d.B2DCamera;
 import box2d.B2DMuscle;
 import box2d.ShapeType;
+import creatureCreator.ProtoBone;
+import creatureCreator.ProtoJoint;
+import creatureCreator.ProtoMuscle;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -350,6 +353,56 @@ public class Screen extends Canvas {
 		gc.restore();
 		//drawPxCircle(pxpoint.x, pxpoint.y, camera.scalarWorldToPixels(0.05f), camera.scalarWorldToPixels(0.05f), Color.color(col,0,0), true);
 	}
+	
+	public void drawRect(float posx, float posy, float dimx, float dimy, float rot, Color c, boolean fill) {
+		drawPxRect(camera.coordWorldToPixels(new Vec2(posx, posy)),
+				camera.scalarWorldToPixels(new Vec2(dimx, dimy)),
+				(float) Math.toDegrees(-rot),
+				c, fill);
+	}
+
+	//************************************************
+	//*		PROTO DRAW FUNCTIONS
+	//************************************************	
+
+	public void drawProtoJoint(ProtoJoint j) {
+		Color c = Color.color(1, 0, 0);
+//		Vec2 dim = new Vec2(0.1f, 0.1f);
+//		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
+//		dim = new Vec2 (dim.x, -dim.y);
+//		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
+		Vec2 pos = camera.coordWorldToPixels(j.pos);
+		float rad = camera.scalarWorldToPixels(0.05f);
+		float angl = (float) Math.toDegrees(0);
+		drawPxLineCircle(pos.x, pos.y, rad, angl, c, true);
+	}
+
+	public void drawProtoBone(ProtoBone b) {
+		Color c = Color.color(0.5, 0.5, 1);
+		boolean fill = false;
+		
+		switch (b.shapetype) {
+		case RECT:
+			drawPxRect(camera.coordWorldToPixels(b.getPos()), camera.scalarWorldToPixels(b.getDim()),
+					(float) Math.toDegrees(-b.getAngle()), c, fill);
+			break;
+		case CIRCLE:
+			Vec2 pos = camera.coordWorldToPixels(b.getPos());
+			float rad = camera.scalarWorldToPixels(b.shapeArg);
+			float angl = (float) Math.toDegrees(0);
+			drawPxLineCircle(pos.x, pos.y, rad, angl, c, fill);	
+			break;
+		default:
+			break;
+		}
+		
+		
+	}
+
+	public void drawProtoMuscle(ProtoMuscle m) {
+		
+	}
+
 	
 	//************************************************
 	//*		PRIVATE PX DRAW FUNCTIONS
@@ -906,6 +959,11 @@ public class Screen extends Canvas {
 	 */
 	public void enableViewLock() {
 		viewLock = true;
+	}
+	
+
+	public void disableViewLock() {
+		viewLock = false;
 	}
 	
 	

@@ -1,9 +1,10 @@
 package box2d;
 
 import java.io.Serializable;
-
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
+
+import creatureCreator.ProtoBone;
 
 /**
  * A {@link B2DBone} connects two {@link B2DJoint} instances with a rigid
@@ -79,6 +80,19 @@ public class B2DBone implements Serializable {
 		this.shapeArg = shapeArg;
 	}
 	
+	public B2DBone(ProtoBone protB, B2DJoint[] joints) {
+		headJoint = joints[protB.IDJointA];
+		endJoint = joints[protB.IDJointB];
+		id = protB.ID;
+		
+		halfLength = (endJoint.getPos().add(headJoint.getPos().negate()).length()) * 0.5f;
+
+		headJoint.registerHeadBone(this);
+		endJoint.registerEndBone(this);
+		
+		shapeType = protB.shapetype;
+		this.shapeArg = protB.shapeArg;
+	}
 	
 	/**
 	 * Returns an array[2] with the reference to the head-{@link B2DJoint} at

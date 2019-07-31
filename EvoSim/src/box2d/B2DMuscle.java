@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
+import creatureCreator.ProtoMuscle;
 import mutation.MutTimer;
 import mutation.MutVal;
 import population.Creature;
@@ -92,7 +93,7 @@ public class B2DMuscle implements Serializable {
 	 * {@code maxTorque} hold the maximum "strength" a {@link B2DMuscle} is able to
 	 * apply to the {@link B2DBone}s connected to it.
 	 */
-	private static float maxTorque = 5.0f;
+	private final float maxTorque;
 	
 	/**
 	 * Creates a new {@link B2DMuscle} with all parameters given. {@code joint_in}
@@ -127,7 +128,9 @@ public class B2DMuscle implements Serializable {
 	 * @param id_in
 	 *            gives this instance a {@code final} ID
 	 */
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in, float angleMin_in, float angleMax_in, int id_in) {
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
+			MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in,
+			float angleMin_in, float angleMax_in, float maxTorque_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -138,6 +141,7 @@ public class B2DMuscle implements Serializable {
 		angleMin = angleMin_in;
 		angleMax = angleMax_in;
 		id = id_in;
+		maxTorque = maxTorque_in;
 		
 		initialiseMuscle();
 	}
@@ -163,7 +167,8 @@ public class B2DMuscle implements Serializable {
 	 * @param id_in
 	 *            gives this instance a {@code final} ID
 	 */
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int id_in) {
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
+			float maxTorque_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -174,11 +179,13 @@ public class B2DMuscle implements Serializable {
 		angleMin = (float) (-Math.PI);
 		angleMax = (float) (3*Math.PI);
 		id = id_in;
+		maxTorque = maxTorque_in;
 		
 		initialiseMuscle();
 	}
 
-	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, float minAngle, float maxAngle, int id_in) {
+	public B2DMuscle(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in,
+			float minAngle, float maxAngle, float maxTorque_in, int id_in) {
 		joint = joint_in;
 		boneA = boneA_in;
 		boneB = boneB_in;
@@ -189,6 +196,23 @@ public class B2DMuscle implements Serializable {
 		angleMin = (float) (minAngle);
 		angleMax = (float) (maxAngle);
 		id = id_in;
+		maxTorque = maxTorque_in;
+		
+		initialiseMuscle();
+	}
+	
+	public B2DMuscle(ProtoMuscle protM, B2DJoint[] joints, B2DBone[] bones) {
+		joint = joints[protM.IDJoint];
+		boneA = bones[protM.IDBoneA];
+		boneB = bones[protM.IDBoneB];
+		timer1 = new MutTimer();
+		timer2 = new MutTimer();
+		angle = new MutVal(0, 1);
+		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+		angleMin = (float) (protM.angleMin);
+		angleMax = (float) (protM.angleMax);
+		id = protM.ID;
+		maxTorque = protM.torque;
 		
 		initialiseMuscle();
 	}
@@ -216,7 +240,10 @@ public class B2DMuscle implements Serializable {
 	 * @return a new mutated {@link B2DMuscle} with the new references
 	 */
 	public B2DMuscle rereferencedMutate(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in, int gen) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.mutate(gen), timer2.mutate(gen), angle.mutate(gen), angleOffset.mutate(gen), angleMin, angleMax, id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in,
+				timer1.mutate(gen), timer2.mutate(gen),
+				angle.mutate(gen), angleOffset.mutate(gen),
+				angleMin, angleMax, maxTorque, id);
 	}
 
 	/**
@@ -240,7 +267,10 @@ public class B2DMuscle implements Serializable {
 	 * @return a cloned {@link B2DMuscle} with new references
 	 */
 	public B2DMuscle rereferencedClone(B2DJoint joint_in, B2DBone boneA_in, B2DBone boneB_in) {
-		return new B2DMuscle(joint_in, boneA_in, boneB_in, timer1.clone(), timer2.clone(), angle.clone(), angleOffset.clone(), angleMin, angleMax, id);
+		return new B2DMuscle(joint_in, boneA_in, boneB_in,
+				timer1.clone(), timer2.clone(),
+				angle.clone(), angleOffset.clone(),
+				angleMin, angleMax, maxTorque, id);
 	}
 	
 	/**

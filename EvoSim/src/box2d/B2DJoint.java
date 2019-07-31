@@ -2,6 +2,8 @@ package box2d;
 import java.io.Serializable;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
+
+import creatureCreator.ProtoJoint;
 import mutation.MutVec2;
 
 /**
@@ -64,6 +66,13 @@ public class B2DJoint implements Serializable {
 	public B2DJoint(MutVec2 mutVec2_in, int id_in) {
 		pos = mutVec2_in.clone();
 		id = id_in;
+		
+		offset = new Vec2((float) Math.random() / 1000, (float) Math.random() / 1000);
+	}
+	
+	public B2DJoint(ProtoJoint protJ) {
+		pos = new MutVec2(protJ.pos, protJ.mutatingPos);
+		id = protJ.ID;
 		
 		offset = new Vec2((float) Math.random() / 1000, (float) Math.random() / 1000);
 	}

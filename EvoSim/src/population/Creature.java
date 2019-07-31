@@ -1,16 +1,12 @@
 package population;
 import java.io.Serializable;
 
-import org.jbox2d.common.Vec2;
-
 import box2d.B2DBone;
 import box2d.B2DJoint;
 import box2d.B2DMuscle;
-import box2d.ShapeType;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import mutation.MutVal;
-import mutation.MutVec2;
 
 public class Creature  implements Serializable, Comparable<Creature>{
 	private static final long serialVersionUID = 1L;
@@ -25,20 +21,6 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	private float distance = -1000.0f;
 	private float fitness_ser = -1000.f;
 	private boolean fitnessEvaluated = false;
-	
-	public Creature(int id_in) {
-		//joints = createDefJoints();
-		//bones = createDefBones();
-		//muscles = createDefMuscles();
-
-		joints = createHumanoidJoints();
-		bones = createHumanoidBones();
-		muscles = createHumanoidMuscles();
-		
-		cycleLength = new MutVal(2, 1);
-		
-		id = id_in;
-	}
 	
 	public Creature(int id_in, B2DJoint[] joints_in, B2DBone[] bones_in, B2DMuscle[] muscles_in, MutVal cycleLen_in) {
 		joints = joints_in;
@@ -63,8 +45,9 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		distance = distance_in;
 		fitnessEvaluated = fitnessEval_in;
 	}
-
+/*
 	@SuppressWarnings("unused")
+
 	private B2DJoint[] createDefJoints() {
 		B2DJoint[] joints_def = new B2DJoint[6];
 		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(-1.6f, 0.1f)), 0);
@@ -98,44 +81,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		muscle_def[4] = new B2DMuscle(joints[3], bones[2], bones[5], 4);
 		return muscle_def;
 	}
-	
-	private B2DJoint[] createHumanoidJoints() {
-		B2DJoint[] joints_def = new B2DJoint[6];
-		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(0f, 3.1f)), 0); //shoulder
-		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(0f, 1.6f)), 1); //hip
-		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(0f, 0.85f)), 2); //knee
-		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0f, 0.1f)), 3); //ankle
-		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.5f, 0.1f)), 4); //toes
-		joints_def[5] = new B2DJoint(new MutVec2(new Vec2(0f, 2.35f)), 5); //stomach
-		return joints_def;
-	}
-
-	private B2DBone[] createHumanoidBones() {
-		B2DBone[] bones_def = new B2DBone[9];
-		bones_def[0] = new B2DBone(joints[0], joints[5], 0, 0.1f); //torso
-		bones_def[1] = new B2DBone(joints[1], joints[2], 1, 0.1f); //thigh l
-		bones_def[2] = new B2DBone(joints[2], joints[3], 2, 0.1f); //shank l
-		bones_def[3] = new B2DBone(joints[3], joints[4], 3, 0.1f); //foot l
-		bones_def[4] = new B2DBone(joints[1], joints[2], 4, 0.1f); //thigh r
-		bones_def[5] = new B2DBone(joints[2], joints[3], 5, 0.1f); //shank r
-		bones_def[6] = new B2DBone(joints[3], joints[4], 6, 0.1f); //foot r
-		bones_def[7] = new B2DBone(joints[0], joints[0], 7, ShapeType.CIRCLE ,0.2f); //head
-		bones_def[8] = new B2DBone(joints[5], joints[1], 8, 0.1f); //lower torso
-		return bones_def;
-	}
-
-	private B2DMuscle[] createHumanoidMuscles() {
-		B2DMuscle[] muscle_def = new B2DMuscle[8];
-		muscle_def[0] = new B2DMuscle(joints[1], bones[8], bones[1], -2.0f, 2.0f, 0); //hip l
-		muscle_def[1] = new B2DMuscle(joints[1], bones[8], bones[4], -2.0f, 2.0f, 1); //hip r
-		muscle_def[2] = new B2DMuscle(joints[2], bones[1], bones[2], -2.5f, 0.1f, 2); //knee l
-		muscle_def[3] = new B2DMuscle(joints[2], bones[4], bones[5], -2.5f, 0.1f, 3); //knee r
-		muscle_def[4] = new B2DMuscle(joints[3], bones[2], bones[3], -1.5f, 1.5f, 4); //ankle l
-		muscle_def[5] = new B2DMuscle(joints[3], bones[5], bones[6], -1.5f, 1.5f, 5); //ankle r
-		muscle_def[6] = new B2DMuscle(joints[0], bones[7], bones[0], -1.6f, -1.5f, 6); //head
-		muscle_def[7] = new B2DMuscle(joints[5], bones[0], bones[8], -1.0f, 1.0f, 7); //stomach
-		return muscle_def;
-	}
+	*/
 	
 	public void setFitness(float fitness_in, float distance_in) {
 		if (fitnessEvaluated) {
@@ -197,8 +143,8 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
 		
 		for (int i = 0; i < temp_joints.length; i++) {
-			//temp_joints[i] = joints[i].mutate(gen);
-			temp_joints[i] = joints[i].clone();
+			temp_joints[i] = joints[i].mutate(gen);
+			//temp_joints[i] = joints[i].clone();
 		}
 		for (int i = 0; i < temp_bones.length; i++) {
 			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};

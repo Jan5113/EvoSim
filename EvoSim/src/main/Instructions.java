@@ -1,6 +1,8 @@
 package main;
 
 import org.jbox2d.common.Vec2;
+
+import creatureCreator.ProtoCreature;
 import display.Layout;
 import display.TestScreen;
 import javafx.geometry.Insets;
@@ -253,7 +255,9 @@ public class Instructions extends BorderPane {
 	}
 
 	private TestScreen[] testScreen = new TestScreen[4];
-	private Creature tutorialCret = new Creature(0);
+
+	private ProtoCreature pc = new ProtoCreature(true);
+	private Creature tutorialCret = pc.makeCreature(0);
 
 	private BorderPane getPage3() {
 		BorderPane page = new BorderPane();
