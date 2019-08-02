@@ -1,6 +1,10 @@
 package creatureCreator;
 
-public class ProtoMuscle {
+import java.io.Serializable;
+
+public class ProtoMuscle implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	public final int IDBoneA;
 	public final int IDBoneB;
 	public final int IDJoint;

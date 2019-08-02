@@ -1,8 +1,11 @@
 package creatureCreator;
+import java.io.Serializable;
+
 import org.jbox2d.common.Vec2;
 import box2d.ShapeType;
 
-public class ProtoBone {
+public class ProtoBone implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public final int IDJointA;
 	public final int IDJointB;
 	public final int ID;

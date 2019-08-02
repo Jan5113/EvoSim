@@ -1,4 +1,5 @@
 package creatureCreator;
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import box2d.B2DBone;
@@ -8,7 +9,8 @@ import box2d.ShapeType;
 import mutation.MutVal;
 import population.Creature;
 
-public class ProtoCreature {
+public class ProtoCreature implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public ArrayList<ProtoJoint> jointDefList = new ArrayList<ProtoJoint>();
 	public ArrayList<ProtoBone> boneDefList = new ArrayList<ProtoBone>();
 	public ArrayList<ProtoMuscle> muscleDefList = new ArrayList<ProtoMuscle>();

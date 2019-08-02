@@ -1,8 +1,12 @@
 package creatureCreator;
 
+import java.io.Serializable;
+
 import org.jbox2d.common.Vec2;
 
-public class ProtoJoint {
+public class ProtoJoint implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	public Vec2 pos;
 	public boolean mutatingPos = true;
 	public final int ID;
