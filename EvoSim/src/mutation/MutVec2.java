@@ -11,6 +11,8 @@ public class MutVec2 implements Serializable {
 	private MutVal x;
 	private MutVal y;	
 	
+	private boolean mutates = true;
+	
 	private final Vec2 offset;
 
 	public MutVec2(Vec2 val, float[] minXY_maxXY) {
@@ -36,6 +38,14 @@ public class MutVec2 implements Serializable {
 		offset = new Vec2((float) Math.random() * 0.001f, (float) Math.random() * 0.001f);
 	}
 	
+	public MutVec2(Vec2 val, boolean mutates_in) {
+		x = new MutVal(defRangeMinXYMaxXY[0], defRangeMinXYMaxXY[2], val.x);
+		y = new MutVal(defRangeMinXYMaxXY[1], defRangeMinXYMaxXY[3], val.y);
+		
+		offset = new Vec2((float) Math.random() * 0.001f, (float) Math.random() * 0.001f);
+		mutates = mutates_in;
+	}
+	
 	public MutVec2() {
 		x = new MutVal(defRangeMinXYMaxXY[0], defRangeMinXYMaxXY[2]);
 		y = new MutVal(defRangeMinXYMaxXY[1], defRangeMinXYMaxXY[3]);
@@ -43,24 +53,28 @@ public class MutVec2 implements Serializable {
 		offset = new Vec2((float) Math.random() * 0.001f, (float) Math.random() * 0.001f);
 	}
 	
-	public MutVec2(MutVal x_in, MutVal y_in, float[] minXY_maxXY, Vec2 offset_in) {
+	public MutVec2(MutVal x_in, MutVal y_in, float[] minXY_maxXY,boolean mutates_in, Vec2 offset_in) {
 		x = x_in;
 		y = y_in;
 		defRangeMinXYMaxXY = minXY_maxXY;
-		
+		mutates = mutates_in;
 		offset = new Vec2(offset_in);
 	}
 	
-	public MutVec2(MutVal x_in, MutVal y_in, float[] minXY_maxXY) {
+	public MutVec2(MutVal x_in, MutVal y_in, float[] minXY_maxXY, boolean mutates_in) {
 		x = x_in;
 		y = y_in;
 		defRangeMinXYMaxXY = minXY_maxXY;
-		
+		mutates = mutates_in;
 		offset = new Vec2((float) Math.random() * 0.001f, (float) Math.random() * 0.001f);
 	}
 	
 	public MutVec2 mutate(int gen) {
-		return new MutVec2(x.mutate(gen), y.mutate(gen), defRangeMinXYMaxXY);
+		if (mutates) {
+			return new MutVec2(x.mutate(gen), y.mutate(gen), defRangeMinXYMaxXY, true);			
+		} else {
+			return new MutVec2(x.clone(), y.clone(), defRangeMinXYMaxXY, false);			
+		}
 	}
 	
 	public Vec2 getVal() {
@@ -68,7 +82,7 @@ public class MutVec2 implements Serializable {
 	}
 	
 	public MutVec2 clone() {
-		return new MutVec2(x.clone(), y.clone(), defRangeMinXYMaxXY, offset);
+		return new MutVec2(x.clone(), y.clone(), defRangeMinXYMaxXY, mutates, offset);
 	}
 	
 //	public static float sigmoid(float x, float min, float max, float expRange) {

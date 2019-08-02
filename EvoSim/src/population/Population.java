@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.jbox2d.common.Vec2;
 
+import creatureCreator.ProtoCreature;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,7 +22,8 @@ public class Population implements Serializable{
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	private Vec2 testGrav;
 	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
-	private PopulationStatus popStat = PopulationStatus.S0_NOTCREATED;
+	private PopulationStatus popStat = PopulationStatus.S000_NOBLUEPRINT;
+	private ProtoCreature creatureBlueprint;
 	
 	private static float killVal = 0.8f;
 	
@@ -30,12 +32,23 @@ public class Population implements Serializable{
 		testGrav = testGrav_in.clone();
 	}
 	
+	public void createCreature() {
+		if (popStat != PopulationStatus.S000_NOBLUEPRINT) {System.err.println("Creature already created!");return;}
+		popStat = PopulationStatus.S00_CREATOR;
+	}
+	
+	public void saveCreature(ProtoCreature blueprint_in) {
+		if (popStat != PopulationStatus.S00_CREATOR) {System.err.println("Creature already created!");return;}
+		creatureBlueprint = blueprint_in;
+		popStat = PopulationStatus.S0_NOTCREATED;
+	}
+	
 	public void CreateRandPopulation (int popSize_in) {
 		if (popStat != PopulationStatus.S0_NOTCREATED) {System.err.println("Population already initialised!");return;}
 		
 		populationSize = popSize_in;
 		for (int i = 0; i < populationSize; i++) {
-			Creature tempC = new Creature(currentID);
+			Creature tempC = creatureBlueprint.makeCreature(currentID);
 			currentID++;
 			addCreature(tempC);
 		}

@@ -2,10 +2,11 @@ package display;
 
 import java.util.ArrayList;
 
+import creatureCreator.CreatorScreen;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import population.Creature;
+import main.Main;
 import population.Population;
 import population.PopulationStatus;
 import population.PopulationTask;
@@ -31,62 +32,19 @@ import test.MultiTestStatus;
  */
 public class PopScreenControl extends BorderPane{
 
-	/**
-	 * {@code multiTest} is a reference to the {@link MultiTest} instance this
-	 * {@link PopScreenControl} instance has control over.
-	 */
+	private final Main main;
 	private final MultiTest multiTest;
-	
-	/**
-	 * {@code testScreen} is a reference to the {@link TestScreen} instance this
-	 * {@link PopScreenControl} instance has control over. It is needed to display
-	 * {@link Creature} instances in the main {@link TestScreen}
-	 */
 	private final TestScreen testScreen;
-	
-	/**
-	 * {@code pop} holds the reference to the main {@link Population} this instance 
-	 * is controlling.
-	 */
+	private final CreatorScreen creatorScreen;
 	private final Population pop;
-	
-	/**
-	 * {@code popScreen} hold the reference to the main {@link PopScreen}. This is mainly
-	 * used for {@code refresh()} and applying the {@link TestProgressBar}.
-	 */
 	private final PopScreen popScreen;
-	
-	/**
-	 * {@code testProgressBar} is a progress bar that is being shown when the {@link MultiTest}
-	 * is performing calculations. It displays the progress of the calculation.
-	 */
 	private TestProgressBar testProgressBar;
-	
-	/**
-	 * This queue holds {@link PopulationTask} enums. All tasks are added to the
-	 * queue and are then later processed in the order they were added.
-	 */
 	private ArrayList<PopulationTask> tasks = new ArrayList<PopulationTask>();
-
-	/**
-	 * {@code gp_controls} is the {@link GridPane} which holds all the buttons and
-	 * arranges them accordingly.
-	 */
 	private GridPane gp_controls = new GridPane();
 
 	// Playback Controls
-	/**
-	 * This button adds the next action which can be performed on the
-	 * {@link Population} to the queue.
-	 */
 	private Button btn_singleAction = new Button("Test");
-	/**
-	 * This button adds multiple actions to the queue to calculate one entire generation. 
-	 */
 	private Button btn_1G = new Button("1 Gen");
-	/**
-	 * This button adds multiple actions to the queue to calculate ten entire generations. 
-	 */
 	private Button btn_10G = new Button("10 Gens");
 	
 	/**
@@ -106,11 +64,14 @@ public class PopScreenControl extends BorderPane{
 	 *            reference to the main {@link Population} this
 	 *            {@link PopScreenControl} controls.
 	 */
-	public PopScreenControl(TestScreen testScreen_in, MultiTest multiTest_in, PopScreen popScreen_in, Population pop_in) {
+	public PopScreenControl(Main main_in, TestScreen testScreen_in, MultiTest multiTest_in, 
+			CreatorScreen creatorScreen_in, PopScreen popScreen_in, Population pop_in) {
 		multiTest = multiTest_in;
 		testScreen = testScreen_in;
 		pop = pop_in;
 		popScreen = popScreen_in;
+		main = main_in;
+		creatorScreen = creatorScreen_in;
 		
 		testProgressBar = new TestProgressBar();
 
@@ -147,6 +108,16 @@ public class PopScreenControl extends BorderPane{
 	public void refresh() {
 		
 		switch (pop.getPopStat()) {
+		case S000_NOBLUEPRINT:
+			btn_singleAction.setText("Create Creature");
+			btn_1G.setDisable(true);
+			btn_10G.setDisable(true);
+			break;
+		case S00_CREATOR:
+			btn_singleAction.setText("Save Creature");
+			btn_1G.setDisable(true);
+			btn_10G.setDisable(true);
+			break;
 		case S0_NOTCREATED:
 			btn_singleAction.setText("Create Population");
 			btn_1G.setDisable(true);
@@ -241,6 +212,14 @@ public class PopScreenControl extends BorderPane{
 	 */
 	private void singleAction() {		
 		switch (pop.getPopStat()) {
+		case S000_NOBLUEPRINT: //CREATE CREATURE
+			main.openCreator();
+			pop.createCreature();
+			break;
+		case S00_CREATOR: //SAVE CREATURE
+			main.closeCreator();			
+			pop.saveCreature(creatorScreen.getBlueprint());
+			break;
 		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
 			testProgressBar.setPopSize(pop.getPopulationSize());
