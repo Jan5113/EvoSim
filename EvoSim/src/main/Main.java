@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -53,6 +54,7 @@ public class Main extends Application{
 	}
 	
 	private void setup() {
+		primaryStage.getIcons().add(new Image("icon.png"));
 		primaryStage.setTitle("EvoSim - v"+ version);
 		root = new BorderPane();
 		scene = new Scene(root, 1200, 700);

@@ -37,9 +37,9 @@ public class MutTimer extends MutVal implements Serializable {
 			newGenOffset = gen / 2;
 		}
 		
-		if (newGenOffset > 3) {
-			System.out.println(super.getVal() + " " + new_val);
-		}
+//		if (newGenOffset > 3) {
+//			System.out.println(super.getVal() + " " + new_val);
+//		}
 		
 		return new MutTimer(new_val, newGenOffset);
 	}

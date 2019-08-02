@@ -34,7 +34,16 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		joints = createHumanoidJoints();
 		bones = createHumanoidBones();
 		muscles = createHumanoidMuscles();
-		
+
+//		joints = createMonoHumanoidJoints();
+//		bones = createMonoHumanoidBones();
+//		muscles = createMonoHumanoidMuscles();
+
+
+//		joints = createTestJoints();
+//		bones = createTestBones();
+//		muscles = createTestMuscles();
+//		
 		cycleLength = new MutVal(2, 1);
 		
 		id = id_in;
@@ -99,6 +108,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		return muscle_def;
 	}
 	
+	@SuppressWarnings("unused")
 	private B2DJoint[] createHumanoidJoints() {
 		B2DJoint[] joints_def = new B2DJoint[6];
 		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(0f, 3.1f)), 0); //shoulder
@@ -110,6 +120,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		return joints_def;
 	}
 
+	@SuppressWarnings("unused")
 	private B2DBone[] createHumanoidBones() {
 		B2DBone[] bones_def = new B2DBone[9];
 		bones_def[0] = new B2DBone(joints[0], joints[5], 0, 0.1f); //torso
@@ -124,6 +135,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		return bones_def;
 	}
 
+	@SuppressWarnings("unused")
 	private B2DMuscle[] createHumanoidMuscles() {
 		B2DMuscle[] muscle_def = new B2DMuscle[8];
 		muscle_def[0] = new B2DMuscle(joints[1], bones[8], bones[1], -2.0f, 2.0f, 0); //hip l
@@ -134,6 +146,66 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		muscle_def[5] = new B2DMuscle(joints[3], bones[5], bones[6], -1.5f, 1.5f, 5); //ankle r
 		muscle_def[6] = new B2DMuscle(joints[0], bones[7], bones[0], -1.6f, -1.5f, 6); //head
 		muscle_def[7] = new B2DMuscle(joints[5], bones[0], bones[8], -1.0f, 1.0f, 7); //stomach
+		return muscle_def;
+	}
+
+
+	@SuppressWarnings("unused")
+	private B2DJoint[] createMonoHumanoidJoints() {
+		B2DJoint[] joints_def = new B2DJoint[6];
+		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(0f, 3.1f)), 0); //shoulder
+		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(0f, 1.6f)), 1); //hip
+		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(0f, 0.85f)), 2); //knee
+		joints_def[3] = new B2DJoint(new MutVec2(new Vec2(0f, 0.1f)), 3); //ankle
+		joints_def[4] = new B2DJoint(new MutVec2(new Vec2(0.5f, 0.1f)), 4); //toes
+		joints_def[5] = new B2DJoint(new MutVec2(new Vec2(0f, 2.35f)), 5); //stomach
+		return joints_def;
+	}
+
+	@SuppressWarnings("unused")
+	private B2DBone[] createMonoHumanoidBones() {
+		B2DBone[] bones_def = new B2DBone[6];
+		bones_def[0] = new B2DBone(joints[0], joints[5], 0, 0.1f); //torso
+		bones_def[1] = new B2DBone(joints[1], joints[2], 1, 0.1f); //thigh l
+		bones_def[2] = new B2DBone(joints[2], joints[3], 2, 0.1f); //shank l
+		bones_def[3] = new B2DBone(joints[3], joints[4], 3, 0.1f); //foot l
+		bones_def[4] = new B2DBone(joints[0], joints[0], 4, ShapeType.CIRCLE ,0.2f); //head
+		bones_def[5] = new B2DBone(joints[5], joints[1], 5, 0.1f); //lower torso
+		return bones_def;
+	}
+
+	@SuppressWarnings("unused")
+	private B2DMuscle[] createMonoHumanoidMuscles() {
+		B2DMuscle[] muscle_def = new B2DMuscle[5];
+		muscle_def[0] = new B2DMuscle(joints[1], bones[5], bones[1], -2.0f, 2.0f, 0); //hip l
+		muscle_def[1] = new B2DMuscle(joints[2], bones[1], bones[2], -2.5f, 0.1f, 1); //knee l
+		muscle_def[2] = new B2DMuscle(joints[3], bones[2], bones[3], -1.5f, 1.5f, 2); //ankle l
+		muscle_def[3] = new B2DMuscle(joints[0], bones[4], bones[0], -1.6f, -1.5f, 3); //head
+		muscle_def[4] = new B2DMuscle(joints[5], bones[0], bones[5], -1.0f, 1.0f, 4); //stomach
+		return muscle_def;
+	}
+
+	@SuppressWarnings("unused")
+	private B2DJoint[] createTestJoints() {
+		B2DJoint[] joints_def = new B2DJoint[3];
+		joints_def[0] = new B2DJoint(new MutVec2(new Vec2(0f, 4f)), 0);
+		joints_def[1] = new B2DJoint(new MutVec2(new Vec2(0f, 3.5f)), 1);
+		joints_def[2] = new B2DJoint(new MutVec2(new Vec2(0f, 3f)), 2); 
+		return joints_def;
+	}
+
+	@SuppressWarnings("unused")
+	private B2DBone[] createTestBones() {
+		B2DBone[] bones_def = new B2DBone[2];
+		bones_def[0] = new B2DBone(joints[0], joints[1], 0, 0.1f);
+		bones_def[1] = new B2DBone(joints[1], joints[2], 1, 0.1f);
+		return bones_def;
+	}
+
+	@SuppressWarnings("unused")
+	private B2DMuscle[] createTestMuscles() {
+		B2DMuscle[] muscle_def = new B2DMuscle[1];
+		muscle_def[0] = new B2DMuscle(joints[1], bones[0], bones[1], -2.0f, 2.0f, 0);
 		return muscle_def;
 	}
 	

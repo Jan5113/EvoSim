@@ -111,7 +111,7 @@ public class Test {
 			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST
 				taskDone = true;
 				lastDistance = getAveragePosition().x;
-				lastFitness = lastDistance * headHeight;
+				lastFitness = lastDistance * headHeight * headHeight * headHeight;
 				parentWrapper.taskDone(creature, lastFitness, lastDistance);					
 				afterTestTime = testTimer + afterTestLength;
 			}			
@@ -121,7 +121,7 @@ public class Test {
 			}
 
 			parentWrapper.stepCallback(steps);
-			System.out.println("teststep");
+			//System.out.println("teststep");
 			steps++;
 		}
 	}
