@@ -856,7 +856,7 @@ public class Screen extends Canvas {
 	 *            {@link ScrollEvent} for determining direction and location
 	 */
 	public void scrollEvent(ScrollEvent se) {
-		if (!scrollZoomEnabled) return;
+		if (!scrollZoomEnabled || se.getDeltaY() == 0.0) return;
 		if (se.getDeltaY() > 0 ) {
 			camera.zoomInPoint(1.25f, camera.coordPixelsToWorld(se.getX(), se.getY()), viewLock);
 		} else {
