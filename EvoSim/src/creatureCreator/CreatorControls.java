@@ -13,12 +13,14 @@ public class CreatorControls extends BorderPane {
 
 	// Playback Controls
 	private Label lbl_tools = new Label("Tools");
+
 	private Button btn_select = new Button("Select");
-	private Button btn_delete = new Button("Delete");
+	private Button btn_delete = new Button("Delete All");
 	private Button btn_joint = new Button("Joint");
 	private Button btn_bone = new Button("Bone");
 	private Button btn_head = new Button("Head");
 	private Button btn_muscle = new Button("Muscle");
+	private Button btn_human = new Button("Human");
 	
 	public CreatorControls(CreatorScreen cretatorScreen_in) {
 		cretatorScreen = cretatorScreen_in;
@@ -34,6 +36,7 @@ public class CreatorControls extends BorderPane {
 		Layout.button(btn_bone);
 		Layout.button(btn_head);
 		Layout.button(btn_muscle);
+		Layout.button(btn_human);
 
 		this.setTop(lbl_tools);
 		gp_controls.add(btn_select, 0, 0);
@@ -42,6 +45,7 @@ public class CreatorControls extends BorderPane {
 		gp_controls.add(btn_bone, 1, 1);
 		gp_controls.add(btn_head, 2, 0);
 		gp_controls.add(btn_muscle, 2, 1);
+		gp_controls.add(btn_human, 3, 0);
 
 		btn_select.setOnAction(e -> {
 			enableAllBtns();
@@ -49,8 +53,6 @@ public class CreatorControls extends BorderPane {
 			cretatorScreen.toolSelect();
 		});
 		btn_delete.setOnAction(e -> {
-			enableAllBtns();
-			btn_delete.setDisable(true);
 			cretatorScreen.toolDelete();
 		});
 		btn_joint.setOnAction(e -> {
@@ -73,6 +75,10 @@ public class CreatorControls extends BorderPane {
 			btn_muscle.setDisable(true);
 			cretatorScreen.toolMuscle();
 		});
+		btn_human.setOnAction(e -> {
+			cretatorScreen.loadHuman();
+		});
+
 	}
 	
 	private void enableAllBtns () {

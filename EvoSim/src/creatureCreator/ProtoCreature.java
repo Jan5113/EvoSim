@@ -51,6 +51,12 @@ public class ProtoCreature implements Serializable {
 		pm.angleMax = anglMax;
 		muscleDefList.add(pm);
 	}
+
+	public void deleteAll() {
+		jointDefList.clear();
+		boneDefList.clear();
+		muscleDefList.clear();
+	}
 	
 	
 	public Creature makeCreature (int ID) {
@@ -126,5 +132,50 @@ public class ProtoCreature implements Serializable {
 		
 		addMuscle(1, 0, 1);
 	}
+
+	public int getCommonJoint(int b1, int b2) {
+		int[] j1 = new int[] {boneDefList.get(b1).IDJointA, boneDefList.get(b1).IDJointB};
+		int[] j2 = new int[] {boneDefList.get(b2).IDJointA, boneDefList.get(b2).IDJointB};
+
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
+				if (j1[i] == j2[j]) {
+					return j1[i];
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int selectJointNear(Vec2 pos) {
+		float minDistJoint = 100000f;
+		int jointID = -1;
+		for (ProtoJoint j : jointDefList) {
+			float dist = distSqrt(pos, j.pos);
+			if (dist < minDistJoint) {
+				minDistJoint = dist;
+				jointID = j.ID;
+			}
+		}
+		return jointID;
+	}
+
+	public int selectBoneNear(Vec2 pos) {
+		float minDistBone = 100000f;
+		int boneID = -1;
+		for (ProtoBone b : boneDefList) {
+			float dist = distSqrt(pos, b.getPos());
+			if (dist < minDistBone) {
+				minDistBone = dist;
+				boneID = b.ID;
+			}
+		}
+		return boneID;
+	}
+
+	private float distSqrt(Vec2 v1, Vec2 v2) {
+		Vec2 d = v1.sub(v2);
+		return d.x*d.x+d.y*d.y;
+	} 
 	
 }

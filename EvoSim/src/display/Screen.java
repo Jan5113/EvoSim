@@ -365,8 +365,11 @@ public class Screen extends Canvas {
 	//*		PROTO DRAW FUNCTIONS
 	//************************************************	
 
-	public void drawProtoJoint(ProtoJoint j) {
+	public void drawProtoJoint(ProtoJoint j, boolean selected) {
 		Color c = Color.color(1, 0, 0);
+		if (selected) {
+			c = Color.ROSYBROWN;
+		}
 		Vec2 dim = new Vec2(0.1f, 0.1f);
 		drawLine (j.pos.add(dim.negate()), j.pos.add(dim), c);
 		dim = new Vec2 (dim.x, -dim.y);
@@ -377,8 +380,12 @@ public class Screen extends Canvas {
 //		drawPxLineCircle(pos.x, pos.y, rad, angl, c, true);
 	}
 
-	public void drawProtoBone(ProtoBone b) {
+	public void drawProtoBone(ProtoBone b, boolean selected) {
 		Color c = Color.DODGERBLUE;
+		if (selected) {
+			c = Color.BLUE;
+		}
+
 		boolean fill = false;
 		
 		switch (b.shapetype) {
