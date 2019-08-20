@@ -1,6 +1,8 @@
 package creatureCreator;
 import display.Layout;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -21,7 +23,10 @@ public class CreatorControls extends BorderPane {
 	private Button btn_head = new Button("Head");
 	private Button btn_muscle = new Button("Muscle");
 	private Button btn_human = new Button("Human");
-	
+
+	private ComboBox<String> cbb_level;
+	private String[] levels = {"Flat Level", "Hurdles", "Incline", "Random"};
+
 	public CreatorControls(CreatorScreen cretatorScreen_in) {
 		cretatorScreen = cretatorScreen_in;
 
@@ -46,6 +51,14 @@ public class CreatorControls extends BorderPane {
 		gp_controls.add(btn_head, 2, 0);
 		gp_controls.add(btn_muscle, 2, 1);
 		gp_controls.add(btn_human, 3, 0);
+
+		cbb_level = new ComboBox<String>(FXCollections.observableArrayList(levels));
+		gp_controls.add(cbb_level, 4, 0);
+		cbb_level.getSelectionModel().selectFirst();
+		cbb_level.valueProperty().addListener(e -> {
+			cretatorScreen.changeLevel(cbb_level.getValue().toString());
+		});
+		
 
 		btn_select.setOnAction(e -> {
 			enableAllBtns();
@@ -78,7 +91,6 @@ public class CreatorControls extends BorderPane {
 		btn_human.setOnAction(e -> {
 			cretatorScreen.loadHuman();
 		});
-
 	}
 	
 	private void enableAllBtns () {

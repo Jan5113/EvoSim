@@ -127,4 +127,8 @@ public class CreatorScreen extends Screen {
 			drawProtoMuscle(m);
 		}
 	}
+
+	public void changeLevel(String s) {
+		System.out.println(s);
+	}
 }
