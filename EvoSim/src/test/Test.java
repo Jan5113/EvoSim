@@ -2,14 +2,12 @@ package test;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
 import box2d.B2DMuscle;
-import box2d.ShapeType;
-import javafx.scene.paint.Color;
+import level.Level;
 import population.Creature;
 
 public class Test {
@@ -37,30 +35,28 @@ public class Test {
 	private static float dtStepSize = 0.005f;
 	
 	private final TestWrapper parentWrapper;
+	private final Level level;
 	
 	private float cycleLen;
 	private B2DMuscle[] muscles;
 	
-	public Test (Vec2 gravity_in, TestWrapper testWrapper) {
+	public Test (Vec2 gravity_in, TestWrapper testWrapper, Level level) {
 		gravity = gravity_in;
-		
-		initWorld();
-		
+		this.level = level;
+		initWorld();		
 		parentWrapper = testWrapper;
 	}
 	
 	private void initWorld() {
 		testWorld = new World(gravity);
-
-		B2DBody floor = new B2DBody("floor");
-		floor.setUpRect(0.0f, -10.0f, 100.0f, 10.0f, 0.0f, BodyType.STATIC);
-		floor.setFill(true);
-		floor.setColor(Color.GREENYELLOW);
-		floor.createBody(testWorld);
-		worldInstancesList.add(floor);
+		for (B2DBody b : level.getLevel()) {
+			b.createBody(testWorld);
+			worldInstancesList.add(b);
+		}
 	}
 	
 	public void setCreature (Creature creature_in) {
+		initWorld();		
 		creature = creature_in;
 		buildCreature();
 		cycleLen = creature.getCycleLength();
@@ -152,7 +148,7 @@ public class Test {
 	
 	private float getHeadHeight() {
 		for (B2DBody b: creatureInstancesList) {
-			if(b.getShapeType() == ShapeType.CIRCLE) {
+			if(b.getName() == "head") {
 			return b.getPos().y;
 			}
 		}

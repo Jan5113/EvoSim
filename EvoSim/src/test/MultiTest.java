@@ -211,7 +211,7 @@ public class MultiTest{
 		public TestThread(int threadNr) {
 			this.threadNr = threadNr;
 			System.out.println("Creating " +  this.threadNr );
-			test = new Test(pop.getTestGravitation(), (TestWrapper) this);
+			test = new Test(pop.getTestGravitation(), (TestWrapper) this, pop.getLevel());
 		}
 
 		public void run() {

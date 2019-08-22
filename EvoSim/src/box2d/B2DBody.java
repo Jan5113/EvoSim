@@ -32,7 +32,7 @@ public class B2DBody {
 	
 	/**
 	 * The {@link Body} instance which is setup by the {@link B2DBody} class. All
-	 * the properties are save in this instance with the help of {@link BodyDef},
+	 * the properties are saved in this instance with the help of {@link BodyDef},
 	 * {@link FixtureDef} and other sub-classes. This instance is then initialised
 	 * in a {@link World} in which its physical processes are calculated.
 	 */
@@ -107,7 +107,8 @@ public class B2DBody {
 	 * Each {@link B2DBody} can be given an identification string. This can be used
 	 * for later recognition of a particular {@link B2DBody} instance.
 	 */
-	private final String name; 
+	private String name = ""; 
+	private int id = -1;
 
 	//************************************************
 	//*		SET DEFAULT VALUES
@@ -120,8 +121,34 @@ public class B2DBody {
 	 * @param name_in
 	 *            Gives this instance a {@code final} name.
 	 */
+	public B2DBody(int id_in) {
+		setDefalutValues();
+		id = id_in;
+	}
 	public B2DBody(String name_in) {
 		setDefalutValues();
+		name = name_in;
+	}
+	public B2DBody(int id_in, String name_in) {
+		setDefalutValues();
+		name = name_in;
+		id = id_in;
+	}
+
+	public B2DBody(Body body_in, BodyDef bodyDef_in, FixtureDef fixtureDef_in, PolygonShape polygonShape_in,
+	CircleShape circleShape_in, Vec2 dimensions_in, ShapeType shapeType_in, Color drawColor_in,
+	boolean drawFill_in, boolean isCreated_in,int id_in, String name_in){	
+		body = body_in;
+		bodyDef = bodyDef_in;
+		fixtureDef = fixtureDef_in;
+		polygonShape = polygonShape_in;
+		circleShape = circleShape_in;
+		dimensions = dimensions_in;
+		shapeType = shapeType_in;
+		drawColor = drawColor_in;
+		drawFill = drawFill_in;
+		isCreated = isCreated_in;
+		id = id_in;
 		name = name_in;
 	}
 	
@@ -815,6 +842,23 @@ public class B2DBody {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public Vec2[] getPolygon() {	
+		Vec2[] allVerts = polygonShape.getVertices();	
+		Vec2[] out = new Vec2[polygonShape.m_count];
+		for (int i = 0; i < polygonShape.m_count; i++) {
+			out[i] = allVerts[i];
+		}
+		return out;
+	}
+
+	public B2DBody clone() {
+		return new B2DBody(body, bodyDef, fixtureDef, polygonShape, circleShape, dimensions, shapeType, drawColor, drawFill, isCreated, id, name);
 	}
 	
 //	Add in future:

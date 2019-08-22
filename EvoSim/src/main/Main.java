@@ -95,7 +95,8 @@ public class Main extends Application{
 			}
 		}.start();
 
-		setBPInstr();
+		//setBPInstr();
+		setBPEvo();
 		
 		primaryStage.setScene(scene);
 		stageResize(primaryStage);

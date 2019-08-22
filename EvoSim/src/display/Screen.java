@@ -238,6 +238,9 @@ public class Screen extends Canvas {
 		else if (body.getShapeType() == ShapeType.POINT) {
 			drawCross(body);
 		}
+		else if (body.getShapeType() == ShapeType.POLYGON) {
+			drawPolygon(body);
+		}
 	}
 	
 	/**
@@ -410,6 +413,18 @@ public class Screen extends Canvas {
 		
 	}
 
+	public void drawPolygon(B2DBody body) {
+		Vec2[] points = body.getPolygon();
+		Vec2[] pxPoints = new Vec2[points.length];
+
+		for (int i = 0; i < points.length; i++) {
+			pxPoints[i] = camera.coordWorldToPixels(points[i]);
+		}
+		drawPxPolygon(pxPoints, body.getColor(), body.getFill());
+	}
+
+	
+
 	
 	//************************************************
 	//*		PRIVATE PX DRAW FUNCTIONS
@@ -519,7 +534,24 @@ public class Screen extends Canvas {
 			gc.strokeRect(x - w, y - h, 2 * w, 2 * h);
 
 	}
-	
+
+	private void drawPxPolygon(Vec2[] pxPoints, Color c, boolean fill) {
+		gc.setStroke(c);
+		gc.setFill(c);
+		double xPoints[] = new double[pxPoints.length];
+		double yPoints[] = new double[pxPoints.length];
+		for (int i = 0; i < pxPoints.length; i++) {
+			xPoints[i] = (double) pxPoints[i].x;
+			yPoints[i] = (double) pxPoints[i].y;
+		}
+		if (fill) {
+			gc.fillPolygon(xPoints, yPoints, pxPoints.length);
+		} else {
+			gc.strokePolygon(xPoints, yPoints, pxPoints.length);
+		}
+
+	}
+
 //************************************************
 //*		CAMERA FUNCTIONS
 //************************************************

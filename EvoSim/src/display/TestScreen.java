@@ -5,6 +5,7 @@ import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
 import box2d.B2DCamera;
+import level.Level;
 import population.Creature;
 import population.Population;
 import test.Test;
@@ -121,7 +122,7 @@ public class TestScreen extends Screen implements TestWrapper {
 	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in, Population pop_in) {
 		super(resX, resY, scale_in, pos_in);
 		pop = pop_in;
-		test = new Test(pop.getTestGravitation(), (TestWrapper) this);
+		test = new Test(pop.getTestGravitation(), (TestWrapper) this, pop.getLevel());
 
 		camera.enableFollowX();
 	}
@@ -151,7 +152,7 @@ public class TestScreen extends Screen implements TestWrapper {
 	public TestScreen(double resX, double resY, float scale_in, Vec2 pos_in) {
 		super(resX, resY, scale_in, pos_in);
 		pop = null;
-		test = new Test(new Vec2(0, -9.81f), (TestWrapper) this);
+		test = new Test(new Vec2(0, -9.81f), (TestWrapper) this, new Level());
 
 		camera.enableFollowX();
 	}

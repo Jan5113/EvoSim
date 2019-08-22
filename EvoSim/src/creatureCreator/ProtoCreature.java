@@ -110,6 +110,7 @@ public class ProtoCreature implements Serializable {
 		addBone(0, 0);
 		boneDefList.get(boneDefList.size() - 1).shapetype = ShapeType.CIRCLE;
 		boneDefList.get(boneDefList.size() - 1).shapeArg = 0.2f;
+		boneDefList.get(boneDefList.size() - 1).name = "head";
 		addBone(5, 1);
 		
 		addMuscle(1, 8, 1, -2.0f, 2.0f);

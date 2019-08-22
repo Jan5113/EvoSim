@@ -40,7 +40,7 @@ public class CreatureBuilder {
 		B2DJoint[] joints = bone.getJoints();
 		Vec2 pos = joints[0].getPos().add(joints[1].getPos()).mul(0.5f);
 		
-		B2DBody boneBody = new B2DBody("BONE" + bone.getID());
+		B2DBody boneBody = new B2DBody(bone.getID(), bone.getName());
 		if (bone.getShapeType() == ShapeType.RECT) {
 			float angle = B2DCamera.getRotation(joints[1].getPos().add(joints[0].getPos().negate()));
 			boneBody.setUpRect(pos, new Vec2(bone.getHalfLen(), bone.getShapeArg()), angle, BodyType.DYNAMIC);
@@ -89,7 +89,7 @@ public class CreatureBuilder {
 	
 	private static B2DBody getBoneByID(int id, ArrayList<B2DBody> creatureInstances_in) {
 		for (B2DBody b : creatureInstances_in) {
-			if (b.getName().equals("BONE" + id)) {
+			if (b.getId() == id) {
 				return b;
 			}
 		}

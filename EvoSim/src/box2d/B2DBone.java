@@ -41,6 +41,8 @@ public class B2DBone implements Serializable {
 	private final ShapeType shapeType;
 	
 	private final float shapeArg;
+
+	private String name;
 	
 	/**
 	 * Creates a new {@link B2DBone} instance connecting the {@link B2DJoint} given.
@@ -84,6 +86,7 @@ public class B2DBone implements Serializable {
 		headJoint = joints[protB.IDJointA];
 		endJoint = joints[protB.IDJointB];
 		id = protB.ID;
+		name = protB.name;
 		
 		halfLength = (endJoint.getPos().add(headJoint.getPos().negate()).length()) * 0.5f;
 
@@ -152,6 +155,18 @@ public class B2DBone implements Serializable {
 	 */
 	public Vec2 getLocalHead() {
 		return new Vec2(-halfLength, 0);
+	}
+
+	public void setName(String n) {
+		name = n;
+	}
+
+	public String getName() {
+		if (name == null) {
+			return ("BONE " + getID());
+		} else {
+			return name;
+		}	
 	}
 	
 	/**

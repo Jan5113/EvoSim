@@ -15,6 +15,7 @@ public class ProtoBone implements Serializable {
 	public float width = 0.2f;
 	public ShapeType shapetype = ShapeType.RECT;
 	public float shapeArg = 0.1f;
+	public String name;
 	
 	public ProtoBone (int jointA, int jointB, int id_in, ProtoCreature pc_in) {
 		IDJointA = jointA;

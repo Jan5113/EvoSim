@@ -13,6 +13,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import level.Level;
 
 public class Population implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -24,6 +25,7 @@ public class Population implements Serializable{
 	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
 	private PopulationStatus popStat = PopulationStatus.S000_NOBLUEPRINT;
 	private ProtoCreature creatureBlueprint;
+	private Level level = new Level();
 	
 	private static float killVal = 0.8f;
 	
@@ -162,6 +164,10 @@ public class Population implements Serializable{
 	
 	public int getPopulationSize() {
 		return populationSize;
+	}
+
+	public Level getLevel() {
+		return level;
 	}
 	
 //	public void setCurrentFitness(float fitness_in) {
