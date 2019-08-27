@@ -1,3 +1,4 @@
-/genExport.txt
+genExport.txt
 /.vscode/
-/EvoSim/.classpath
+EvoSim/.classpath
+EvoSim/genExport.txt
