@@ -51,7 +51,7 @@ public class CreatorScreen extends Screen {
 				creatureBlueprint.addJoint(clickPos);
 			break;
 			case ADD_HEAD:
-
+				creatureBlueprint.addHead(creatureBlueprint.selectJointNear(clickPos));
 			break;
 			case ADD_MUSCLE:
 				if (firstSelected == -1) {

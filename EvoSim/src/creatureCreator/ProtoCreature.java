@@ -40,6 +40,14 @@ public class ProtoCreature implements Serializable {
 	public void addBone(int j1, int j2) {
 		boneDefList.add(new ProtoBone(j1, j2, boneDefList.size(), this));
 	}
+
+	public void addHead(int j) {
+		ProtoBone headPb = new ProtoBone(j, j, boneDefList.size(), this);
+		headPb.shapetype = ShapeType.CIRCLE;
+		headPb.shapeArg = 0.2f;
+		headPb.name = "head";
+		boneDefList.add(headPb);
+	} 
 	
 	public void addMuscle(int j, int b1, int b2) {
 		muscleDefList.add(new ProtoMuscle(j,b1, b2, muscleDefList.size(), this));
@@ -177,6 +185,6 @@ public class ProtoCreature implements Serializable {
 	private float distSqrt(Vec2 v1, Vec2 v2) {
 		Vec2 d = v1.sub(v2);
 		return d.x*d.x+d.y*d.y;
-	} 
+	}
 	
 }

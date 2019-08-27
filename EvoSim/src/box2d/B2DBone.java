@@ -68,10 +68,11 @@ public class B2DBone implements Serializable {
 		shapeArg = width;
 	}
 	
-	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in, ShapeType shape, float shapeArg) {
+	public B2DBone(B2DJoint jointA_in, B2DJoint jointB_in, int id_in, ShapeType shape, float shapeArg, String name_in) {
 		headJoint = jointA_in;
 		endJoint = jointB_in;
 		id = id_in;
+		name = name_in;
 		
 		halfLength = (endJoint.getPos().add(headJoint.getPos().negate()).length()) * 0.5f;
 
@@ -125,7 +126,7 @@ public class B2DBone implements Serializable {
 	 * a clone of this {@link B2DBone} instance with replaced {@link B2DJoint} references
 	 */
 	public B2DBone rereferencedClone(B2DJoint jointA_in, B2DJoint jointB_in) {
-		return new B2DBone(jointA_in, jointB_in, id, shapeType, shapeArg);
+		return new B2DBone(jointA_in, jointB_in, id, shapeType, shapeArg, name);
 	}
 	
 	/**

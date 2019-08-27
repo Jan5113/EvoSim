@@ -102,11 +102,10 @@ public class Test {
 					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
 				}
 			}
-			float headHeight = getHeadHeight();
-			if ((testTimer > testDuration || headHeight < 0.3f) && !taskDone) { //abort TEST
+			B2DBody[] head = getHead();
+			if ((testTimer > testDuration || headOnGround(head)) && !taskDone) { //abort TEST
 				taskDone = true;
-				lastDistance = getAveragePosition().x;
-				lastFitness = lastDistance * headHeight * headHeight * headHeight;
+				setFitness(head);
 				parentWrapper.taskDone(creature, lastFitness, lastDistance);					
 				afterTestTime = testTimer + afterTestLength;
 			}			
@@ -120,8 +119,7 @@ public class Test {
 			steps++;
 		}
 	}
-	
-	public void reset () {
+	public void reset() {
 		for (RevoluteJoint rj : creatureRevoluteJointsList) {
 			RevoluteJoint.destroy(rj);
 			rj.destructor();
@@ -146,15 +144,50 @@ public class Test {
 		initWorld();
 	}
 	
-	private float getHeadHeight() {
+	
+	private void setFitness(B2DBody[] head) {	
+		float[] headHeight = getHeadHeight(head);	
+		lastDistance = getAveragePosition().x;
+		float fitness = lastDistance;
+		for (float f : headHeight) {
+			fitness *= f * f;
+		}
+		lastFitness = fitness;
+	}
+
+	private B2DBody[] getHead() {
+		ArrayList<B2DBody> tempHead = new ArrayList<B2DBody>();
 		for (B2DBody b: creatureInstancesList) {
 			if(b.getName() == "head") {
-			return b.getPos().y;
+				tempHead.add(b);
 			}
 		}
-		return 1;
+		if (tempHead.size()==0) return null;
+
+		B2DBody[] head = new B2DBody[tempHead.size()];
+		for (int i = 0; i < tempHead.size(); i++) {
+			head[i] = tempHead.get(i);
+		}
+		return head;
 	}
 	
+	private float[] getHeadHeight(B2DBody[] head) {
+		if (head == null) return new float[] {1f};
+		float heighs[] = new float[head.length];
+		for (int i = 0; i < head.length; i++) {
+			heighs[i] = head[i].getPos().y;
+		}
+		return heighs;
+	}
+	
+	private boolean headOnGround(B2DBody[] head) {
+		if (head == null) return false;
+		for (B2DBody h : head) {
+			if (h.getPos().y < h.getDim().y + 0.02f) return true;
+		} 
+		return false;
+	}
+
 	public Vec2 getAveragePosition() {
 		Vec2 pos = new Vec2(0,0);
 		for (B2DBody b: creatureInstancesList) {
