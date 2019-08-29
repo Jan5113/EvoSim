@@ -1,18 +1,22 @@
 package creatureCreator;
 
 import javafx.scene.input.MouseEvent;
+import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
+import box2d.B2DBody;
 import display.Screen;
-import javafx.scene.paint.Color;
+import level.Level;
 public class CreatorScreen extends Screen {
 	
 	private ProtoCreature creatureBlueprint;
 	private Vec2 mouseCoord;
 	private CreatorToolMode toolMode;
 	private int firstSelected = -1;
+	private Level level;
 
-	public CreatorScreen(double xRes, double yRes, float scale_in, Vec2 pos_in) {
+	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes, scale_in, pos_in);
+		level = level_in;
 		creatureBlueprint = new ProtoCreature(true);
 		toolMode = CreatorToolMode.NONE;
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> mousePressed(e));
@@ -114,8 +118,10 @@ public class CreatorScreen extends Screen {
 	
 	public void refresh() {
 		clearScreen(true);
-		drawRect(0, -10, 100, 10, 0, Color.GREENYELLOW, true);
-		drawRect(-1, 1, 1, 1, 0, Color.LIGHTBLUE, true);
+		ArrayList<B2DBody> levelBodies = level.getLevel();
+		for (B2DBody b : levelBodies) {
+			drawBody(b);
+		}
 
 		for (ProtoJoint j : creatureBlueprint.jointDefList) {
 			drawProtoJoint(j, firstSelected == j.ID && toolMode == CreatorToolMode.ADD_BONE);
@@ -126,6 +132,7 @@ public class CreatorScreen extends Screen {
 		for (ProtoMuscle m : creatureBlueprint.muscleDefList) {
 			drawProtoMuscle(m);
 		}
+		drawInfoNGrind(level.isVertical());
 	}
 
 	public void changeLevel(String s) {

@@ -212,6 +212,7 @@ public class TestScreen extends Screen implements TestWrapper {
 				drawMuscle(rj);
 			}
 		}
+		drawInfoNGrind(test.getLevelisVertical());
 
 		if (running)
 			test.step(dt, playBackSpeed);

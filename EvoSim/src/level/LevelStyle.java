@@ -1,5 +1,5 @@
 package level;
 
 public enum LevelStyle {
-    FLAT, HURDLES, RANDOM, INCLINE
+    FLAT, HURDLES, RANDOM, INCLINE, JUMP, CLIMB
 }

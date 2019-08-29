@@ -777,7 +777,6 @@ public class B2DBody {
 	 * @return the dimension vector of the {@link B2DBody}
 	 */
 	public Vec2 getDim() {
-		if (!isCreated) {System.err.println("B2DBody not created! Body " + name); return null;}
 		return dimensions;
 	}
 	
@@ -788,7 +787,9 @@ public class B2DBody {
 	 * @return the current rotation of the {@link B2DBody}
 	 */
 	public float getAngle() {
-		if (!isCreated) {System.err.println("B2DBody not created! Body " + name); return 0.0f;}
+		if (!isCreated) {
+			return bodyDef.angle;
+		}
 		return body.getAngle();
 	}
 	
@@ -799,7 +800,6 @@ public class B2DBody {
 	 * @return the {@link ShapeType} of this {@link B2DBody}
 	 */
 	public ShapeType getShapeType () {
-		if (!isCreated) {System.err.println("B2DBody not created! Body " + name); return null;}
 		return shapeType;
 	}
 	

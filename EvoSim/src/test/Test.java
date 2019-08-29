@@ -220,4 +220,8 @@ public class Test {
 	public ArrayList<RevoluteJoint> getRevoluteJoints() {
 		return creatureRevoluteJointsList;
 	}
+
+	public boolean getLevelisVertical() {
+		return level.isVertical();
+	}
 }

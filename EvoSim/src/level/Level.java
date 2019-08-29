@@ -15,6 +15,8 @@ public class Level {
     private float hurdleWidth = 0.2f;
     private float randDist = 2f;
     private float randMaxDiff = 2f;
+    private float climbHeight = 50f;
+    private float climbWidth = 2f;
 
     private static float thickness = 10f;
     private static float negX = 10f;
@@ -24,12 +26,9 @@ public class Level {
 
     public Level() {
         //initIncline(0.2f);
-        initRandom();
+        //initRandom();
         //initFlat();
-    }
-
-    public void setLevelStyle(LevelStyle ls) {
-        levelStyle = ls;
+        initClimb();
     }
 
     public void initFlat() {
@@ -40,6 +39,7 @@ public class Level {
         setVisuals(f);
         levelBodies.add(f);
     }
+
     public void initIncline(float incl_in) {
         levelStyle = LevelStyle.INCLINE;
         incline = incl_in;
@@ -59,11 +59,6 @@ public class Level {
         //poly.setPosition(new Vec2(posX/2f, 0));
         levelBodies.add(poly);
     }
-
-    public float getIncline() {
-        return incline;
-    }
-
 
     public void initHurdles(float dist, float height, float width) {
         hurdleHeight = height;
@@ -85,6 +80,31 @@ public class Level {
         }        
         B2DBody f = new B2DBody("flat");
         f.setUpRect(posX/2f, -thickness/2f, posX/2f, thickness/2f, 0f, BodyType.STATIC);
+        setVisuals(f);
+        levelBodies.add(f);
+    }
+
+    public void initClimb() {
+        levelStyle = LevelStyle.CLIMB;
+        initStartArea();
+        B2DBody w1 = new B2DBody("wall"), w2 = new B2DBody("wall");
+        w1.setUpRect(-climbWidth/2f - 2f, climbHeight/2f, 2f, climbHeight/2f, 0, BodyType.STATIC);
+        w2.setUpRect(climbWidth/2f + 2f, climbHeight/2f, 2f, climbHeight/2f, 0, BodyType.STATIC);
+        setVisuals(w1);
+        setVisuals(w2);
+        levelBodies.add(w1);
+        levelBodies.add(w2);     
+        B2DBody f = new B2DBody("flat");
+        f.setUpRect(negX/2f, -thickness/2f, negX/2f, thickness/2f, 0f, BodyType.STATIC);
+        setVisuals(f);
+        levelBodies.add(f);
+    }
+
+    public void initJump() {
+        levelStyle = LevelStyle.JUMP;
+        initStartArea();  
+        B2DBody f = new B2DBody("flat");
+        f.setUpRect(negX/2f, -thickness/2f, negX/2f, thickness/2f, 0f, BodyType.STATIC);
         setVisuals(f);
         levelBodies.add(f);
     }
@@ -134,5 +154,19 @@ public class Level {
         b.setColor(Color.GREENYELLOW);
         b.setFill(true);
     }
+
+    public float getIncline() {
+        return incline;
+    }
+
+    public LevelStyle getLevelStyle() {
+        return levelStyle;
+    }
+
+	public boolean isVertical() {
+        if (levelStyle == LevelStyle.CLIMB || levelStyle == LevelStyle.JUMP) return true;
+		return false;
+	}
+
 
 }

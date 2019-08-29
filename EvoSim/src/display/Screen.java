@@ -133,7 +133,7 @@ public class Screen extends Canvas {
 
 		camera = new B2DCamera((float) scale_in, pos_in, new Vec2((float) xRes, (float) yRes));
 		gc = this.getGraphicsContext2D();
-		clearScreen();
+		clearScreen(true);
 		
 		this.addEventHandler(ScrollEvent.SCROLL, e -> scrollEvent(e));
 		this.addEventHandler(MouseEvent.DRAG_DETECTED, e -> dragCameraStarted(e));
@@ -169,18 +169,6 @@ public class Screen extends Canvas {
 	public void setInactiveBackgroundCol(Color c) {
 		col_backgroundInactive = c;
 	}
-
-	/**
-	 * This method clears the whole canvas with the primary background colour and
-	 * draws the grid, info and/or marker if enabled.
-	 */
-	public void clearScreen() {
-		gc.setFill(col_background);
-		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
-		if (gridEnabled) drawGrid();
-		if (infoEnabled != 0) drawInfo();
-		if (markersEnabled) drawMarkers();
-	}
 	
 	/**
 	 * This method clears the whole canvas with the primary background colour or
@@ -195,9 +183,12 @@ public class Screen extends Canvas {
 		else gc.setFill(col_backgroundInactive);
 		
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
-		if (gridEnabled) drawGrid();
+	}
+
+	public void drawInfoNGrind(boolean vertical) {
 		if (infoEnabled != 0) drawInfo();
-		if (markersEnabled) drawMarkers();
+		if (markersEnabled) drawMarkers(vertical);
+		if (gridEnabled) drawGrid(vertical);
 	}
 	
 	/**
@@ -717,15 +708,27 @@ public class Screen extends Canvas {
 	 * This method draws the grid to the {@link Screen}. Every metre is marked and
 	 * every fifth metre is highlighted in red.
 	 */
-	private void drawGrid() {
-		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
-		for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
-			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
-				drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), Color.RED);
-			} else {
-				drawLine(new Vec2(startPos.x + i, 0.5f),new Vec2(startPos.x + i, 0.0f), Color.GRAY);
+	private void drawGrid(boolean vertical) {
+		if (vertical) {
+			Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
+			for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
+				if ((startPos.y + i) % 5 > -0.1f && (startPos.y + i) % 5 < 0.1f) {
+					drawLine(new Vec2(2.0f, startPos.y + i),new Vec2(1.0f, startPos.y + i), Color.RED);
+				} else {
+					drawLine(new Vec2(1.5f, startPos.y + i),new Vec2(1.0f, startPos.y + i), Color.GRAY);
+				}
+			}
+		} else {
+			Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
+			for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
+				if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
+					drawLine(new Vec2(startPos.x + i, 1.0f),new Vec2(startPos.x + i, 0.0f), Color.RED);
+				} else {
+					drawLine(new Vec2(startPos.x + i, 0.5f),new Vec2(startPos.x + i, 0.0f), Color.GRAY);
+				}
 			}
 		}
+		
 	}
 	
 //************************************************
@@ -759,16 +762,30 @@ public class Screen extends Canvas {
 	/**
 	 * This method draws the distance labels to the {@link Screen}.
 	 */
-	private void drawMarkers() {
-		Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), 0);
-		for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
-			if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
-				gc.save();
-				gc.setFont(new Font(30));
-				gc.setFill(Color.RED);
-				Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(i, 1.1f)));
-				gc.fillText((int) (startPos.x + i) + "m", pos.x - 20, pos.y);
-				gc.restore();
+	private void drawMarkers(boolean vertical) {
+		if (vertical) {
+			Vec2 startPos = new Vec2 (0, (float) Math.floor(camera.getPos().y));
+			for (float i = -Math.round(0.55f *(float) getHeight() / camera.getZoom()); i <= Math.round(0.55f *(float) getHeight() / camera.getZoom()); i++) {
+				if ((startPos.y + i) % 5 > -0.1f && (startPos.y + i) % 5 < 0.1f) {
+					gc.save();
+					gc.setFont(new Font(30));
+					gc.setFill(Color.RED);
+					Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(2.1f, i)));
+					gc.fillText((int) (startPos.y + i) + "m", pos.x, pos.y + 10);
+					gc.restore();
+				}
+			}
+		} else {
+			Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), 0);
+			for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
+				if ((startPos.x + i) % 5 > -0.1f && (startPos.x + i) % 5 < 0.1f) {
+					gc.save();
+					gc.setFont(new Font(30));
+					gc.setFill(Color.RED);
+					Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(i, 1.1f)));
+					gc.fillText((int) (startPos.x + i) + "m", pos.x - 20, pos.y);
+					gc.restore();
+				}
 			}
 		}
 	}

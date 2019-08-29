@@ -180,7 +180,7 @@ public class Main extends Application{
 		bp_test.setTop(testTitle);
 		
 		
-		mainCreatorScreen = new CreatorScreen(900, 500, 70, new Vec2(-0.5f, 1.0f));
+		mainCreatorScreen = new CreatorScreen(pop.getLevel(), 900, 500, 70, new Vec2(-0.5f, 1.0f));
 		mainCreatorScreen.setBackgroundCol(Layout.getSkycolor());
 		mainCreatorScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 		mainCreatorScreen.disableInfo();
