@@ -45,7 +45,7 @@ public class CreatorScreen extends Screen {
 					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
 					firstSelected = creatureBlueprint.selectJointNear(clickPos);
 					if (firstSelected == -1) { // no joints
-						creatureBlueprint.addJoint(clickPos, null, true);
+						firstSelected = creatureBlueprint.addJoint(clickPos, -1);
 					}
 				} else {
 					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
