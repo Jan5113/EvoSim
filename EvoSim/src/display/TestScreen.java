@@ -91,6 +91,8 @@ public class TestScreen extends Screen implements TestWrapper {
 	 * {@link Screen}
 	 */
 	private boolean showMuscles = false;
+
+	private boolean showCurrentFitness = false;
 	/**
 	 * This {@link Vec2} specifies the offset for the camera follow feature from the
 	 * centre of the {@link Creature}.
@@ -214,6 +216,8 @@ public class TestScreen extends Screen implements TestWrapper {
 		}
 
 		drawInfoNGrind(test.getLevelisVertical());
+
+		drawCurrentDistance(test.getLevelisVertical(), test.getCurrentDistance());
 
 		if (running)
 			test.step(dt, playBackSpeed);
@@ -491,6 +495,10 @@ public class TestScreen extends Screen implements TestWrapper {
 	 */
 	public void showTimer(boolean show) {
 		showTimer = show;
+	}
+
+	public void showCurrentFitness(boolean show) {
+		showCurrentFitness = show;
 	}
 
 	/**

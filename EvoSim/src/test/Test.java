@@ -149,6 +149,9 @@ public class Test {
 		testing = false;
 		creature = null;
 		afterTestTime = 10000.0f;
+		lastDistance = 0f;
+		lastFitness = 0f;
+
 		testWorld.clearForces();
 		//testWorld.getJointList().destructor();
 		
@@ -234,5 +237,9 @@ public class Test {
 
 	public boolean getLevelisVertical() {
 		return level.isVertical();
+	}
+
+	public float getCurrentDistance() {
+		return lastDistance;
 	}
 }

@@ -190,6 +190,11 @@ public class Screen extends Canvas {
 		if (markersEnabled) drawMarkers(vertical);
 		if (gridEnabled) drawGrid(vertical);
 	}
+
+	public void drawCurrentDistance(boolean vertical, float distance){
+		if (!vertical) return; //only draw when JUMP or CLIMB
+		drawLine(new Vec2(-2f, distance),new Vec2(0f, distance), Color.RED);
+	}
 	
 	/**
 	 * Resizes this {@link Screen} instance
