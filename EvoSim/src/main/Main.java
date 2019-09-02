@@ -169,6 +169,7 @@ public class Main extends Application{
 		mainTestScreen.enableMarkers();
 		mainTestScreen.showTimer(true);
 		mainTestScreen.showScore(true);
+		mainTestScreen.showCurrentFitness(true);
 		Layout.defaultMargin(mainTestScreen);
 		BorderPane.setAlignment(mainTestScreen, Pos.TOP_LEFT);
 

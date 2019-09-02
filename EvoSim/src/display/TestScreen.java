@@ -217,7 +217,9 @@ public class TestScreen extends Screen implements TestWrapper {
 
 		drawInfoNGrind(test.getLevelisVertical());
 
-		drawCurrentDistance(test.getLevelisVertical(), test.getCurrentDistance());
+		if (showCurrentFitness) {
+			drawCurrentDistance(test.getLevelisVertical(), test.getCurrentDistance());
+		}		
 
 		if (running)
 			test.step(dt, playBackSpeed);

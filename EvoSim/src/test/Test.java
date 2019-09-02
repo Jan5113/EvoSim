@@ -61,6 +61,8 @@ public class Test {
 		buildCreature();
 		cycleLen = creature.getCycleLength();
 		muscles = creature.getMuscles();	
+		lastDistance = 0f;
+		lastFitness = 0f;
 	}
 	
 	public Creature getCreature () {
@@ -149,8 +151,6 @@ public class Test {
 		testing = false;
 		creature = null;
 		afterTestTime = 10000.0f;
-		lastDistance = 0f;
-		lastFitness = 0f;
 
 		testWorld.clearForces();
 		//testWorld.getJointList().destructor();

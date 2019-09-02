@@ -1013,7 +1013,7 @@ public class Screen extends Canvas {
 	 */
 	public void refreshFollow(float dt, float playBackSpeed, Vec2 B2D_target, Vec2 B2D_offset, boolean running) {
 		if (B2D_target == null) return;
-		if (running && viewLock) camera.refreshFollow(dt, playBackSpeed, B2D_target.add(B2D_offset));
+		if (running && viewLock && !dragging) camera.refreshFollow(dt, playBackSpeed, B2D_target.add(B2D_offset));
 	}
 	
 	/**
