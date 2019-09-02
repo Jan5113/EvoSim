@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.joints.RevoluteJoint;
 import box2d.B2DBody;
 import box2d.B2DMuscle;
 import level.Level;
+import level.LevelStyle;
 import population.Creature;
 
 public class Test {
@@ -21,6 +22,7 @@ public class Test {
 	private Creature creature;
 	private float lastFitness = 0.0f;
 	private float lastDistance = 0.0f;
+	private float lastRecordTime = 0f;
 	
 	private boolean testing = false;
 	private boolean taskDone = true;
@@ -28,7 +30,8 @@ public class Test {
 	private float testTimer = 0;
 	
 	private static float testDuration = 15.0f;
-	private static float afterTestLength = 2.0f;
+	private static float jumpTestDuration = 2f;
+	private static float afterTestLength = 5.0f;
 	private float afterTestTime = 10000.0f;
 	
 	private float dtToRun = 0;
@@ -63,6 +66,7 @@ public class Test {
 		muscles = creature.getMuscles();	
 		lastDistance = 0f;
 		lastFitness = 0f;
+		lastRecordTime = 0f;
 	}
 	
 	public Creature getCreature () {
@@ -104,10 +108,21 @@ public class Test {
 					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
 				}
 			}
-			if (level.isVertical()) {
+			if (level.getLevelStyle() == LevelStyle.CLIMB) {
 				float height = getAveragePosition().y;
 				if (height > lastDistance) lastDistance = height;
 				if (testTimer > testDuration && !taskDone) { //abort TEST
+					taskDone = true;
+					lastFitness = lastDistance;
+					parentWrapper.taskDone(creature, lastFitness, lastDistance);					
+					afterTestTime = testTimer + afterTestLength;
+				}	
+			} else if (level.getLevelStyle() == LevelStyle.JUMP) {float height = getAveragePosition().y;
+				if (height > lastDistance) {
+					lastDistance = height;
+					lastRecordTime = testTimer;
+				}
+				if (testTimer > lastRecordTime + jumpTestDuration && !taskDone) { //abort TEST
 					taskDone = true;
 					lastFitness = lastDistance;
 					parentWrapper.taskDone(creature, lastFitness, lastDistance);					
@@ -228,6 +243,7 @@ public class Test {
 	}
 	
 	public float getTestDuration() {
+		if (level.getLevelStyle() == LevelStyle.JUMP) return 0;
 		return testDuration;
 	}
 

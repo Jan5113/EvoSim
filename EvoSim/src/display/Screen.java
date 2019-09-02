@@ -897,20 +897,26 @@ public class Screen extends Canvas {
 	 *            current play-back speed
 	 */
 	public void drawTimer(float time, float duration, float speed) {
-		gc.save();
-		time = ((int) (time * 10))/10.0f;
-		duration = ((int) (duration * 10))/10.0f;
-		if (time >= duration) {
-			gc.setFill(Color.RED);
-		} else {
-			gc.setFill(Color.BLACK);
-		}
+		gc.save();		
 		gc.setFont(new Font(20));
 		gc.setTextAlign(TextAlignment.RIGHT);
-		if (speed == 1.0f) {
-			gc.fillText("Time: " + time + "s / "+ duration + "s", this.getWidth() - 25, 30);
+		String durationString = "";
+		time = ((int) (time * 10))/10.0f;
+		if (duration == 0) {
+			gc.setFill(Color.BLACK);
+			durationString = "-";
 		} else {
-			gc.fillText("Time: " + time + "s / "+ duration + "s\n" + speed + "x Speed", this.getWidth() - 25, 30);
+			durationString = ((int) (duration * 10))/10.0f + "s";
+			if (time >= duration) {
+				gc.setFill(Color.RED);
+			} else {
+				gc.setFill(Color.BLACK);
+			}
+		}
+		if (speed == 1.0f) {
+			gc.fillText("Time: " + time + "s / "+ durationString , this.getWidth() - 25, 30);
+		} else {
+			gc.fillText("Time: " + time + "s / "+ durationString + "\n" + speed + "x Speed", this.getWidth() - 25, 30);
 		}
 		gc.restore();
 	}

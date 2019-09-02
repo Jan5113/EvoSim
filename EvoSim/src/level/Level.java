@@ -28,7 +28,7 @@ public class Level {
         //initIncline(0.2f);
         //initRandom();
         //initFlat();
-        initClimb();
+        initJump();
     }
 
     public void initFlat() {
