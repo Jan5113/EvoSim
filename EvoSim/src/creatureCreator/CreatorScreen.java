@@ -42,6 +42,19 @@ public class CreatorScreen extends Screen {
 			break;
 			case ADD_BONE:
 				if (firstSelected == -1) {
+					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
+					firstSelected = creatureBlueprint.selectJointNear(clickPos);
+					if (firstSelected == -1) { // no joints
+						creatureBlueprint.addJoint(clickPos, null, true);
+					}
+				} else {
+					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
+					creatureBlueprint.addJoint(clickPos);
+				}
+
+				/*
+				BONE
+				if (firstSelected == -1) {
 					firstSelected = creatureBlueprint.selectJointNear(clickPos);
 				} else {
 					int secondSelected = creatureBlueprint.selectJointNear(clickPos);
@@ -49,15 +62,11 @@ public class CreatorScreen extends Screen {
 					creatureBlueprint.addBone(creatureBlueprint.selectJointNear(clickPos), firstSelected);
 					firstSelected = -1;
 				}
-			break;
-			case ADD_JOINT:
+				JOINT
 				if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
 				creatureBlueprint.addJoint(clickPos);
-			break;
-			case ADD_HEAD:
-				creatureBlueprint.addHead(creatureBlueprint.selectJointNear(clickPos));
-			break;
-			case ADD_MUSCLE:
+				
+				MUSCLE
 				if (firstSelected == -1) {
 					firstSelected = creatureBlueprint.selectBoneNear(clickPos);
 				} else {
@@ -72,6 +81,10 @@ public class CreatorScreen extends Screen {
 						firstSelected = -1;
 					}
 				}
+				*/
+			break;
+			case ADD_HEAD:
+				creatureBlueprint.addHead(creatureBlueprint.selectJointNear(clickPos));
 			break;
 			case SELECT:
 			break;
@@ -90,12 +103,7 @@ public class CreatorScreen extends Screen {
 		refresh();
 	}
 
-	public void toolJoint() {
-		toolMode = CreatorToolMode.ADD_JOINT;
-		firstSelected = -1;
-	}
-
-	public void toolBone() {
+	public void toolAdd() {
 		toolMode = CreatorToolMode.ADD_BONE;
 		firstSelected = -1;
 	}
@@ -105,16 +113,11 @@ public class CreatorScreen extends Screen {
 		firstSelected = -1;
 	}
 
-	public void toolMuscle() {
-		toolMode = CreatorToolMode.ADD_MUSCLE;
-		firstSelected = -1;
-	}
-
-	public void loadHuman() {
+	/*public void loadHuman() {
 		creatureBlueprint.deleteAll();
 		creatureBlueprint.createHumanoid();
 		refresh();
-	}
+	}*/
 	
 	public void refresh() {
 		clearScreen(true);
@@ -125,9 +128,6 @@ public class CreatorScreen extends Screen {
 
 		for (ProtoJoint j : creatureBlueprint.jointDefList) {
 			drawProtoJoint(j, firstSelected == j.ID && toolMode == CreatorToolMode.ADD_BONE);
-		}
-		for (ProtoBone b : creatureBlueprint.boneDefList) {
-			drawProtoBone(b, firstSelected == b.ID && toolMode == CreatorToolMode.ADD_MUSCLE);
 		}
 		for (ProtoMuscle m : creatureBlueprint.muscleDefList) {
 			drawProtoMuscle(m);
