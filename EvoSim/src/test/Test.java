@@ -102,14 +102,25 @@ public class Test {
 					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
 				}
 			}
-			B2DBody[] head = getHead();
-			if ((testTimer > testDuration || headOnGround(head)) && !taskDone) { //abort TEST
-				taskDone = true;
-				setFitness(head);
-				parentWrapper.taskDone(creature, lastFitness, lastDistance);					
-				afterTestTime = testTimer + afterTestLength;
-			}			
-			
+			if (level.isVertical()) {
+				float height = getAveragePosition().y;
+				if (height > lastDistance) lastDistance = height;
+				if (testTimer > testDuration && !taskDone) { //abort TEST
+					taskDone = true;
+					lastFitness = lastDistance;
+					parentWrapper.taskDone(creature, lastFitness, lastDistance);					
+					afterTestTime = testTimer + afterTestLength;
+				}	
+			} else {
+				B2DBody[] head = getHead();
+				if ((testTimer > testDuration || headOnGround(head)) && !taskDone) { //abort TEST
+					taskDone = true;
+					setFitness(head);
+					parentWrapper.taskDone(creature, lastFitness, lastDistance);					
+					afterTestTime = testTimer + afterTestLength;
+				}		
+			}
+							
 			if (testTimer > afterTestTime) {
 				parentWrapper.pauseDone(creature, lastFitness, lastDistance);
 			}

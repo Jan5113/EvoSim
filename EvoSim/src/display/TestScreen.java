@@ -124,7 +124,7 @@ public class TestScreen extends Screen implements TestWrapper {
 		pop = pop_in;
 		test = new Test(pop.getTestGravitation(), (TestWrapper) this, pop.getLevel());
 
-		camera.enableFollowX();
+		camera.enableFollow();
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class TestScreen extends Screen implements TestWrapper {
 		pop = null;
 		test = new Test(new Vec2(0, -9.81f), (TestWrapper) this, new Level());
 
-		camera.enableFollowX();
+		camera.enableFollow();
 	}
 
 	/**
@@ -196,11 +196,6 @@ public class TestScreen extends Screen implements TestWrapper {
 	public void refresh(float dt) {
 		clearScreen(!test.isTaskDone());
 
-		if (showScore && test.getCreature() != null) {
-			if (test.getCreature().fitnessEvaulated())
-				drawScore(test.getCreature().getDistance());
-		}
-
 		for (B2DBody b : test.getWorldInstances()) {
 			drawBody(b);
 		}
@@ -212,6 +207,12 @@ public class TestScreen extends Screen implements TestWrapper {
 				drawMuscle(rj);
 			}
 		}
+		
+		if (showScore && test.getCreature() != null) {
+			if (test.getCreature().fitnessEvaulated())
+				drawScore(test.getCreature().getDistance(), test.getLevelisVertical());
+		}
+
 		drawInfoNGrind(test.getLevelisVertical());
 
 		if (running)

@@ -18,8 +18,8 @@ public class Level {
     private float climbHeight = 50f;
     private float climbWidth = 2f;
 
-    private static float thickness = 10f;
-    private static float negX = 10f;
+    private static float thickness = 20f;
+    private static float negX = 20f;
     private static float posX = 100f;
 
     private ArrayList<B2DBody> levelBodies;
@@ -88,8 +88,8 @@ public class Level {
         levelStyle = LevelStyle.CLIMB;
         initStartArea();
         B2DBody w1 = new B2DBody("wall"), w2 = new B2DBody("wall");
-        w1.setUpRect(-climbWidth/2f - 2f, climbHeight/2f, 2f, climbHeight/2f, 0, BodyType.STATIC);
-        w2.setUpRect(climbWidth/2f + 2f, climbHeight/2f, 2f, climbHeight/2f, 0, BodyType.STATIC);
+        w1.setUpRect(-climbWidth - 10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
+        w2.setUpRect(10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
         setVisuals(w1);
         setVisuals(w2);
         levelBodies.add(w1);

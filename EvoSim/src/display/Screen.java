@@ -713,9 +713,9 @@ public class Screen extends Canvas {
 			Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
 			for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
 				if ((startPos.y + i) % 5 > -0.1f && (startPos.y + i) % 5 < 0.1f) {
-					drawLine(new Vec2(2.0f, startPos.y + i),new Vec2(1.0f, startPos.y + i), Color.RED);
+					drawLine(new Vec2(1.0f, startPos.y + i),new Vec2(0.0f, startPos.y + i), Color.RED);
 				} else {
-					drawLine(new Vec2(1.5f, startPos.y + i),new Vec2(1.0f, startPos.y + i), Color.GRAY);
+					drawLine(new Vec2(0.5f, startPos.y + i),new Vec2(0.0f, startPos.y + i), Color.GRAY);
 				}
 			}
 		} else {
@@ -770,7 +770,7 @@ public class Screen extends Canvas {
 					gc.save();
 					gc.setFont(new Font(30));
 					gc.setFill(Color.RED);
-					Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(2.1f, i)));
+					Vec2 pos = camera.coordWorldToPixels(startPos.add(new Vec2(1.1f, i)));
 					gc.fillText((int) (startPos.y + i) + "m", pos.x, pos.y + 10);
 					gc.restore();
 				}
@@ -801,16 +801,26 @@ public class Screen extends Canvas {
 	 * @param fitness
 	 *            x-distance from the origin, fitness
 	 */
-	public void drawScore(float distance) {
+	public void drawScore(float distance, boolean vertical) {
 		float halfWidth = 50;
 		float top = 70;
 		float bottom = 30;
 		float tipc = 0f;
 		
-		Vec2 tip = camera.coordWorldToPixels(new Vec2(distance, tipc));
+		Vec2 tip;
 		
-		double[] xPoints = {tip.x - halfWidth, tip.x + halfWidth, tip.x + halfWidth, tip.x, tip.x - halfWidth};
-		double[] yPoints = {tip.y - bottom - top, tip.y - bottom - top, tip.y - bottom, tip.y, tip.y - bottom};
+		double[] xPoints;
+		double[] yPoints;
+		
+		if (vertical) {
+			tip  = camera.coordWorldToPixels(new Vec2(tipc, distance));
+			yPoints = new double[]{tip.y - halfWidth, tip.y + halfWidth, tip.y + halfWidth, tip.y, tip.y - halfWidth};
+			xPoints = new double[]{bottom + top + tip.x, bottom + top +  tip.x, bottom + tip.x, tip.x, tip.x + bottom};
+		} else {
+			tip = camera.coordWorldToPixels(new Vec2(distance, tipc));
+			xPoints = new double[]{tip.x - halfWidth, tip.x + halfWidth, tip.x + halfWidth, tip.x, tip.x - halfWidth};
+			yPoints = new double[]{tip.y - bottom - top, tip.y - bottom - top, tip.y - bottom, tip.y, tip.y - bottom};
+		}
 		
 		gc.save();
 		
@@ -822,7 +832,11 @@ public class Screen extends Canvas {
 		
 		gc.setFill(Color.RED);
 		gc.setFont(new Font(30));
-		gc.fillText(Math.round(distance * 10)/10.0f + "m", tip.x, tip.y - bottom - (top/2) , 2 * halfWidth - 10);
+		if (vertical) {
+			gc.fillText(Math.round(distance * 10)/10.0f + "m", tip.x + (bottom + top)/2 , tip.y, bottom + top - 10);			
+		} else {
+			gc.fillText(Math.round(distance * 10)/10.0f + "m", tip.x, tip.y - bottom - (top/2) , 2 * halfWidth - 10);
+		}
 		
 		gc.restore();
 	}
