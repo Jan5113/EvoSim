@@ -1,8 +1,6 @@
 package main;
 
 import org.jbox2d.common.Vec2;
-
-import creatureCreator.ProtoCreature;
 import display.Layout;
 import display.TestScreen;
 import javafx.geometry.Insets;
@@ -18,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import population.Creature;
+import population.RootBone;
 
 public class Instructions extends BorderPane {
 	private BorderPane[] pages = new BorderPane[12];
@@ -168,12 +167,12 @@ public class Instructions extends BorderPane {
 		lbls[0].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, G3E");
 		Layout.italics(lbls[0]);
 		lbls[1].setText("\nOb Darwinismus oder Survival of the Fittest, jeder hat schon "
-				+ "mal in irgendeiner Form vor der Evolution gehört: Eine komplexe, mehr "
-				+ "oder weniger von Zufällen gesteuerte Entwicklung, aus welcher die Natur, wie wir "
+				+ "mal in irgendeiner Form vor der Evolution gehï¿½rt: Eine komplexe, mehr "
+				+ "oder weniger von Zufï¿½llen gesteuerte Entwicklung, aus welcher die Natur, wie wir "
 				+ "sie kennen, entstanden sein soll. Mit dem Projekt EvoSim haben wir es uns zur Aufgabe "
 				+ "gemacht, genau einen solchen Prozess, die Evolution, zu simulieren.");
 
-		lbls[2].setText("Auf den folgenden Seiten findet ihr Informationen über die Funktionsweise "
+		lbls[2].setText("Auf den folgenden Seiten findet ihr Informationen ï¿½ber die Funktionsweise "
 				+ "des Programmes sowohl als auch eine Bedienungsanleitung.");
 
 		ImageView img_evolution = new ImageView();
@@ -214,29 +213,29 @@ public class Instructions extends BorderPane {
 			lbls[i] = new Label();
 			Layout.instrLabel(lbls[i]);
 		}
-		lbls[0].setText("Die Evolution programmieren, ist das überhaupt möglich?");
+		lbls[0].setText("Die Evolution programmieren, ist das ï¿½berhaupt mï¿½glich?");
 		lbls[1].setText("Bevor die Erwartungen allzu sehr steigen, ist zu vorentnehmen, dass es sich "
 				+ "bei dieser Simulation nur um ein sehr vereinfachtes Modell handelt. Die "
 				+ "Kreaturen, welche sich evolutiv entwickeln sollen, sind lediglich ein paar "
-				+ "bewegende Klötzchen. Auf diese wird dann der Trick angewendet:");
+				+ "bewegende Klï¿½tzchen. Auf diese wird dann der Trick angewendet:");
 
 		lbls[2].setText("genetische Algorithmen");
 		Layout.labelTitle(lbls[2]);
-		lbls[3].setText("Diese ermöglichen es, die Evolution vereinfacht in Codezeilen zu fassen. "
-				+ "Kurz und knapp erklärt, sieht ein solcher Algorithmus etwa so aus:");
-		lbls[4].setText("1.	komplett zufällige Kreaturen werden erstellt\n"
+		lbls[3].setText("Diese ermï¿½glichen es, die Evolution vereinfacht in Codezeilen zu fassen. "
+				+ "Kurz und knapp erklï¿½rt, sieht ein solcher Algorithmus etwa so aus:");
+		lbls[4].setText("1.	komplett zufï¿½llige Kreaturen werden erstellt\n"
 				+ "2.	Kreaturen werden auf ein bestimmtes Kriterium getestet, ihre Leistung "
-				+ "wird in einer Zahl, der «Fitness», wiedergegeben\n"
-				+ "3.	Kreaturen mit einer guten Leistung können sich mit kleinen Veränderungen, "
-				+ "sogenannten Mutationen, an den Nachkommen fortpflanzen, während die "
-				+ "Schlechteren eliminiert werden\n" + "4.	zurück zu Schritt 2");
-		lbls[5].setText("That’s it!");
+				+ "wird in einer Zahl, der ï¿½Fitnessï¿½, wiedergegeben\n"
+				+ "3.	Kreaturen mit einer guten Leistung kï¿½nnen sich mit kleinen Verï¿½nderungen, "
+				+ "sogenannten Mutationen, an den Nachkommen fortpflanzen, wï¿½hrend die "
+				+ "Schlechteren eliminiert werden\n" + "4.	zurï¿½ck zu Schritt 2");
+		lbls[5].setText("Thatï¿½s it!");
 		lbls[6].setText("In unserem Fall werden: 100 Kreaturen mit einer"
 				+ "(Wurm/Schlangen/Dreibeinigen/Vierbeinigen Gestalt) " + "werden in einem Zeitrahmen von "
-				+ "15s auf ihre Fähigkeit getestet, so weit wie möglich zu kommen.");
+				+ "15s auf ihre Fï¿½higkeit getestet, so weit wie mï¿½glich zu kommen.");
 		lbls[6].setText("In unserem Fall werden: 100 Kreaturen mit einer " + "dreigliedrigen Gestalt "
 				+ "werden in einem Zeitrahmen von "
-				+ "15s auf ihre Fähigkeit getestet, so weit wie möglich zu kommen.");
+				+ "15s auf ihre Fï¿½higkeit getestet, so weit wie mï¿½glich zu kommen.");
 		Layout.setBold(lbls[6]);
 		VBox vb = new VBox();
 
@@ -256,8 +255,7 @@ public class Instructions extends BorderPane {
 
 	private TestScreen[] testScreen = new TestScreen[4];
 
-	private ProtoCreature pc = new ProtoCreature(true);
-	private Creature tutorialCret = pc.makeCreature(0);
+	private Creature tutorialCret = new Creature(0, new RootBone(0));
 
 	private BorderPane getPage3() {
 		BorderPane page = new BorderPane();
@@ -266,7 +264,7 @@ public class Instructions extends BorderPane {
 		Layout.labelBigTitle(title);
 		testScreen[0] = new TestScreen(400, 200, 60, new Vec2(0, 0.5f));
 		testScreen[0].enableInfo();
-		testScreen[0].setInfoString("Eine zufällig generierte Kreatur:");
+		testScreen[0].setInfoString("Eine zufï¿½llig generierte Kreatur:");
 		testScreen[0].disableScrollZoom();
 
 		for (int i = 0; i < lbls.length; i++) {
@@ -282,18 +280,18 @@ public class Instructions extends BorderPane {
 
 		Layout.defaultMargin(testScreen[0]);
 
-		lbls[1].setText("Der Körper einer Kreatur wird durch Knochen gebildet, welche durch "
+		lbls[1].setText("Der Kï¿½rper einer Kreatur wird durch Knochen gebildet, welche durch "
 				+ "rotierende Gelenke miteinander verbunden sind. Der Winkel des Gelenks kann "
 				+ "direkt beeinflusst werden.");
 		lbls[2].setText("Jedes Gelenk hat nun zwei Winkel, dessen Werte von Gelenk zu Gelenk "
 				+ "verschieden sind, hier in rot und weiss. Das Gelenk versucht, die verbundenen " + "Knochen zwischen "
-				+ "diesen beiden Werten hin und her zu bewegen – es arbeitet (fast) wie ein Muskel. "
-				+ "Zu beachten ist bei der Darstellung der Muskeln, dass sich nicht die Länge ändert, "
-				+ "sondern wie erwäht der Winkel zwischen den Knochenelementen vorgegeben wird.");
+				+ "diesen beiden Werten hin und her zu bewegen ï¿½ es arbeitet (fast) wie ein Muskel. "
+				+ "Zu beachten ist bei der Darstellung der Muskeln, dass sich nicht die Lï¿½nge ï¿½ndert, "
+				+ "sondern wie erwï¿½ht der Winkel zwischen den Knochenelementen vorgegeben wird.");
 		lbls[3].setText("Wann das Gelenk welchen Winkel einnimmt, wird von der internen Uhr "
-				+ "der Kreatur bestimmt. Diese gibt den Takt vor und läuft je nach Kreatur "
-				+ "schneller oder langsamer. Zwei Zeiten – wiederum spezifisch für jedes Gelenk "
-				+ "und variabel – bestimmen den genauen Zeitpunkt, wann welcher Winkel eingenommen "
+				+ "der Kreatur bestimmt. Diese gibt den Takt vor und lï¿½uft je nach Kreatur "
+				+ "schneller oder langsamer. Zwei Zeiten ï¿½ wiederum spezifisch fï¿½r jedes Gelenk "
+				+ "und variabel ï¿½ bestimmen den genauen Zeitpunkt, wann welcher Winkel eingenommen "
 				+ "wird. Durch den zyklischen Ablauf der Uhr entsteht somit ein sich wiederholender "
 				+ "Bewegungsablauf.");
 
@@ -333,22 +331,22 @@ public class Instructions extends BorderPane {
 
 		testScreen[1].startSingleTest(tutorialCret);
 		testScreen[1].setInfoString("Die Mutterkreatur...");
-		testScreen[2].startSingleTest(tutorialCret.mutate(1, 60));
+		//testScreen[2].startSingleTest(tutorialCret.mutate(1, 60));
 		testScreen[2].setInfoString("...eine Variation davon...");
-		testScreen[3].startSingleTest(tutorialCret.mutate(2, 60));
+		//testScreen[3].startSingleTest(tutorialCret.mutate(2, 60));
 		testScreen[3].setInfoString("...und noch eine Variation");
 
 		lbls[0].setText("Ein wichtiger Bestandteil von diesem genetischen Algorithmus ist "
-				+ "natürlich die Veränderung der Kreaturen – die Mutation. Was bedeutet das in "
-				+ "für unsere vereinfachten Kreaturen?");
-		lbls[1].setText("Grundsätzlich werden alle Parameter, welche im vorherigen Kapitel "
-				+ "als «variabel» deklariert worden sind, bei der Erstellung vom Nachwuchs "
-				+ "nach dem Zufallsprinzip verändert. Das sind namentlich die Winkel sowie "
+				+ "natï¿½rlich die Verï¿½nderung der Kreaturen ï¿½ die Mutation. Was bedeutet das in "
+				+ "fï¿½r unsere vereinfachten Kreaturen?");
+		lbls[1].setText("Grundsï¿½tzlich werden alle Parameter, welche im vorherigen Kapitel "
+				+ "als ï¿½variabelï¿½ deklariert worden sind, bei der Erstellung vom Nachwuchs "
+				+ "nach dem Zufallsprinzip verï¿½ndert. Das sind namentlich die Winkel sowie "
 				+ "die Zeitintervalle der Gelenke, aber auch die Zyklusdauer der internen Uhr " + "einer Kreatur.");
 		lbls[2].setText("Um am schnellsten die optimale Parameterkombination zu erraten, sind "
-				+ "die Mutationen anfangs relativ gross, um in einem möglichst grossen Bereich "
-				+ "nach diesem Optimum suchen zu können. Je forstgeschrittener die Kreaturen "
-				+ "über die Laufzeit werden, umso mehr wir dieser Suchbereich eingeschränkt, "
+				+ "die Mutationen anfangs relativ gross, um in einem mï¿½glichst grossen Bereich "
+				+ "nach diesem Optimum suchen zu kï¿½nnen. Je forstgeschrittener die Kreaturen "
+				+ "ï¿½ber die Laufzeit werden, umso mehr wir dieser Suchbereich eingeschrï¿½nkt, "
 				+ "bis es gegen Ende der Entwicklung nur noch um die Perfektion der Parameter " + "geht.");
 
 		VBox vb = new VBox();
@@ -376,11 +374,11 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("Auf den folgenden Seiten wird die Bedienung von EvoSim erklärt. "
-				+ "Es empfiehlt sich, die Schritte parallel zum Lesen selber im Programm " + "auszuführen.");
+		lbls[0].setText("Auf den folgenden Seiten wird die Bedienung von EvoSim erklï¿½rt. "
+				+ "Es empfiehlt sich, die Schritte parallel zum Lesen selber im Programm " + "auszufï¿½hren.");
 
-		lbls[1].setText("Dieses Fenster lässt sich mit dem Button unten rechts "
-				+ "schliessen und ist jederzeit unter dem «?»-Button oben rechts wieder " + "abrufbar.");
+		lbls[1].setText("Dieses Fenster lï¿½sst sich mit dem Button unten rechts "
+				+ "schliessen und ist jederzeit unter dem ï¿½?ï¿½-Button oben rechts wieder " + "abrufbar.");
 
 		Button tutBtn = new Button("?");
 		tutBtn.setMouseTransparent(true);
@@ -426,21 +424,21 @@ public class Instructions extends BorderPane {
 		}
 
 		lbls[0].setText("Das Interface in EvoSim ist in zwei Hauptteile unterteilt:");
-		lbls[1].setText("Population - Übersicht von allen Kreaturen");
+		lbls[1].setText("Population - ï¿½bersicht von allen Kreaturen");
 		lbls[2].setText("Creature Preview - das genaue Betrachten einer einzigen Kreatur");
 		lbls[3].setText("Unter Population werden alle Kreaturen der aktuellen Generation mit ihrer ID "
 				+ "und Fitness aufgelistet. Eine Kreatur kann durch Doppelklick angezeigt werden. Die "
-				+ "Buttons führen die zum genetischen Algorithmus gehörenden Befehle aus. Deren genaue "
-				+ "Funktionsweise wird auf den folgenden Seiten erläutert.\n");
-		lbls[4].setText("Die Vorschau zeigt Details von der zurzeit ausgewählten Kreatur an "
+				+ "Buttons fï¿½hren die zum genetischen Algorithmus gehï¿½renden Befehle aus. Deren genaue "
+				+ "Funktionsweise wird auf den folgenden Seiten erlï¿½utert.\n");
+		lbls[4].setText("Die Vorschau zeigt Details von der zurzeit ausgewï¿½hlten Kreatur an "
 				+ "und animiert ihre Bewegung. Die Buttons steuern die Wiedergabe/Darstellung der Kreatur:");
 		lbls[5].setText("startet / pausiert die Wiedergabe");
 		lbls[6].setText("halbiert/verdoppelt die Wiedergabegeschwindigkeit");
-		lbls[7].setText("setzt die Geschwindigkeit zurück");
+		lbls[7].setText("setzt die Geschwindigkeit zurï¿½ck");
 		lbls[8].setText("Bildausschnitt folgt der Kreatur");
 		lbls[9].setText("Bildausschnitt kann mittels Ziehen der Maus und Scrollen angepasst werden");
-		lbls[10].setText("setzt den Bildausschnitt wieder zurück");
-		lbls[11].setText("zeigt die Gelenke der Kreatur und deren Aktivität");
+		lbls[10].setText("setzt den Bildausschnitt wieder zurï¿½ck");
+		lbls[11].setText("zeigt die Gelenke der Kreatur und deren Aktivitï¿½t");
 
 		Layout.labelTitle(lbls[1]);
 		Layout.labelTitle(lbls[2]);
@@ -499,7 +497,7 @@ public class Instructions extends BorderPane {
 		BorderPane page = new BorderPane();
 		Label[] lbls = new Label[3];
 		Label title = new Label("Die ersten Kreaturen erstellen");
-		page.setId("1. Schöpfung");
+		page.setId("1. Schï¿½pfung");
 		Layout.labelBigTitle(title);
 
 		for (int i = 0; i < lbls.length; i++) {
@@ -507,10 +505,10 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("All diese Steuerungsbefehle nützen einem jedoch nichts, wenn es nichts "
-				+ "anzuzeigen gibt. Zu Beginn gibt es nämlich noch keine Kreaturen, die Population "
-				+ "ist leer. Das Drücken des «Create Population»-Buttons generiert nun 100 "
-				+ "Kreaturen mit einem komplett zufälligen Bewegungsmuster.");
+		lbls[0].setText("All diese Steuerungsbefehle nï¿½tzen einem jedoch nichts, wenn es nichts "
+				+ "anzuzeigen gibt. Zu Beginn gibt es nï¿½mlich noch keine Kreaturen, die Population "
+				+ "ist leer. Das Drï¿½cken des ï¿½Create Populationï¿½-Buttons generiert nun 100 "
+				+ "Kreaturen mit einem komplett zufï¿½lligen Bewegungsmuster.");
 		lbls[1].setText("Das Generieren dieser Kreaturen entspricht dem Entstehen der ersten "
 				+ "Einzeller in der Ursuppe vor 3.7 Milliarden Jahren. Gleich wie sich aus diesen "
 				+ "Einzellern alles Leben, das wir heute kennen, entwickelt hat, werden sich auch "
@@ -543,7 +541,7 @@ public class Instructions extends BorderPane {
 		Label[] lbls = new Label[4];
 		Button[] btns = new Button[3];
 		Label title = new Label("Die Kreaturen testen");
-		page.setId("2. Prüfung");
+		page.setId("2. Prï¿½fung");
 		Layout.labelBigTitle(title);
 
 		for (int i = 0; i < lbls.length; i++) {
@@ -551,20 +549,20 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("Nun ist es die Aufgabe, alle Kreaturen auf ihre «Fähigkeiten» zu testen. «Start "
-				+ "Test» wird nun eine Kreatur nach der anderen testen. In der Zeitspanne von 15 Sekunden "
-				+ "müssen sie versuchen, so weit wie möglich zu kommen – egal wie. Bei abgelaufener Zeit "
-				+ "wird die Distanz, welche die Kreatur zurückgelegt hat, als «Fitness» eingetragen – je "
-				+ "grösser desto besser.");
-		lbls[1].setText("In der Biologie entspricht dies dem Überleben der Organismen in der Natur, mit "
+		lbls[0].setText("Nun ist es die Aufgabe, alle Kreaturen auf ihre ï¿½Fï¿½higkeitenï¿½ zu testen. ï¿½Start "
+				+ "Testï¿½ wird nun eine Kreatur nach der anderen testen. In der Zeitspanne von 15 Sekunden "
+				+ "mï¿½ssen sie versuchen, so weit wie mï¿½glich zu kommen ï¿½ egal wie. Bei abgelaufener Zeit "
+				+ "wird die Distanz, welche die Kreatur zurï¿½ckgelegt hat, als ï¿½Fitnessï¿½ eingetragen ï¿½ je "
+				+ "grï¿½sser desto besser.");
+		lbls[1].setText("In der Biologie entspricht dies dem ï¿½berleben der Organismen in der Natur, mit "
 				+ "allen Fressfeinden, Konkurrenten und Artgenossen. Je besser ein Organismus an seine "
-				+ "Umwelt angepasst ist, umso höher sind dessen Überlebenschancen. All diese Aspekte sind "
-				+ "hier auf eine Zahl kondensiert: Die «Fitness» entspricht genau dieser Angepasstheit der "
-				+ "Kreatur an ihre «Umwelt».");
+				+ "Umwelt angepasst ist, umso hï¿½her sind dessen ï¿½berlebenschancen. All diese Aspekte sind "
+				+ "hier auf eine Zahl kondensiert: Die ï¿½Fitnessï¿½ entspricht genau dieser Angepasstheit der "
+				+ "Kreatur an ihre ï¿½Umweltï¿½.");
 		lbls[2].setText("Da wahrscheinlich keiner allen Kreaturen zuschauen will, wie die sich kaum vom "
-				+ "Fleck bewegen, kann man die Animation selbstverständlich beschleunigen mit «>>>».");
-		lbls[3].setText("Für die ganz Ungeduldigen unter uns kann der ganze Vorgang mit dem Klicken von "
-				+ "«Skip Test» übersprungen werden.");
+				+ "Fleck bewegen, kann man die Animation selbstverstï¿½ndlich beschleunigen mit ï¿½>>>ï¿½.");
+		lbls[3].setText("Fï¿½r die ganz Ungeduldigen unter uns kann der ganze Vorgang mit dem Klicken von "
+				+ "ï¿½Skip Testï¿½ ï¿½bersprungen werden.");
 
 		Layout.italics(lbls[1]);
 
@@ -609,13 +607,13 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("Die «Fitness» aller Kreaturen ist nun bekannt, jetzt müssen diese mit «Sort» "
-				+ "nach ihrer «Fitness» geordnet werden.");
-		lbls[1].setText("Mit «Kill» kommt «Survival of the Fittest» nun wortwörtlich zum Zug: Da nur "
-				+ "die besten 20% weiterkommen, werden alle andern Kreaturen wohl oder übel dezimiert.");
+		lbls[0].setText("Die ï¿½Fitnessï¿½ aller Kreaturen ist nun bekannt, jetzt mï¿½ssen diese mit ï¿½Sortï¿½ "
+				+ "nach ihrer ï¿½Fitnessï¿½ geordnet werden.");
+		lbls[1].setText("Mit ï¿½Killï¿½ kommt ï¿½Survival of the Fittestï¿½ nun wortwï¿½rtlich zum Zug: Da nur "
+				+ "die besten 20% weiterkommen, werden alle andern Kreaturen wohl oder ï¿½bel dezimiert.");
 		lbls[2].setText("In der Natur entspricht dies dem Aussterben der schlecht an die Umwelt angepassten "
-				+ "Organismen beziehungsweise dem Überleben der effizienteren, stärkeren oder schnelleren. "
-				+ "Die komplette «natürliche Selektion» geschieht in diesem Schritt mit zwei Mausklicks.");
+				+ "Organismen beziehungsweise dem ï¿½berleben der effizienteren, stï¿½rkeren oder schnelleren. "
+				+ "Die komplette ï¿½natï¿½rliche Selektionï¿½ geschieht in diesem Schritt mit zwei Mausklicks.");
 
 		Layout.italics(lbls[2]);
 
@@ -657,20 +655,20 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("Da die Population wieder Platz bietet, ist es Zeit für den Nachwuchs. Wie im "
-				+ "Kapitel «Mutation» erwähnt können nun die verbleibenden Kreaturen Nachwuchs zeugen, "
-				+ "welche kleine Abweichungen vor der Mutterkreatur aufweisen – die Mutationen. Aus "
-				+ "technischen Gründen beschränkt sich EvoSim auf die ungeschlechtliche Fortpflanzung.");
+		lbls[0].setText("Da die Population wieder Platz bietet, ist es Zeit fï¿½r den Nachwuchs. Wie im "
+				+ "Kapitel ï¿½Mutationï¿½ erwï¿½hnt kï¿½nnen nun die verbleibenden Kreaturen Nachwuchs zeugen, "
+				+ "welche kleine Abweichungen vor der Mutterkreatur aufweisen ï¿½ die Mutationen. Aus "
+				+ "technischen Grï¿½nden beschrï¿½nkt sich EvoSim auf die ungeschlechtliche Fortpflanzung.");
 		lbls[1].setText("Bis vor etwa 700 Millionen Jahren war dies die einzige Form der Reproduktion. "
 				+ "Auch heute ist diese Art der Fortpflanzung zu beobachten, zum Beispiel an der "
 				+ "Zellteilung der Bakterien.\n"
 				+ "Die Mutationen werden im Fall der ungeschlechtlichen Fortpflanzung durch kleinste "
-				+ "Veränderungen am Gen hervorgerrufen.");
+				+ "Verï¿½nderungen am Gen hervorgerrufen.");
 		lbls[2].setText("Die Population ist wieder komplett und der Prozess beginnt wieder von vorn. Die "
-				+ "Schritte 2-4 bilden den Ablauf einer Generation, ab jetzt gilt nur noch «rince and "
-				+ "repeat», eine einzelne Generation ist unbedeutend, schliesslich hat sich die Natur auch "
-				+ "4.5 Milliarden Jahre Zeit gelassen und hat ein ähnliches Spiel etwas öfter durchgemacht.");
-		lbls[3].setText("Um den manuellen Prozess einer Generation zu überspringen, kann man mit diesen Buttons "
+				+ "Schritte 2-4 bilden den Ablauf einer Generation, ab jetzt gilt nur noch ï¿½rince and "
+				+ "repeatï¿½, eine einzelne Generation ist unbedeutend, schliesslich hat sich die Natur auch "
+				+ "4.5 Milliarden Jahre Zeit gelassen und hat ein ï¿½hnliches Spiel etwas ï¿½fter durchgemacht.");
+		lbls[3].setText("Um den manuellen Prozess einer Generation zu ï¿½berspringen, kann man mit diesen Buttons "
 				+ "die entsprechende Anzahl Generationen im Schnelldurchlauf berechnen.");
 
 		Layout.italics(lbls[1]);
@@ -714,16 +712,16 @@ public class Instructions extends BorderPane {
 
 		lbls[0].setText("Wenn die Entwicklung einen Wert erreicht hat, bei dem die Entwicklung stagniert, "
 				+ "ist das der Punkt, wo Ihr euch selber kurz Gedanken machen solltet. Wie haben sich "
-				+ "Eure Kreaturen entwickelt? Was haben Sie sich \"überlegt\"? Denn jedes Mal findet "
+				+ "Eure Kreaturen entwickelt? Was haben Sie sich \"ï¿½berlegt\"? Denn jedes Mal findet "
 				+ "die Evolution einen anderen Weg zum Ziel!");
-		lbls[1].setText("Wählt die beste Kreatur der Population mit Doppelklick aus und lasst die Wiedergabe "
-				+ "langsamer laufen. Was könnt ihr beobachten?");
-		lbls[2].setText("Wie übertragen die Kreaturen die Kraft auf den Boden? \n" + "Wie verankern sie sich? \n"
-				+ "Wie lösen sie sich wieder vom Boden? \n"
+		lbls[1].setText("Wï¿½hlt die beste Kreatur der Population mit Doppelklick aus und lasst die Wiedergabe "
+				+ "langsamer laufen. Was kï¿½nnt ihr beobachten?");
+		lbls[2].setText("Wie ï¿½bertragen die Kreaturen die Kraft auf den Boden? \n" + "Wie verankern sie sich? \n"
+				+ "Wie lï¿½sen sie sich wieder vom Boden? \n"
 				+ "Haben sich Schwungarme oder andere Bewegunsmuster entwickelt?");
 		lbls[3].setText("Das war es auch schon von EvoSim! Wir hoffen, dass es euch einen Einblick in "
 				+ "die Prinzipien der Evolution und den genetischen Algorithmen gegeben hat. Bei Fragen oder "
-				+ "Interesse stehen wir Euch natürlich gerne zur Verfügung.");
+				+ "Interesse stehen wir Euch natï¿½rlich gerne zur Verfï¿½gung.");
 		lbls[4].setText("Nils Schlatter und Jan Obermeier, G3E");
 
 		Layout.italics(lbls[2]);
@@ -766,7 +764,7 @@ public class Instructions extends BorderPane {
 	private static BorderPane getPage12() {
 		BorderPane page = new BorderPane();
 		Label[] lbls = new Label[4];
-		Label title = new Label("Über den Sinn und Unsinn dieses Projekts");
+		Label title = new Label("ï¿½ber den Sinn und Unsinn dieses Projekts");
 		page.setId("About");
 		Layout.labelBigTitle(title);
 
@@ -775,11 +773,11 @@ public class Instructions extends BorderPane {
 			Layout.instrLabel(lbls[i]);
 		}
 
-		lbls[0].setText("EvoSim haben wir im Rahmen des Projektunterrichts zum Thema «Bewegung» "
+		lbls[0].setText("EvoSim haben wir im Rahmen des Projektunterrichts zum Thema ï¿½Bewegungï¿½ "
 				+ "konzipiert, programmiert und gestaltet.");
-		lbls[1].setText("Falls Ihr selber einen Blick in den Code werfen wollt, könnt Ihr diesen "
+		lbls[1].setText("Falls Ihr selber einen Blick in den Code werfen wollt, kï¿½nnt Ihr diesen "
 				+ "unter https://github.com/Jan5113/EvoSim.git abrufen.");
-		lbls[2].setText("Fun-Fact:\nEvoSim enthält 7238 Zeilen Code in insgesamt 33 Java-Klassen");
+		lbls[2].setText("Fun-Fact:\nEvoSim enthï¿½lt 7238 Zeilen Code in insgesamt 33 Java-Klassen");
 		lbls[3].setText("Projektarbeit von Nils Schlatter und Jan Obermeier, 2019");
 
 		Layout.italics(lbls[2]);

@@ -22,6 +22,12 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	private float fitness_ser = -1000.f;
 	private boolean fitnessEvaluated = false;
 	
+	public Creature(int id_in, RootBone rb_in) {
+		rootBone = rb_in;
+		cycleLength = new MutVal(1, 2);
+		id = id_in;
+	}
+	
 	public Creature(int id_in, RootBone rb_in, MutVal cycleLen_in) {
 		rootBone = rb_in;
 		cycleLength = cycleLen_in.clone();

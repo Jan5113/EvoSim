@@ -6,24 +6,25 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import display.Screen;
 import level.Level;
+import population.RootBone;
 public class CreatorScreen extends Screen {
 	
-	private ProtoCreature creatureBlueprint;
+	private RootBone creatureBlueprint;
 	private Vec2 mouseCoord;
 	private CreatorToolMode toolMode;
-	private int firstSelected = -1;
+	private PosID firstSelected;
 	private Level level;
 
 	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes, scale_in, pos_in);
 		level = level_in;
-		creatureBlueprint = new ProtoCreature(true);
+		creatureBlueprint = new RootBone(0);
 		toolMode = CreatorToolMode.NONE;
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> mousePressed(e));
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> clickEvent(e));
 	}
 	
-	public ProtoCreature getBlueprint() {
+	public RootBone getBlueprint() {
 		return creatureBlueprint;
 	}
 
@@ -41,16 +42,7 @@ public class CreatorScreen extends Screen {
 			case NONE:
 			break;
 			case ADD_BONE:
-				if (firstSelected == -1) {
-					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
-					firstSelected = creatureBlueprint.selectJointNear(clickPos);
-					if (firstSelected == -1) { // no joints
-						firstSelected = creatureBlueprint.addJoint(clickPos, -1);
-					}
-				} else {
-					if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
-					creatureBlueprint.addJoint(clickPos);
-				}
+				
 
 				/*
 				BONE
@@ -84,7 +76,7 @@ public class CreatorScreen extends Screen {
 				*/
 			break;
 			case ADD_HEAD:
-				creatureBlueprint.addHead(creatureBlueprint.selectJointNear(clickPos));
+				creatureBlueprint.addHead(firstSelected.id, 0.2f);
 			break;
 			case SELECT:
 			break;
@@ -94,23 +86,23 @@ public class CreatorScreen extends Screen {
 
 	public void toolSelect() {
 		toolMode = CreatorToolMode.SELECT;
-		firstSelected = -1;
+		firstSelected = null;
 	}
 
 	public void toolDelete() {
-		creatureBlueprint.deleteAll();
-		firstSelected = -1;
+		creatureBlueprint = new RootBone();
+		firstSelected = null;
 		refresh();
 	}
 
 	public void toolAdd() {
 		toolMode = CreatorToolMode.ADD_BONE;
-		firstSelected = -1;
+		firstSelected = null;
 	}
 
 	public void toolHead() {
 		toolMode = CreatorToolMode.ADD_HEAD;
-		firstSelected = -1;
+		firstSelected = null;
 	}
 
 	/*public void loadHuman() {
@@ -125,13 +117,13 @@ public class CreatorScreen extends Screen {
 		for (B2DBody b : levelBodies) {
 			drawBody(b);
 		}
-
+/*
 		for (ProtoJoint j : creatureBlueprint.jointDefList) {
 			drawProtoJoint(j, firstSelected == j.ID && toolMode == CreatorToolMode.ADD_BONE);
 		}
 		for (ProtoMuscle m : creatureBlueprint.muscleDefList) {
 			drawProtoMuscle(m);
-		}
+		}*/
 		drawInfoNGrind(level.isVertical());
 	}
 

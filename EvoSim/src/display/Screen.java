@@ -5,14 +5,8 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
-import box2d.B2DBone;
-import box2d.B2DBoneDir;
 import box2d.B2DCamera;
-import box2d.B2DMuscle;
 import box2d.ShapeType;
-import creatureCreator.ProtoBone;
-import creatureCreator.ProtoJoint;
-import creatureCreator.ProtoMuscle;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,6 +17,8 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import population.Creature;
+import population.Muscle;
+import population.MuscleInfo;
 import test.Test;
 
 /**
@@ -311,36 +307,20 @@ public class Screen extends Canvas {
 	 * red, depending on the angle between the Bones.
 	 * 
 	 * @param muscle
-	 * {@link B2DMuscle} to be drawn
+	 * {@link Muscle} to be drawn
 	 */
 	public void drawMuscle(RevoluteJoint muscle) {
-		Vec2 pxpointA;
-		Vec2 pxpointB;
-		if (((B2DMuscle) muscle.getUserData()).getBoneDirs()[0] == B2DBoneDir.END) {
-			pxpointA = camera.coordWorldToPixels(
-					muscle.getBodyA().getPosition().add(
-							B2DCamera.rotateVec2(muscle.getLocalAnchorA().add(new Vec2(0.3f, 0).negate()),
-									muscle.getBodyA().getAngle())));
-		} else {
-			pxpointA = camera.coordWorldToPixels(
-					muscle.getBodyA().getPosition().add(
-							B2DCamera.rotateVec2(muscle.getLocalAnchorA().add(new Vec2(-0.3f, 0).negate()),
-									muscle.getBodyA().getAngle())));
-		}
-		if (((B2DMuscle) muscle.getUserData()).getBoneDirs()[1] == B2DBoneDir.HEAD) {
-			pxpointB = camera.coordWorldToPixels(
-					muscle.getBodyB().getPosition().add(
-							B2DCamera.rotateVec2(muscle.getLocalAnchorB().add(new Vec2(-0.3f, 0).negate()),
-									muscle.getBodyB().getAngle())));
-		} else {
-			pxpointB = camera.coordWorldToPixels(
-					muscle.getBodyB().getPosition().add(
-							B2DCamera.rotateVec2(muscle.getLocalAnchorB().add(new Vec2(0.3f, 0).negate()),
-									muscle.getBodyB().getAngle())));
-		}
+		Vec2 pxpointA; // bone
+		Vec2 pxpointB; // parent
+		MuscleInfo mi = (MuscleInfo) muscle.getUserData();
+		pxpointA = camera.coordWorldToPixels(muscle.getBodyA().getPosition().add(B2DCamera.rotateVec2(
+								mi.anchorA.mul(0.8f), muscle.getBodyA().getAngle())));
+		pxpointB = camera.coordWorldToPixels(muscle.getBodyA().getPosition().add(B2DCamera.rotateVec2(
+								mi.anchorB.mul(0.8f), muscle.getBodyB().getAngle())));
+		
 		float angl = muscle.getJointAngle();
-		float angl0 = ((B2DMuscle) muscle.getUserData()).getOffAngle();
-		float angl1 = ((B2DMuscle) muscle.getUserData()).getOnAngle();
+		float angl0 = mi.offAngle;
+		float angl1 = mi.onAngle;
 		float col = Math.abs((angl - angl0) / (angl1 - angl0));
 		if (col > 1) col = 1;
 		if (col < 0) col = 0;
@@ -363,7 +343,7 @@ public class Screen extends Canvas {
 	//************************************************
 	//*		PROTO DRAW FUNCTIONS
 	//************************************************	
-
+/*
 	public void drawProtoJoint(ProtoJoint j, boolean selected) {
 		Color c = Color.color(1, 0, 0);
 		if (selected) {
@@ -407,7 +387,7 @@ public class Screen extends Canvas {
 
 	public void drawProtoMuscle(ProtoMuscle m) {
 		
-	}
+	}*/
 
 	public void drawPolygon(B2DBody body) {
 		Vec2[] points = body.getPolygon();

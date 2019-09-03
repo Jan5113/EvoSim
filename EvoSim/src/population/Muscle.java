@@ -1,40 +1,34 @@
 package population;
 
-import creatureCreator.ProtoMuscle;
 import mutation.MutTimer;
 import mutation.MutVal;
 
 public class Muscle {
-    private final MutTimer timer1;
-	private final MutTimer timer2;
-    private final MutVal angle;
-    private final MutVal angleOffset;
-	private final float angleMin;
-	private final float angleMax;
-	private final int id;
-	private final float maxTorque;
-	private final boolean enabled;
-    public Muscle(ProtoMuscle protM) {
-        timer1 = new MutTimer();
-		timer2 = new MutTimer();
-		angle = new MutVal(0, 1);
-		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
-		angleMin = (float) (protM.angleMin);
-		angleMax = (float) (protM.angleMax);
-		id = protM.ID;
-		maxTorque = protM.torque;
-		enabled = protM.enabled;
+    private MutTimer timer1 = new MutTimer();
+	private MutTimer timer2 = new MutTimer();
+	private MutVal angle = new MutVal(0, 1);
+	private MutVal angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+	
+	private float maxTorque = 5.0f;
+	private float angleMin = (float) (-Math.PI);
+	private float angleMax = (float) (3*Math.PI);
+	private boolean enabled = true;
+
+    public Muscle() {
+	}
+	
+    public Muscle(boolean enabled_in) {
+		enabled = enabled_in;
     }
 
     public Muscle(MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in,
-			float angleMin_in, float angleMax_in, float maxTorque_in, boolean enabled_in, int id_in) {
+			float angleMin_in, float angleMax_in, float maxTorque_in, boolean enabled_in) {
 		timer1 = timer1_in;
 		timer2 = timer2_in;
 		angle = angle_in;
 		angleOffset = angleOffset_in;
 		angleMin = angleMin_in;
 		angleMax = angleMax_in;
-		id = id_in;
 		maxTorque = maxTorque_in;
 		enabled = enabled_in;
 	}

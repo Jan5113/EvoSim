@@ -6,7 +6,6 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
 import box2d.B2DBody;
-import box2d.B2DMuscle;
 import level.Level;
 import level.LevelStyle;
 import population.Creature;
@@ -31,8 +30,8 @@ public class Test {
 	private float testTimer = 0;
 	
 	private static float testDuration = 15.0f;
-	private static float jumpTestDuration = 2f;
-	private static float afterTestLength = 5.0f;
+	private static float jumpTestDuration = 5f;
+	private static float afterTestLength = 2f;
 	private float afterTestTime = 10000.0f;
 	
 	private float dtToRun = 0;

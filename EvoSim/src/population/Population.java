@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.jbox2d.common.Vec2;
 
-import creatureCreator.ProtoCreature;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,7 +23,7 @@ public class Population implements Serializable{
 	private Vec2 testGrav;
 	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
 	private PopulationStatus popStat = PopulationStatus.S000_NOBLUEPRINT;
-	private ProtoCreature creatureBlueprint;
+	private RootBone creatureBlueprint;
 	private Level level = new Level();
 	
 	private static float killVal = 0.8f;
@@ -39,7 +38,7 @@ public class Population implements Serializable{
 		popStat = PopulationStatus.S00_CREATOR;
 	}
 	
-	public void saveCreature(ProtoCreature blueprint_in) {
+	public void saveCreature(RootBone blueprint_in) {
 		if (popStat != PopulationStatus.S00_CREATOR) {System.err.println("Creature already created!");return;}
 		creatureBlueprint = blueprint_in;
 		popStat = PopulationStatus.S0_NOTCREATED;
@@ -50,7 +49,7 @@ public class Population implements Serializable{
 		
 		populationSize = popSize_in;
 		for (int i = 0; i < populationSize; i++) {
-			Creature tempC = creatureBlueprint.makeCreature(currentID);
+			Creature tempC = new Creature(currentID, creatureBlueprint);
 			currentID++;
 			addCreature(tempC);
 		}
