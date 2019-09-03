@@ -1,4 +1,4 @@
-package test;
+package test;/*
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
@@ -16,9 +16,9 @@ import box2d.B2DJoint;
 import box2d.B2DMuscle;
 import box2d.ShapeType;
 import javafx.scene.paint.Color;
-import population.Creature;
+import population.Creature;*/
 
-public class CreatureBuilder {
+public class CreatureBuilder {/*
 	public static void buildCreature(Creature c, World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in) {
 		
 		B2DBone[] bones = c.getBones();
@@ -95,6 +95,6 @@ public class CreatureBuilder {
 		}
 		System.err.println("No matching bone found!");
 		return null;
-	}
+	}*/
 	
 }

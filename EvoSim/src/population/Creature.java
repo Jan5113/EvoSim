@@ -1,9 +1,11 @@
 package population;
 import java.io.Serializable;
+import java.util.ArrayList;
 
-import box2d.B2DBone;
-import box2d.B2DJoint;
-import box2d.B2DMuscle;
+import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
+
+import box2d.B2DBody;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import mutation.MutVal;
@@ -22,9 +24,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	
 	public Creature(int id_in, RootBone rb_in, MutVal cycleLen_in) {
 		rootBone = rb_in;
-		
 		cycleLength = cycleLen_in.clone();
-		
 		id = id_in;
 	}
 	
@@ -86,25 +86,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	
 
 	public Creature mutate(int id, int gen) {
-		B2DJoint[] temp_joints = new B2DJoint[joints.length];
-		B2DBone[] temp_bones = new B2DBone[bones.length];
-		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
-		
-		for (int i = 0; i < temp_joints.length; i++) {
-			temp_joints[i] = joints[i].mutate(gen);
-			//temp_joints[i] = joints[i].clone();
-		}
-		for (int i = 0; i < temp_bones.length; i++) {
-			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};
-			temp_bones[i] = bones[i].rereferencedClone(temp_joints[jointIDs[0]], temp_joints[jointIDs[1]]);
-		}
-		for (int i = 0; i < temp_muscles.length; i++) {
-			int jointID = muscles[i].getJointID();
-			int[] boneIDs = {muscles[i].getBones()[0].getID(), muscles[i].getBones()[1].getID()};
-			temp_muscles[i] = muscles[i].rereferencedMutate(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]], gen);
-		}
-		
-		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.mutate(gen));
+		return new Creature(id, rootBone.mutateCreature(), cycleLength.mutate(gen));
 	}
 
 	public int compareTo(Creature c) {
@@ -126,27 +108,15 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	}
 	
 	public Creature clone() {
-		B2DJoint[] temp_joints = new B2DJoint[joints.length];
-		B2DBone[] temp_bones = new B2DBone[bones.length];
-		B2DMuscle[] temp_muscles = new B2DMuscle[muscles.length];
-		
-		for (int i = 0; i < temp_joints.length; i++) {
-			temp_joints[i] = joints[i].clone();
-		}
-		for (int i = 0; i < temp_bones.length; i++) {
-			int[] jointIDs = {bones[i].getJoints()[0].getID(), bones[i].getJoints()[1].getID()};
-			temp_bones[i] = bones[i].rereferencedClone(temp_joints[jointIDs[0]], temp_joints[jointIDs[1]]);
-		}
-		for (int i = 0; i < temp_muscles.length; i++) {
-			int jointID = muscles[i].getJointID();
-			int[] boneIDs = {muscles[i].getBones()[0].getID(), muscles[i].getBones()[1].getID()};
-			temp_muscles[i] = muscles[i].rereferencedClone(temp_joints[jointID], temp_bones[boneIDs[0]], temp_bones[boneIDs[1]]);
-		}
-		
-		return new Creature(id, temp_joints, temp_bones, temp_muscles, cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
+		return new Creature(id, rootBone.cloneCreature(), cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
 	}
 	
 	public void initProperty() {
 		fitness = new SimpleFloatProperty(fitness_ser);
+	}
+
+	public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,
+			ArrayList<RevoluteJoint> revoluteJoints_in) {
+		rootBone.buildCreature(w, creatureInstances_in, revoluteJoints_in);
 	}
 }

@@ -843,6 +843,10 @@ public class B2DBody {
 	public String getName() {
 		return name;
 	}
+
+	public void setName(String name_in) {
+		name = name_in;
+	}
 	
 	public int getId() {
 		return id;

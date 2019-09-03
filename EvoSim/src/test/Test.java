@@ -10,6 +10,7 @@ import box2d.B2DMuscle;
 import level.Level;
 import level.LevelStyle;
 import population.Creature;
+import population.Muscle;
 
 public class Test {
 	private World testWorld;
@@ -41,7 +42,7 @@ public class Test {
 	private final Level level;
 	
 	private float cycleLen;
-	private B2DMuscle[] muscles;
+	private Muscle[] muscles;
 	
 	public Test (Vec2 gravity_in, TestWrapper testWrapper, Level level) {
 		gravity = gravity_in;
@@ -76,7 +77,7 @@ public class Test {
 	private void buildCreature () {
 		if (creature == null) {System.err.println("No Creature set!"); return;}
 		if (testing) {System.err.println("No Creature set!"); return;}
-		CreatureBuilder.buildCreature(creature, testWorld, creatureInstancesList, creatureRevoluteJointsList);
+		creature.buildCreature(testWorld, creatureInstancesList, creatureRevoluteJointsList);
 	}
 	
 	public void startTest() {
