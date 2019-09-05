@@ -90,9 +90,8 @@ public class Creature  implements Serializable, Comparable<Creature>{
 		return rootBone.getMuscleList();
 	}
 	
-
 	public Creature mutate(int id, int gen) {
-		return new Creature(id, rootBone.mutateCreature(), cycleLength.mutate(gen));
+		return new Creature(id, rootBone.mutate(gen), cycleLength.mutate(gen));
 	}
 
 	public int compareTo(Creature c) {
@@ -114,7 +113,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	}
 	
 	public Creature clone() {
-		return new Creature(id, rootBone.cloneCreature(), cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
+		return new Creature(id, rootBone.clone(), cycleLength.clone(), fitness.get(), distance, fitnessEvaluated);
 	}
 	
 	public void initProperty() {

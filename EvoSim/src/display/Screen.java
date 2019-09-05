@@ -180,7 +180,7 @@ public class Screen extends Canvas {
 		
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
-	
+
 	public void drawCurrentDistance(boolean vertical, float distance){
 		if (!vertical) return; //only draw when JUMP or CLIMB
 		drawLine(new Vec2(-2f, distance),new Vec2(0f, distance), Color.RED);
@@ -308,9 +308,9 @@ public class Screen extends Canvas {
 		Vec2 pxpointB; // parent
 		MuscleInfo mi = (MuscleInfo) muscle.getUserData();
 		pxpointA = camera.coordWorldToPixels(muscle.getBodyA().getPosition().add(B2DCamera.rotateVec2(
-								mi.anchorA.mul(0.8f), muscle.getBodyA().getAngle())));
-		pxpointB = camera.coordWorldToPixels(muscle.getBodyA().getPosition().add(B2DCamera.rotateVec2(
-								mi.anchorB.mul(0.8f), muscle.getBodyB().getAngle())));
+								mi.anchorA.mul(0.5f), muscle.getBodyA().getAngle())));
+		pxpointB = camera.coordWorldToPixels(muscle.getBodyB().getPosition().add(B2DCamera.rotateVec2(
+								mi.anchorB.mul(0.5f), muscle.getBodyB().getAngle())));
 		
 		float angl = muscle.getJointAngle();
 		float angl0 = mi.offAngle;

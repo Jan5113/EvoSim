@@ -38,6 +38,11 @@ public class Muscle {
 		angleMin, angleMax, maxTorque, enabled);
 	}
 
+	public Muscle mutate(int gen) {
+		return new Muscle(timer1.mutate(gen), timer2.mutate(gen), angle.mutate(gen), angleOffset.mutate(gen), 
+		angleMin, angleMax, maxTorque, enabled);
+	}
+
 	public void newInit() {
 		timer1 = new MutTimer();
 		timer2 = new MutTimer();

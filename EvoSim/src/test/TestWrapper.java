@@ -38,5 +38,4 @@ public interface TestWrapper {
 	 */
 	public void pauseDone(Creature creature_in, float calcFitness, float calcDist);
 	
-	public void stepCallback(int step);
 }

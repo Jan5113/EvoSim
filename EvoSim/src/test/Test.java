@@ -75,10 +75,7 @@ public class Test {
 	
 	private void buildCreature () {
 		if (creature == null) {System.err.println("No Creature set! 1"); return;}
-		if (testing) {
-			System.err.println("No Creature set! 2");
-			return;
-		}
+		if (testing) {System.err.println("No Creature set! 2"); return;}
 		creature.buildCreature(testWorld, creatureInstancesList, creatureRevoluteJointsList);
 	}
 	
@@ -92,9 +89,8 @@ public class Test {
 			return;
 		}
 		dtToRun = dtToRun + (speed * dt);
-		int steps = 0;
 		
-		while (dtToRun >= dtStepSize) {
+		while (dtToRun > dtStepSize) {
 			dtToRun = dtToRun - dtStepSize;
 			testTimer = testTimer + dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
@@ -145,10 +141,7 @@ public class Test {
 			if (testTimer > afterTestTime) {
 				parentWrapper.pauseDone(creature, lastFitness, lastDistance);
 			}
-
-			parentWrapper.stepCallback(steps);
 			//System.out.println("teststep");
-			steps++;
 		}
 	}
 	public void reset() {

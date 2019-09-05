@@ -11,6 +11,6 @@ public class MuscleInfo {
         anchorA = anchorA_in;
         anchorB = anchorB_in;
         offAngle = offAngle_in;
-        onAngle = offAngle_in;
+        onAngle = onAngle_in;
     }
 }

@@ -6,29 +6,17 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 import box2d.B2DBody;
 import creatureCreator.PosID;
-import mutation.MutVec2;
 
 public class Root implements BoneParent {
-    private MutVec2 rootPos;
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
     private int currentBoneID = 1;
+    private Vec2[] boundingBox; 
 
-    public Root() {
+    public Root(boolean init){ //init test
+        if (init) initTest();
     }
-
-    public Root(int init){ //init test
-        switch (init) {
-            case 0:
-                initTest();
-                break;
-        
-            default:
-                break;
-        }
-    }
-    private Root(MutVec2 rootPos_in, int currentBoneID_in) {
-        rootPos = rootPos_in;
+    private Root(int currentBoneID_in) {
         currentBoneID = currentBoneID_in;
     }
 
@@ -43,11 +31,18 @@ public class Root implements BoneParent {
         return mArray;
     }
 
+    public Vec2[] getBoundingBox() {
+        if (boundingBox == null) {
+            refreshBoundingBox();
+        }
+        return boundingBox;
+    }
+
     public ArrayList<PosID> getJointPos() {
 		ArrayList<PosID> jointList = new ArrayList<PosID>();
-		jointList.add(new PosID(0, rootPos.getVal()));
+		jointList.add(new PosID(0, new Vec2()));
 		for (Bone b : rootChildren) {
-			b.getJointPos(jointList, rootPos.getVal());
+			b.getJointPos(jointList, new Vec2());
         }
 		return jointList;
 	}
@@ -55,7 +50,7 @@ public class Root implements BoneParent {
     public ArrayList<PosID> getBonePos() {
 		ArrayList<PosID> boneList = new ArrayList<PosID>();
 		for (Bone b : rootChildren) {
-			b.getJointPos(boneList, rootPos.getVal());
+			b.getJointPos(boneList, new Vec2());
         }
 		return boneList;
 	}
@@ -63,26 +58,28 @@ public class Root implements BoneParent {
     public ArrayList<PosID> getMusclePos() {
 		ArrayList<PosID> musclePosList = new ArrayList<PosID>();
 		for (int i = 1; i < rootChildren.size(); i++) {
-            rootChildren.get(i).getMusclePos(musclePosList, rootPos.getVal());
+            rootChildren.get(i).getMusclePos(musclePosList, new Vec2());
 		}
 		return musclePosList;
 	}
 
-    public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in) {
-        
+    public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,
+            ArrayList<RevoluteJoint> revoluteJoints_in) {
+        Vec2 pos = getBoundingBox()[1].negate();
+        //root bone (no muscle)
         B2DBody rootBody = rootChildren.get(0).build(w, creatureInstances_in, revoluteJoints_in,
-                rootChildren.get(0).getLocalRoot());
-        
+                rootChildren.get(0).getLocalRoot(), pos);
+        //rest
         for (int i = 1; i < rootChildren.size(); i++) {
             rootChildren.get(i).build(w, creatureInstances_in, revoluteJoints_in,
-            rootBody, rootChildren.get(0).getLocalRoot());
+            rootBody, rootChildren.get(0).getLocalRoot(), pos);
 		}
 
     }
 
-    public void addBone(Vec2 pos_root, Vec2 pos_head) {
-        rootPos = new MutVec2(pos_root);
-        addBone(0, pos_head.add(pos_root.negate()));
+    public void addBone(Vec2 dir_head) {
+        addBone(0, dir_head);
+        muscleList = null;
     }
 
     public void addBone(int parentID, Vec2 dir) {
@@ -98,6 +95,8 @@ public class Root implements BoneParent {
             }
         }
         currentBoneID++;
+        muscleList = null;
+        boundingBox = null;
     }
 
     public void addHead(int parentID, float size) {
@@ -111,6 +110,8 @@ public class Root implements BoneParent {
             }
         }
         currentBoneID++;
+        muscleList = null;
+        boundingBox = null;
     }
 
     public void refreshMuscleList() {
@@ -120,14 +121,31 @@ public class Root implements BoneParent {
         }
     }
 
+    public void refreshBoundingBox() {
+        boundingBox = new Vec2[]{new Vec2(), new Vec2()};
+        for (Bone b : rootChildren) {
+            b.getBounds(boundingBox, new Vec2());
+        }
+    }
+
     public Root clone() {
         ArrayList<Bone> cloneRootChildren = new ArrayList<Bone>();
-        Root clone = new Root(rootPos.clone(), currentBoneID);
+        Root clone = new Root(currentBoneID);
         for (Bone b : rootChildren) {
             cloneRootChildren.add(b.clone(clone));
         }
         clone.rootChildren = cloneRootChildren;
         return clone;
+    }
+
+    public Root mutate(int gen) {
+        ArrayList<Bone> mutateRootChildren = new ArrayList<Bone>();
+        Root mutant = new Root(currentBoneID);
+        for (Bone b : rootChildren) {
+            mutateRootChildren.add(b.mutate(mutant, gen));
+        }
+        mutant.rootChildren = mutateRootChildren;
+        return mutant;
     }
 
     public Root getNewInit() {
@@ -179,19 +197,11 @@ public class Root implements BoneParent {
 
 
     public Vec2 getHeadPosition() {
-        return rootPos.getVal();
+        return new Vec2();
 	}
 
-    public Root cloneCreature() {
-        return null;
-    }
-
-    public Root mutateCreature() {
-        return null;
-    }
-
     private void initTest() {
-        addBone(new Vec2(-1,0), new Vec2(-0.5f,1));
+        addBone(new Vec2(0.5f,1));
         addBone(1, new Vec2(0.5f,-1));
     }
     

@@ -81,32 +81,32 @@ public class Bone implements BoneParent{
 	}
 
 
-    public void build(World w, ArrayList<B2DBody> creatureInstances_in, 
-            ArrayList<RevoluteJoint> revoluteJoints_in, B2DBody parentBody, Vec2 localParentHead) {
-        B2DBody boneBody = buildBone();
+    public void build(World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in,
+    B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {
+        B2DBody boneBody = buildBone(parentHeadPos);
         creatureInstances_in.add(boneBody);
         boneBody.createBody(w);
         if (parentMuscle != null) {
-            revoluteJoints_in.add((RevoluteJoint) w.createJoint(buildMuscle(boneBody, parentBody, localParentHead)));
+            revoluteJoints_in.add((RevoluteJoint) w.createJoint(buildMuscle(boneBody, parentBody, localParentHead, parentHeadPos)));
         } else System.err.println("Wrong function for root bone");
         for (Bone b : children) {
-            b.build(w, creatureInstances_in, revoluteJoints_in, boneBody, getLocalHead());
+            b.build(w, creatureInstances_in, revoluteJoints_in, boneBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
         }
     }
 
     public B2DBody build(World w, ArrayList<B2DBody> creatureInstances_in, 
-    ArrayList<RevoluteJoint> revoluteJoints_in, Vec2 localParentHead) {
-        B2DBody rootBody = buildBone();
+    ArrayList<RevoluteJoint> revoluteJoints_in, Vec2 localParentHead, Vec2 parentHeadPos) {
+        B2DBody rootBody = buildBone(parentHeadPos);
         creatureInstances_in.add(rootBody);
         rootBody.createBody(w);        
         for (Bone b : children) {
-            b.build(w, creatureInstances_in, revoluteJoints_in, rootBody, getLocalHead());
+            b.build(w, creatureInstances_in, revoluteJoints_in, rootBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
         }
         return rootBody;
     }
 
-    public B2DBody buildBone() {
-        Vec2 pos = getBonePosition();
+    private B2DBody buildBone(Vec2 parentHeadPos) {
+        Vec2 pos = parentHeadPos.add(headDir.getVal().mul(0.5f));
 		B2DBody boneBody = new B2DBody(getID(), getName());
 		if (getBoneType() == BoneType.BONE) {
             float angle = B2DCamera.getRotation(getHeadDir());
@@ -122,9 +122,9 @@ public class Bone implements BoneParent{
         return boneBody;
     }
 
-    private JointDef buildMuscle(B2DBody bone, B2DBody parentBody, Vec2 localParentHead) {
+    private JointDef buildMuscle(B2DBody bone, B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {
 		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.initialize(bone.getBody(), parentBody.getBody(), parent.getHeadPosition());
+		jointDef.initialize(bone.getBody(), parentBody.getBody(), parentHeadPos);
 		
 		jointDef.localAnchorA.set(getLocalRoot());
 		jointDef.localAnchorB.set(localParentHead);
@@ -152,6 +152,21 @@ public class Bone implements BoneParent{
         }
         clone.setChildren(newChildren);
         return clone;
+    }
+    
+    public Bone mutate(BoneParent newbp, int gen) {
+        Bone mutant;
+        if (parentMuscle == null) {// root bone 
+            mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);
+        } else {
+            mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);
+        }
+        ArrayList<Bone> newChildren = new ArrayList<Bone>();
+        for (Bone b : children) {
+            newChildren.add(b.mutate(mutant, gen));
+        }
+        mutant.setChildren(newChildren);
+        return mutant;
     }
 
     public Vec2 getLocalHead() {
@@ -224,12 +239,22 @@ public class Bone implements BoneParent{
         return length;
     }
 
-    public ArrayList<Muscle> getMuscles(ArrayList<Muscle> muscleList) {
+    public void getMuscles(ArrayList<Muscle> muscleList) {
         if (parentMuscle != null) muscleList.add(parentMuscle);
         for (Bone b : children) {
             b.getMuscles(muscleList);
         }
-        return muscleList;
+    }
+
+    public void getBounds(Vec2[] boundingBox, Vec2 parentHeadPos) {
+        Vec2 pos = parentHeadPos.add(headDir.getVal());
+        if (boundingBox[0].x > pos.x) boundingBox[0].x = pos.x;
+        if (boundingBox[1].x < pos.x) boundingBox[1].x = pos.x;
+        if (boundingBox[0].y < pos.y) boundingBox[0].y = pos.y;
+        if (boundingBox[1].y > pos.y) boundingBox[1].y = pos.y;
+        for (Bone b : children) {
+            b.getBounds(boundingBox, pos);
+        }
     }
 
     public void newInitMuscle() {

@@ -18,7 +18,7 @@ public class CreatorScreen extends Screen {
 	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes, scale_in, pos_in);
 		level = level_in;
-		creatureBlueprint = new Root(0);
+		creatureBlueprint = new Root(true);
 		toolMode = CreatorToolMode.NONE;
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> mousePressed(e));
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> clickEvent(e));
@@ -90,7 +90,7 @@ public class CreatorScreen extends Screen {
 	}
 
 	public void toolDelete() {
-		creatureBlueprint = new Root();
+		creatureBlueprint = new Root(false);
 		firstSelected = null;
 		refresh();
 	}

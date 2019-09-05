@@ -199,6 +199,9 @@ public class MultiTest{
 		 * Is {@code true} when this {@code TestThread} instance is running a Test.
 		 */
 		public boolean running = false;
+		private Creature creature;
+		private float fitness;
+		private float distance;
 		
 		/**
 		 * Initialises a newly created {@code TestThread} object. {@code threadName}
@@ -218,7 +221,7 @@ public class MultiTest{
 			System.out.println("Running Thread " + threadNr);
 			running = true;
 			
-			while (creatureQueue.size() > 0) setCreature();
+			while (creatureQueue.size() > 0) testCreature();
 			
 			System.out.println("Thread " + threadNr + " exiting.");
 			running = false;
@@ -240,41 +243,44 @@ public class MultiTest{
 		 * Takes the next creature in the queue and restarts {@link Test}. Check for
 		 * already evaluated creatures or empty queue.
 		 */
-		private void setCreature() {
+		private void testCreature() {
 			if (creatureQueue.size() == 0) return;
 			try {
 				Creature c = creatureQueue.remove(0);
 				if (!c.fitnessEvaulated()) {
 					test.setCreature(c);
 					test.startTest();
-					test.step(15.1f, 1.0f);
+					while (!test.isTaskDone()) {
+						test.step(1f, 1.0f);
+					}					
 				} else {
 					//System.out.println("Creature ID " + c.getID() + " already tested!");
 				}
+				System.out.println("Thread " + threadNr + " tested creature ID: " + creature.getID() + " | Fitness:" + fitness);
+				if (!test.getCreature().fitnessEvaulated()) {
+					creature.setFitness(fitness, distance);
+				}
+				creature = null;
+				fitness = 0;
+				distance = 0;
+				test.reset();
 			} catch (IndexOutOfBoundsException e) {
-				System.err.println("Out of ArrayBounds");
+				System.err.println("Out of ArrayBounds @ MultiTest");
 			} catch (NullPointerException e) {
-				
+				System.err.println("NullPointerException @ MultiTest");
 			}
-			
 		}
 		
 
 		public void taskDone(Creature creature_in, float calcFitness, float  calcDistance) {
-			System.out.println("Thread " + threadNr + " tested creature ID: " + creature_in.getID() + " | Fitness:" + calcFitness);
-			if (!test.getCreature().fitnessEvaulated()) {
-				creature_in.setFitness(calcFitness, calcDistance);
-			}
-			test.reset();
+			creature = creature_in;
+			fitness = calcFitness;
+			distance = calcDistance;
 		}
 		
 		public void pauseDone(Creature creature_in, float calcFitness, float calcDistnace) {
 			
 		}
-		public void stepCallback(int step) {
-			//System.out.println("");
-		}
-		
 	}
 
 	public ArrayList<Creature> getQueue() {

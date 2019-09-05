@@ -201,6 +201,13 @@ public class TestScreen extends Screen implements TestWrapper {
 		for (B2DBody b : test.getWorldInstances()) {
 			drawBody(b);
 		}
+		drawGrid(test.getLevelisVertical());
+		drawMarkers(test.getLevelisVertical());
+		if (showScore && test.getCreature() != null) {
+			if (test.getCreature().fitnessEvaulated())
+				drawScore(test.getCreature().getDistance(), test.getLevelisVertical());
+		}
+
 		for (B2DBody b : test.getCreatureInstances()) {
 			drawBody(b);
 		}
@@ -208,15 +215,7 @@ public class TestScreen extends Screen implements TestWrapper {
 			for (RevoluteJoint rj : test.getRevoluteJoints()) {
 				drawMuscle(rj);
 			}
-		}
-		
-		drawGrid(test.getLevelisVertical());
-		drawMarkers(test.getLevelisVertical());
-		
-		if (showScore && test.getCreature() != null) {
-			if (test.getCreature().fitnessEvaulated())
-				drawScore(test.getCreature().getDistance(), test.getLevelisVertical());
-		}
+		}		
 		
 		if (showCurrentFitness) {
 			drawCurrentDistance(test.getLevelisVertical(), test.getCurrentDistance());
@@ -525,7 +524,5 @@ public class TestScreen extends Screen implements TestWrapper {
 	public int getCreatureID() {
 		return test.getCreature().getID();
 	}
-
-	public void stepCallback(int step) {}
 
 }

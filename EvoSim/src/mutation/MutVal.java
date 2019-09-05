@@ -39,6 +39,10 @@ public class MutVal implements Serializable {
 		max = mutVal_in.getMax();
 		value = mutVal_in.getVal();
 	}
+
+	public MutVal mul(float f) {
+		return new MutVal(min, max, value*f, genOffset);
+	}
 	
 	public MutVal mutate(int gen) {
 		Random r = new Random();
