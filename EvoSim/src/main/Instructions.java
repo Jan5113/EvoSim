@@ -16,7 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import population.Creature;
-import population.RootBone;
+import population.Root;
 
 public class Instructions extends BorderPane {
 	private BorderPane[] pages = new BorderPane[12];
@@ -255,7 +255,7 @@ public class Instructions extends BorderPane {
 
 	private TestScreen[] testScreen = new TestScreen[4];
 
-	private Creature tutorialCret = new Creature(0, new RootBone(0));
+	private Creature tutorialCret = new Creature(0, new Root(0));
 
 	private BorderPane getPage3() {
 		BorderPane page = new BorderPane();

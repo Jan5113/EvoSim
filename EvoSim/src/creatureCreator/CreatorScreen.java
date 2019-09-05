@@ -6,10 +6,10 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import display.Screen;
 import level.Level;
-import population.RootBone;
+import population.Root;
 public class CreatorScreen extends Screen {
 	
-	private RootBone creatureBlueprint;
+	private Root creatureBlueprint;
 	private Vec2 mouseCoord;
 	private CreatorToolMode toolMode;
 	private PosID firstSelected;
@@ -18,13 +18,13 @@ public class CreatorScreen extends Screen {
 	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes, scale_in, pos_in);
 		level = level_in;
-		creatureBlueprint = new RootBone(0);
+		creatureBlueprint = new Root(0);
 		toolMode = CreatorToolMode.NONE;
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> mousePressed(e));
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> clickEvent(e));
 	}
 	
-	public RootBone getBlueprint() {
+	public Root getBlueprint() {
 		return creatureBlueprint;
 	}
 
@@ -90,7 +90,7 @@ public class CreatorScreen extends Screen {
 	}
 
 	public void toolDelete() {
-		creatureBlueprint = new RootBone();
+		creatureBlueprint = new Root();
 		firstSelected = null;
 		refresh();
 	}

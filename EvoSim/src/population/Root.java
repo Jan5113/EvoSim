@@ -8,16 +8,16 @@ import box2d.B2DBody;
 import creatureCreator.PosID;
 import mutation.MutVec2;
 
-public class RootBone implements BoneParent {
+public class Root implements BoneParent {
     private MutVec2 rootPos;
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
     private int currentBoneID = 1;
 
-    public RootBone() {
+    public Root() {
     }
 
-    public RootBone(int init){ //init test
+    public Root(int init){ //init test
         switch (init) {
             case 0:
                 initTest();
@@ -27,7 +27,7 @@ public class RootBone implements BoneParent {
                 break;
         }
     }
-    private RootBone(MutVec2 rootPos_in, int currentBoneID_in) {
+    private Root(MutVec2 rootPos_in, int currentBoneID_in) {
         rootPos = rootPos_in;
         currentBoneID = currentBoneID_in;
     }
@@ -120,9 +120,9 @@ public class RootBone implements BoneParent {
         }
     }
 
-    public RootBone clone() {
+    public Root clone() {
         ArrayList<Bone> cloneRootChildren = new ArrayList<Bone>();
-        RootBone clone = new RootBone(rootPos.clone(), currentBoneID);
+        Root clone = new Root(rootPos.clone(), currentBoneID);
         for (Bone b : rootChildren) {
             cloneRootChildren.add(b.clone(clone));
         }
@@ -130,8 +130,8 @@ public class RootBone implements BoneParent {
         return clone;
     }
 
-    public RootBone getNewInit() {
-        RootBone clone = clone();
+    public Root getNewInit() {
+        Root clone = clone();
         for (Bone b : clone.rootChildren) {
             b.newInitMuscle();
         }
@@ -182,11 +182,11 @@ public class RootBone implements BoneParent {
         return rootPos.getVal();
 	}
 
-    public RootBone cloneCreature() {
+    public Root cloneCreature() {
         return null;
     }
 
-    public RootBone mutateCreature() {
+    public Root mutateCreature() {
         return null;
     }
 

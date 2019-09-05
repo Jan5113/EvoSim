@@ -23,7 +23,7 @@ public class Population implements Serializable{
 	private Vec2 testGrav;
 	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
 	private PopulationStatus popStat = PopulationStatus.S000_NOBLUEPRINT;
-	private RootBone creatureBlueprint;
+	private Root creatureBlueprint;
 	private Level level = new Level();
 	
 	private static float killVal = 0.8f;
@@ -38,7 +38,7 @@ public class Population implements Serializable{
 		popStat = PopulationStatus.S00_CREATOR;
 	}
 	
-	public void saveCreature(RootBone blueprint_in) {
+	public void saveCreature(Root blueprint_in) {
 		if (popStat != PopulationStatus.S00_CREATOR) {System.err.println("Creature already created!");return;}
 		creatureBlueprint = blueprint_in;
 		popStat = PopulationStatus.S0_NOTCREATED;
