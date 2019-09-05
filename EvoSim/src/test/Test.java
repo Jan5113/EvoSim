@@ -74,8 +74,11 @@ public class Test {
 	}
 	
 	private void buildCreature () {
-		if (creature == null) {System.err.println("No Creature set!"); return;}
-		if (testing) {System.err.println("No Creature set!"); return;}
+		if (creature == null) {System.err.println("No Creature set! 1"); return;}
+		if (testing) {
+			System.err.println("No Creature set! 2");
+			return;
+		}
 		creature.buildCreature(testWorld, creatureInstancesList, creatureRevoluteJointsList);
 	}
 	
@@ -117,12 +120,13 @@ public class Test {
 					parentWrapper.taskDone(creature, lastFitness, lastDistance);					
 					afterTestTime = testTimer + afterTestLength;
 				}	
-			} else if (level.getLevelStyle() == LevelStyle.JUMP) {float height = getAveragePosition().y;
+			} else if (level.getLevelStyle() == LevelStyle.JUMP) {
+				float height = getAveragePosition().y;
 				if (height > lastDistance) {
 					lastDistance = height;
 					lastRecordTime = testTimer;
 				}
-				if (testTimer > lastRecordTime + jumpTestDuration && !taskDone) { //abort TEST
+				if ((testTimer > lastRecordTime + jumpTestDuration || testTimer > testDuration) && !taskDone) { //abort TEST
 					taskDone = true;
 					lastFitness = lastDistance;
 					parentWrapper.taskDone(creature, lastFitness, lastDistance);					

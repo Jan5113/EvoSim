@@ -49,7 +49,7 @@ public class Population implements Serializable{
 		
 		populationSize = popSize_in;
 		for (int i = 0; i < populationSize; i++) {
-			Creature tempC = new Creature(currentID, creatureBlueprint);
+			Creature tempC = new Creature(currentID, creatureBlueprint.getNewInit());
 			currentID++;
 			addCreature(tempC);
 		}

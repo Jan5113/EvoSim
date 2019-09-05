@@ -180,13 +180,7 @@ public class Screen extends Canvas {
 		
 		gc.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
-
-	public void drawInfoNGrind(boolean vertical) {
-		if (infoEnabled != 0) drawInfo();
-		if (markersEnabled) drawMarkers(vertical);
-		if (gridEnabled) drawGrid(vertical);
-	}
-
+	
 	public void drawCurrentDistance(boolean vertical, float distance){
 		if (!vertical) return; //only draw when JUMP or CLIMB
 		drawLine(new Vec2(-2f, distance),new Vec2(0f, distance), Color.RED);
@@ -647,7 +641,8 @@ public class Screen extends Canvas {
 	 * This method draws the information string in the top left corner of this
 	 * {@link Screen} instance.
 	 */
-	private void drawInfo() {
+	public void drawInfo() {
+		if (infoEnabled == 0) return;
 		gc.save();
 		gc.setFill(Color.BLACK);
 		if (infoEnabled == 2) {
@@ -693,7 +688,8 @@ public class Screen extends Canvas {
 	 * This method draws the grid to the {@link Screen}. Every metre is marked and
 	 * every fifth metre is highlighted in red.
 	 */
-	private void drawGrid(boolean vertical) {
+	public void drawGrid(boolean vertical) {
+		if (!gridEnabled) return;
 		if (vertical) {
 			Vec2 startPos = new Vec2 ((float) Math.floor(camera.getPos().x), (float) Math.floor(camera.getPos().y));
 			for (float i = -Math.round(0.55f *(float) getWidth() / camera.getZoom()); i <= Math.round(0.55f *(float) getWidth() / camera.getZoom()); i++) {
@@ -747,7 +743,8 @@ public class Screen extends Canvas {
 	/**
 	 * This method draws the distance labels to the {@link Screen}.
 	 */
-	private void drawMarkers(boolean vertical) {
+	public void drawMarkers(boolean vertical) {
+		if (!markersEnabled) return;
 		if (vertical) {
 			Vec2 startPos = new Vec2 (0, (float) Math.floor(camera.getPos().y));
 			for (float i = -Math.round(0.55f *(float) getHeight() / camera.getZoom()); i <= Math.round(0.55f *(float) getHeight() / camera.getZoom()); i++) {

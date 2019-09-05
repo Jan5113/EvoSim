@@ -124,7 +124,8 @@ public class CreatorScreen extends Screen {
 		for (ProtoMuscle m : creatureBlueprint.muscleDefList) {
 			drawProtoMuscle(m);
 		}*/
-		drawInfoNGrind(level.isVertical());
+		drawGrid(level.isVertical());
+		drawMarkers(level.isVertical());
 	}
 
 	public void changeLevel(String s) {

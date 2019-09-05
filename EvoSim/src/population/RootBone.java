@@ -27,6 +27,10 @@ public class RootBone implements BoneParent {
                 break;
         }
     }
+    private RootBone(MutVec2 rootPos_in, int currentBoneID_in) {
+        rootPos = rootPos_in;
+        currentBoneID = currentBoneID_in;
+    }
 
     public Muscle[] getMuscleList() {
         if (muscleList == null) {
@@ -116,6 +120,24 @@ public class RootBone implements BoneParent {
         }
     }
 
+    public RootBone clone() {
+        ArrayList<Bone> cloneRootChildren = new ArrayList<Bone>();
+        RootBone clone = new RootBone(rootPos.clone(), currentBoneID);
+        for (Bone b : rootChildren) {
+            cloneRootChildren.add(b.clone(clone));
+        }
+        clone.rootChildren = cloneRootChildren;
+        return clone;
+    }
+
+    public RootBone getNewInit() {
+        RootBone clone = clone();
+        for (Bone b : clone.rootChildren) {
+            b.newInitMuscle();
+        }
+        return clone;
+    }
+
     public PosID selectJointNear(Vec2 pos) { // search for head -> for adding new bones
 		float dist = 0f;
 		PosID id = new PosID(-1, new Vec2());
@@ -171,7 +193,6 @@ public class RootBone implements BoneParent {
     private void initTest() {
         addBone(new Vec2(-1,0), new Vec2(-0.5f,1));
         addBone(1, new Vec2(0.5f,-1));
-        addBone(0, new Vec2(-0.5f,1));
     }
     
 }

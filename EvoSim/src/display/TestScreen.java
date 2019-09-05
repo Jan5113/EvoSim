@@ -210,13 +210,14 @@ public class TestScreen extends Screen implements TestWrapper {
 			}
 		}
 		
+		drawGrid(test.getLevelisVertical());
+		drawMarkers(test.getLevelisVertical());
+		
 		if (showScore && test.getCreature() != null) {
 			if (test.getCreature().fitnessEvaulated())
 				drawScore(test.getCreature().getDistance(), test.getLevelisVertical());
 		}
-
-		drawInfoNGrind(test.getLevelisVertical());
-
+		
 		if (showCurrentFitness) {
 			drawCurrentDistance(test.getLevelisVertical(), test.getCurrentDistance());
 		}		
@@ -226,6 +227,8 @@ public class TestScreen extends Screen implements TestWrapper {
 
 		if (infoEnabled() != 0)
 			setInfoString();
+
+		drawInfo();
 
 		if (showTimer)
 			drawTimer(test.getTestTimer(), test.getTestDuration(), playBackSpeed);

@@ -23,7 +23,7 @@ public class Bone implements BoneParent{
     private BoneType boneType = BoneType.BONE;
     private final MutVec2 headDir;
     private final float length;
-    private float boneArg = 0.2f;
+    private float boneArg = 0.1f;
     private Muscle parentMuscle;
 
     private ArrayList<Bone> children= new ArrayList<Bone>();
@@ -34,6 +34,18 @@ public class Bone implements BoneParent{
         parent = parent_in;
         boneID = id_in;
         parentMuscle = pm;
+    }
+
+    private Bone(MutVec2 headDir_in, BoneParent parent_in, int id_in,
+    String name_in, float boneArg_in, Muscle parentMuscle_in, BoneType boneType_in) {
+        headDir = headDir_in;
+        length = headDir.getVal().length();
+        parent = parent_in;
+        boneID = id_in;
+        parentMuscle = parentMuscle_in;
+        boneArg = boneArg_in;
+        boneName = name_in;
+        boneType = boneType_in;
     }
 
     public Vec2 getHeadDir() {
@@ -125,7 +137,22 @@ public class Bone implements BoneParent{
         parentMuscle.getOffAngle(), parentMuscle.getOnAngle());
 		
 		return jointDef;
-	}
+    }
+    
+    public Bone clone(BoneParent newbp) {
+        Bone clone;
+        if (parentMuscle == null) {// root bone 
+            clone = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);
+        } else {
+            clone = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.clone(), boneType);
+        }
+        ArrayList<Bone> newChildren = new ArrayList<Bone>();
+        for (Bone b : children) {
+            newChildren.add(b.clone(clone));
+        }
+        clone.setChildren(newChildren);
+        return clone;
+    }
 
     public Vec2 getLocalHead() {
         return new Vec2(0.5f * length, 0);
@@ -205,7 +232,19 @@ public class Bone implements BoneParent{
         return muscleList;
     }
 
+    public void newInitMuscle() {
+        if (parentMuscle != null) parentMuscle.newInit();
+        for (Bone b : children) {
+            b.newInitMuscle();
+        }
+
+    }
+
     public ArrayList<Bone> getChildren() {
         return children;
+    }
+
+    private void setChildren(ArrayList<Bone> newChildren) {
+        children = newChildren;
     }
 }

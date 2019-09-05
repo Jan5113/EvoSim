@@ -21,7 +21,7 @@ public class Muscle {
 		enabled = enabled_in;
     }
 
-    public Muscle(MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in,
+    private Muscle(MutTimer timer1_in, MutTimer timer2_in, MutVal angle_in, MutVal angleOffset_in,
 			float angleMin_in, float angleMax_in, float maxTorque_in, boolean enabled_in) {
 		timer1 = timer1_in;
 		timer2 = timer2_in;
@@ -32,6 +32,19 @@ public class Muscle {
 		maxTorque = maxTorque_in;
 		enabled = enabled_in;
 	}
+
+	public Muscle clone() {
+		return new Muscle(timer1.clone(), timer2.clone(), angle.clone(), angleOffset.clone(), 
+		angleMin, angleMax, maxTorque, enabled);
+	}
+
+	public void newInit() {
+		timer1 = new MutTimer();
+		timer2 = new MutTimer();
+		angle = new MutVal(0, 1);
+		angleOffset = new MutVal((float) (-Math.PI), (float) (Math.PI));
+	}
+
 
     public float getTorque() {
         return maxTorque;
@@ -67,6 +80,5 @@ public class Muscle {
 		else if (offAngle > angleMax) return angleMax;
 		return offAngle;
 	}
-
 
 }
