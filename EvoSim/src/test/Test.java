@@ -163,10 +163,6 @@ public class Test {
 		testing = false;
 		creature = null;
 		afterTestTime = 10000.0f;
-
-		testWorld.clearForces();
-		//testWorld.getJointList().destructor();
-		
 		initWorld();
 	}
 	
