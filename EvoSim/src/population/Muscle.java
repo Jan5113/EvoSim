@@ -1,9 +1,12 @@
 package population;
 
+import java.io.Serializable;
+
 import mutation.MutTimer;
 import mutation.MutVal;
 
-public class Muscle {
+public class Muscle implements Serializable {
+	private static final long serialVersionUID = 1L;
     private MutTimer timer1 = new MutTimer();
 	private MutTimer timer2 = new MutTimer();
 	private MutVal angle = new MutVal(0, 1);

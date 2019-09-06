@@ -1,5 +1,6 @@
 package level;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -7,14 +8,15 @@ import org.jbox2d.dynamics.BodyType;
 import box2d.B2DBody;
 import javafx.scene.paint.Color;
 
-public class Level {
+public class Level implements Serializable {
+	private static final long serialVersionUID = 1L;
     LevelStyle levelStyle;
     private float incline = 0.3f;
     private float hurdleDist = 2f;
     private float hurdleHeight = 0.2f;
     private float hurdleWidth = 0.2f;
-    private float randDist = 2f;
-    private float randMaxDiff = 2f;
+    //private float randDist = 2f;
+    //private float randMaxDiff = 2f;
     private float climbHeight = 50f;
     private float climbWidth = 2f;
 
@@ -22,28 +24,22 @@ public class Level {
     private static float negX = 20f;
     private static float posX = 100f;
 
-    private ArrayList<B2DBody> levelBodies;
-
     public Level() {
-        //initIncline(0.2f);
-        //initRandom();
-        initFlat();
-        //initJump();
+        levelStyle = LevelStyle.FLAT;
     }
 
-    public void initFlat() {
+    public void getFlat(ArrayList<B2DBody> levelBodies) {
         levelStyle = LevelStyle.FLAT;
-        initStartArea();
+        getStartArea(levelBodies);
         B2DBody f = new B2DBody("flat");
         f.setUpRect(posX/2f, -thickness/2f, posX/2f, thickness/2f, 0f, BodyType.STATIC);
         setVisuals(f);
         levelBodies.add(f);
     }
 
-    public void initIncline(float incl_in) {
+    public void getIncline(ArrayList<B2DBody> levelBodies) {
         levelStyle = LevelStyle.INCLINE;
-        incline = incl_in;
-        initStartArea();
+        getStartArea(levelBodies);
         PolygonShape ps = new PolygonShape();
         Vec2[] verts = {
             new Vec2(0f, -thickness),
@@ -60,16 +56,9 @@ public class Level {
         levelBodies.add(poly);
     }
 
-    public void initHurdles(float dist, float height, float width) {
-        hurdleHeight = height;
-        hurdleDist = dist;
-        hurdleWidth = width;
-        initHurdles();
-    }
-
-    public void initHurdles() {
+    public void getHurdles(ArrayList<B2DBody> levelBodies) {
         levelStyle = LevelStyle.HURDLES;
-        initStartArea();
+        getStartArea(levelBodies);
         float x = 0f;
         while (x < posX - hurdleWidth - hurdleDist) {
             x += hurdleDist;
@@ -84,9 +73,9 @@ public class Level {
         levelBodies.add(f);
     }
 
-    public void initClimb() {
+    public void getClimb(ArrayList<B2DBody> levelBodies) {
         levelStyle = LevelStyle.CLIMB;
-        initStartArea();
+        getStartArea(levelBodies);
         B2DBody w1 = new B2DBody("wall"), w2 = new B2DBody("wall");
         w1.setUpRect(-climbWidth - 10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
         w2.setUpRect(10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
@@ -100,15 +89,15 @@ public class Level {
         levelBodies.add(f);
     }
 
-    public void initJump() {
+    public void getJump(ArrayList<B2DBody> levelBodies) {
         levelStyle = LevelStyle.JUMP;
-        initStartArea();  
+        getStartArea(levelBodies);  
         B2DBody f = new B2DBody("flat");
         f.setUpRect(negX/2f, -thickness/2f, negX/2f, thickness/2f, 0f, BodyType.STATIC);
         setVisuals(f);
         levelBodies.add(f);
     }
-
+/*
     public void initRandom() {
         levelStyle = LevelStyle.RANDOM;
         initStartArea();
@@ -133,30 +122,45 @@ public class Level {
             x += randDist;
         }     
         
-    }
+    }*/
 
-    private void initStartArea() {
-        levelBodies = new ArrayList<B2DBody>();
+    private void getStartArea(ArrayList<B2DBody> levelBodies) {
         levelBodies.add(new B2DBody("start"));
         levelBodies.get(0).setUpRect(-negX/2f, -thickness/2f, thickness/2f, negX/2f, 0f, BodyType.STATIC);
         setVisuals(levelBodies.get(0));
     }
 
     public ArrayList<B2DBody> getLevel() {
-        ArrayList<B2DBody> out = new ArrayList<B2DBody>();
-        for (B2DBody b : levelBodies) {
-            out.add(b.clone());
+        ArrayList<B2DBody> levelBodies = new ArrayList<B2DBody>();
+        switch (levelStyle) {
+            case CLIMB:
+                getClimb(levelBodies);
+                break;
+            case FLAT:
+                getFlat(levelBodies);
+                break;
+            case JUMP:
+                getJump(levelBodies);
+                break;
+            case RANDOM:
+                
+                break;
+            case HURDLES:
+                getHurdles(levelBodies);
+                break;
+            case INCLINE:
+                getIncline(levelBodies);
+                break;
+        
+            default:
+                break;
         }
-        return out;
+        return levelBodies;
     }
 
     private void setVisuals(B2DBody b) {
         b.setColor(Color.GREENYELLOW);
         b.setFill(true);
-    }
-
-    public float getIncline() {
-        return incline;
     }
 
     public LevelStyle getLevelStyle() {

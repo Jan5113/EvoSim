@@ -1,5 +1,6 @@
 package population;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -8,7 +9,9 @@ import box2d.B2DBody;
 import creatureCreator.PosID;
 import mutation.MutVec2;
 
-public class Root implements BoneParent {
+public class Root implements BoneParent, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
     private int currentBoneID = 1;

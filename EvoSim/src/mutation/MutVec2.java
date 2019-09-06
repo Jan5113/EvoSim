@@ -14,7 +14,7 @@ public class MutVec2 implements Serializable {
 		
 	public MutVec2(Vec2 val) {
 		minLength = 0.1f;
-		maxLength = val.mul(2).length();
+		maxLength = val.mul(1.5f).length();
 		x = new MutVal(-maxLength, maxLength, val.x);
 		y = new MutVal(-maxLength, maxLength, val.y);
 		float lenSq = x.getVal()*x.getVal()+y.getVal()*y.getVal();

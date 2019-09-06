@@ -1,5 +1,6 @@
 package population;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
@@ -15,7 +16,9 @@ import creatureCreator.PosID;
 import javafx.scene.paint.Color;
 import mutation.MutVec2;
 
-public class Bone implements BoneParent{
+public class Bone implements BoneParent, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private final int boneID;
     private final BoneParent parent;
 
