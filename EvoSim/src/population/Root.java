@@ -6,12 +6,14 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 import box2d.B2DBody;
 import creatureCreator.PosID;
+import mutation.MutVec2;
 
 public class Root implements BoneParent {
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
     private int currentBoneID = 1;
     private Vec2[] boundingBox; 
+    private MutationMode mutationMode = MutationMode.M2_ALLOW_NEW_BONES;
 
     public Root(boolean init){ //init test
         if (init) initTest();
@@ -142,11 +144,31 @@ public class Root implements BoneParent {
         ArrayList<Bone> mutateRootChildren = new ArrayList<Bone>();
         Root mutant = new Root(currentBoneID);
         for (Bone b : rootChildren) {
-            mutateRootChildren.add(b.mutate(mutant, gen));
+            mutateRootChildren.add(b.mutate(mutant, gen, mutationMode));
         }
+		if (Math.random() < 0.02) {
+            mutateRootChildren.add(new Bone(new MutVec2(gen).getVal(), this, currentBoneID, new Muscle()));
+            currentBoneID ++;
+        }
+
         mutant.rootChildren = mutateRootChildren;
         return mutant;
     }
+
+	public void setMutationMode(MutationMode mm) {
+		mutationMode = mm;
+	}
+
+	public MutationMode getMutationMode() {
+		return mutationMode;
+	}
+    
+
+    public int getIncrCurrentBoneID() {
+        currentBoneID++;
+        return currentBoneID - 1;
+    }
+
 
     public Root getNewInit() {
         Root clone = clone();

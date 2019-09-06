@@ -154,19 +154,36 @@ public class Bone implements BoneParent{
         return clone;
     }
     
-    public Bone mutate(BoneParent newbp, int gen) {
+    public Bone mutate(BoneParent newbp, int gen, MutationMode mm) {
         Bone mutant;
-        if (parentMuscle == null) {// root bone 
-            mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);
+        if (parentMuscle == null) {
+            if (mm == MutationMode.M0_ONLY_MUSCLE) {
+                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);                
+            } else {
+                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, null, boneType);                
+            }
         } else {
-            mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);
+            if (mm == MutationMode.M0_ONLY_MUSCLE) {
+                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
+            } else {
+                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
+            }
+
         }
         ArrayList<Bone> newChildren = new ArrayList<Bone>();
         for (Bone b : children) {
-            newChildren.add(b.mutate(mutant, gen));
+            newChildren.add(b.mutate(mutant, gen, mm));
         }
+		if (mm == MutationMode.M2_ALLOW_NEW_BONES && Math.random() < 0.02) {
+            newChildren.add(new Bone(new MutVec2(gen).getVal(), this, parent.getIncrCurrentBoneID(), new Muscle()));
+        }
+
         mutant.setChildren(newChildren);
         return mutant;
+    }
+
+    public int getIncrCurrentBoneID() {
+        return parent.getIncrCurrentBoneID();
     }
 
     public Vec2 getLocalHead() {

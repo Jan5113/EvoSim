@@ -12,6 +12,7 @@ import mutation.MutVal;
 
 public class Creature  implements Serializable, Comparable<Creature>{
 	private static final long serialVersionUID = 1L;
+
 	private final Root rootBone;
 	
 	private final MutVal cycleLength;
@@ -92,6 +93,14 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	
 	public Creature mutate(int id, int gen) {
 		return new Creature(id, rootBone.mutate(gen), cycleLength.mutate(gen));
+	}
+
+	public void setMutationMode(MutationMode mm) {
+		rootBone.setMutationMode(mm);
+	}
+
+	public MutationMode getMutationMode() {
+		return rootBone.getMutationMode();
 	}
 
 	public int compareTo(Creature c) {

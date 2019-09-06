@@ -18,6 +18,15 @@ public class MutVal implements Serializable {
 		max = max_in;
 		genOffset = genOffset_in;
 	}
+	
+	public MutVal(float min_in, float max_in, int genOffset_in) {
+		if (min_in > max_in) max_in += (min_in - (min_in = max_in)); // swap
+		min = min_in;
+		max = max_in;
+		value = (float) Math.random()*(max - min) + min;
+		genOffset = genOffset_in;
+	}
+
 
 	public MutVal(float min_in, float max_in, float value_in) {
 		if (min_in > max_in) max_in += (min_in - (min_in = max_in)); // swap
@@ -59,7 +68,7 @@ public class MutVal implements Serializable {
 		}
 
 		int newGenOffset = genOffset - 1;
-		if(Math.abs(rand) > 2) {
+		if(Math.abs(rand) > 1.6) { // 5.4%
 			newGenOffset = gen / 2;
 		}
 		
