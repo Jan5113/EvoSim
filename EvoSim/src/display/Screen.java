@@ -1,4 +1,5 @@
 package display;
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
@@ -7,6 +8,7 @@ import org.jbox2d.dynamics.joints.RevoluteJoint;
 import box2d.B2DBody;
 import box2d.B2DCamera;
 import box2d.ShapeType;
+import creatureCreator.PosID;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -215,17 +217,20 @@ public class Screen extends Canvas {
 	 *            is drawn on the {@link Screen}
 	 */
 	public void drawBody(B2DBody body) {
+		drawBody(body, body.getFill(), false);
+	}
+	public void drawBody(B2DBody body, boolean active, boolean selected) {
 		if (body.getShapeType() == ShapeType.CIRCLE) {
-			drawSphere(body);
+			drawSphere(body, active, selected);
 		}
 		else if (body.getShapeType() == ShapeType.RECT) {
-			drawCuboid(body);
+			drawCuboid(body, active, selected);
 		}
 		else if (body.getShapeType() == ShapeType.POINT) {
-			drawCross(body);
+			drawCross(body, selected);
 		}
 		else if (body.getShapeType() == ShapeType.POLYGON) {
-			drawPolygon(body);
+			drawPolygon(body, active, selected);
 		}
 	}
 	
@@ -238,11 +243,11 @@ public class Screen extends Canvas {
 	 * @param cube
 	 *            is drawn on the {@link Screen} as a cuboid
 	 */
-	private void drawCuboid(B2DBody cube) {
+	private void drawCuboid(B2DBody cube, boolean active, boolean selected) {
 		drawPxRect(camera.coordWorldToPixels(cube.getPos()),
 				camera.scalarWorldToPixels(cube.getDim()),
 				(float) Math.toDegrees(-cube.getAngle()),
-				cube.getColor(), cube.getFill());
+				cube.getColor(selected), active);
 	}
 	
 	/**
@@ -255,11 +260,11 @@ public class Screen extends Canvas {
 	 * @param sphere
 	 *            is drawn on the {@link Screen} as a circle
 	 */
-	private void drawSphere(B2DBody sphere) {
+	private void drawSphere(B2DBody sphere, boolean active, boolean selected) {
 		Vec2 pos = camera.coordWorldToPixels(sphere.getPos());
 		float rad = camera.scalarWorldToPixels(sphere.getDim().x);
 		float angl = (float) Math.toDegrees(-sphere.getAngle());
-		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(), sphere.getFill());
+		drawPxLineCircle(pos.x, pos.y, rad, angl, sphere.getColor(selected), active);
 	}
 	
 	/**
@@ -289,11 +294,11 @@ public class Screen extends Canvas {
 	 * @param point
 	 *            is drawn on the {@link Screen} as a cross
 	 */
-	public void drawCross(B2DBody point) {
+	public void drawCross(B2DBody point, boolean selected) {
 		Vec2 dim = point.getDim();
-		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor());
+		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor(selected));
 		dim = new Vec2 (dim.x, -dim.y);
-		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor());
+		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor(selected));
 	}
 	
 	/**
@@ -383,14 +388,22 @@ public class Screen extends Canvas {
 		
 	}*/
 
-	public void drawPolygon(B2DBody body) {
+	public void drawPolygon(B2DBody body, boolean active, boolean selected) {
 		Vec2[] points = body.getPolygon();
 		Vec2[] pxPoints = new Vec2[points.length];
 
 		for (int i = 0; i < points.length; i++) {
 			pxPoints[i] = camera.coordWorldToPixels(points[i]);
 		}
-		drawPxPolygon(pxPoints, body.getColor(), body.getFill());
+		drawPxPolygon(pxPoints, body.getColor(selected), active);
+	}
+
+	public void drawJoint(PosID joint, boolean active, boolean selected, Vec2 rootPos) {
+		Color c = Color.RED;
+		if (selected) c = Color.DARKRED;
+		Vec2 pos = camera.coordWorldToPixels(joint.pos.add(rootPos));
+		float rad = camera.scalarWorldToPixels(0.08f);
+		drawPxCircle(pos.x, pos.y, rad, rad, c, active);
 	}
 
 	

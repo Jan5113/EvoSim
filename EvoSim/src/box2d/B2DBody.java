@@ -82,6 +82,7 @@ public class B2DBody {
 	 * enabled).
 	 */
 	private Color drawColor;
+	private Color selectedDrawColor;
 	/**
 	 * {@code drawFill} specifies whether the {@link B2DBody} is rendered filled or as a frame.
 	 */
@@ -136,7 +137,7 @@ public class B2DBody {
 	}
 
 	public B2DBody(Body body_in, BodyDef bodyDef_in, FixtureDef fixtureDef_in, PolygonShape polygonShape_in,
-	CircleShape circleShape_in, Vec2 dimensions_in, ShapeType shapeType_in, Color drawColor_in,
+	CircleShape circleShape_in, Vec2 dimensions_in, ShapeType shapeType_in, Color drawColor_in, Color selectedDrawColor_in,
 	boolean drawFill_in, boolean isCreated_in,int id_in, String name_in){	
 		body = body_in;
 		bodyDef = bodyDef_in;
@@ -146,6 +147,7 @@ public class B2DBody {
 		dimensions = dimensions_in;
 		shapeType = shapeType_in;
 		drawColor = drawColor_in;
+		selectedDrawColor = selectedDrawColor_in;
 		drawFill = drawFill_in;
 		isCreated = isCreated_in;
 		id = id_in;
@@ -217,6 +219,7 @@ public class B2DBody {
 	 */
 	public void setDefaultPaint() {
 		drawColor = Color.BLUE;
+		selectedDrawColor = Color.CORNFLOWERBLUE;
 		drawFill = false;
 	}
 	
@@ -812,6 +815,10 @@ public class B2DBody {
 	public Color getColor() {
 		return drawColor;
 	}
+	public Color getColor(boolean selected) {
+		if (selected) return selectedDrawColor;
+		else return drawColor;
+	}
 	
 	/**
 	 * Gives a reference of the {@link Body} of this {@link B2DBody} instance. Only
@@ -862,7 +869,8 @@ public class B2DBody {
 	}
 
 	public B2DBody clone() {
-		return new B2DBody(body, bodyDef, fixtureDef, polygonShape, circleShape, dimensions, shapeType, drawColor, drawFill, isCreated, id, name);
+		return new B2DBody(body, bodyDef, fixtureDef, polygonShape, circleShape, dimensions,
+		shapeType, drawColor, selectedDrawColor, drawFill, isCreated, id, name);
 	}
 	
 //	Add in future:

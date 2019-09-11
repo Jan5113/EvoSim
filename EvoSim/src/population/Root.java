@@ -14,6 +14,8 @@ public class Root implements BoneParent, Serializable {
     
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
+    private ArrayList<B2DBody> creatureBodies;
+    private ArrayList<PosID> creatureJoints;
     private int currentBoneID = 1;
     private Vec2[] boundingBox; 
     private MutationMode mutationMode = MutationMode.M2_ALLOW_NEW_BONES;
@@ -44,12 +46,15 @@ public class Root implements BoneParent, Serializable {
     }
 
     public ArrayList<PosID> getJointPos() {
-		ArrayList<PosID> jointList = new ArrayList<PosID>();
-		jointList.add(new PosID(0, new Vec2()));
-		for (Bone b : rootChildren) {
-			b.getJointPos(jointList, new Vec2());
+        if (isEmpty()) return null;
+        if (creatureJoints == null) {
+            creatureJoints = new ArrayList<PosID>();
+            creatureJoints.add(new PosID(0, new Vec2()));
+            for (Bone b : rootChildren) {
+                b.getJointPos(creatureJoints, new Vec2());
+            }
         }
-		return jointList;
+		return creatureJoints;
 	}
 
     public ArrayList<PosID> getBonePos() {
@@ -82,9 +87,15 @@ public class Root implements BoneParent, Serializable {
 
     }
 
-    public void addBone(Vec2 dir_head) {
-        addBone(0, dir_head);
-        muscleList = null;
+    public ArrayList<B2DBody> getCreatureBodies(Vec2 rootPos) {
+        if (creatureBodies == null) {
+            creatureBodies = new ArrayList<B2DBody>();
+            //root bone (no muscle)
+            for (Bone b : rootChildren) {
+                b.getCreatureBodies(creatureBodies, rootPos);
+            }
+        }
+        return creatureBodies;
     }
 
     public void addBone(int parentID, Vec2 dir) {
@@ -102,6 +113,8 @@ public class Root implements BoneParent, Serializable {
         currentBoneID++;
         muscleList = null;
         boundingBox = null;
+        creatureBodies = null;
+        creatureJoints = null;
     }
 
     public void addHead(int parentID, float size) {
@@ -117,6 +130,8 @@ public class Root implements BoneParent, Serializable {
         currentBoneID++;
         muscleList = null;
         boundingBox = null;
+        creatureBodies = null;
+        creatureJoints = null;
     }
 
     public void refreshMuscleList() {
@@ -194,19 +209,6 @@ public class Root implements BoneParent, Serializable {
 		return id;
 	}
 
-	public PosID selectMuscleNear(Vec2 pos) { // search for root -> for editing muscle
-		float dist = 0f;
-		PosID ids = new PosID(new int[]{-1}, new Vec2());
-		for (PosID pid : getMusclePos()) {
-			float tempDist = 1/(pid.pos.add(pos.negate()).lengthSquared() + 1);
-			if (tempDist > dist) {
-				dist = tempDist;
-				ids = pid;
-			}
-		}
-		return ids;
-	}
-
 	public PosID selectBoneNear(Vec2 pos) {
 		float dist = 0f;
 		PosID id = new PosID(-1, new Vec2());
@@ -226,8 +228,13 @@ public class Root implements BoneParent, Serializable {
 	}
 
     private void initTest() {
-        addBone(new Vec2(0.5f,1));
+        addBone(0, new Vec2(0.5f,1));
         addBone(1, new Vec2(0.5f,-1));
+    }
+
+
+    public boolean isEmpty() {
+        return rootChildren.size() == 0;
     }
     
 }

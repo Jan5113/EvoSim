@@ -13,6 +13,7 @@ public class CreatorScreen extends Screen {
 	private Vec2 mouseCoord;
 	private CreatorToolMode toolMode;
 	private PosID firstSelected;
+	private Vec2 rootPos = new Vec2();
 	private Level level;
 
 	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
@@ -42,41 +43,19 @@ public class CreatorScreen extends Screen {
 			case NONE:
 			break;
 			case ADD_BONE:
-				
-
-				/*
-				BONE
-				if (firstSelected == -1) {
-					firstSelected = creatureBlueprint.selectJointNear(clickPos);
+				if (firstSelected == null && creatureBlueprint.isEmpty()) {
+					firstSelected = new PosID(0, new Vec2());
+					rootPos = clickPos;
+				} else if (firstSelected == null) {
+					firstSelected = creatureBlueprint.selectJointNear(clickPos.add(rootPos.negate()));
 				} else {
-					int secondSelected = creatureBlueprint.selectJointNear(clickPos);
-					if (firstSelected == secondSelected) break;
-					creatureBlueprint.addBone(creatureBlueprint.selectJointNear(clickPos), firstSelected);
-					firstSelected = -1;
+					creatureBlueprint.addBone(firstSelected.id,
+						clickPos.add(rootPos.add(firstSelected.pos).negate()));
+					firstSelected = null;
 				}
-				JOINT
-				if (clickPos.x > 0f || clickPos.x < -2f || clickPos.y > 2f || clickPos.y < 0f) return;
-				creatureBlueprint.addJoint(clickPos);
-				
-				MUSCLE
-				if (firstSelected == -1) {
-					firstSelected = creatureBlueprint.selectBoneNear(clickPos);
-				} else {
-					int secondSelected = creatureBlueprint.selectBoneNear(clickPos);
-					if (firstSelected == secondSelected) break;
-					int j = creatureBlueprint.getCommonJoint(secondSelected, firstSelected);
-					if (j == -1) {
-						System.err.println("No common joint found!");
-						firstSelected = -1;
-					} else {
-						creatureBlueprint.addMuscle(j, secondSelected, firstSelected);
-						firstSelected = -1;
-					}
-				}
-				*/
 			break;
 			case ADD_HEAD:
-				creatureBlueprint.addHead(firstSelected.id, 0.2f);
+				
 			break;
 			case SELECT:
 			break;
@@ -117,15 +96,30 @@ public class CreatorScreen extends Screen {
 		for (B2DBody b : levelBodies) {
 			drawBody(b);
 		}
-/*
-		for (ProtoJoint j : creatureBlueprint.jointDefList) {
-			drawProtoJoint(j, firstSelected == j.ID && toolMode == CreatorToolMode.ADD_BONE);
-		}
-		for (ProtoMuscle m : creatureBlueprint.muscleDefList) {
-			drawProtoMuscle(m);
-		}*/
 		drawGrid(level.isVertical());
 		drawMarkers(level.isVertical());
+
+		if (!creatureBlueprint.isEmpty()) {
+			for (B2DBody b : creatureBlueprint.getCreatureBodies(rootPos)) {
+				boolean active = toolMode == CreatorToolMode.SELECT;
+				boolean selected = false;
+				if (firstSelected != null) selected = firstSelected.id == b.getId();
+				drawBody(b, active, selected);
+			}
+			for (PosID j : creatureBlueprint.getJointPos()) {
+				boolean active = (toolMode == CreatorToolMode.ADD_HEAD ||
+						toolMode == CreatorToolMode.ADD_BONE);
+				boolean selected = false;
+				if (firstSelected != null) selected = firstSelected.id == j.id;
+				drawJoint(j, active, selected, rootPos);
+			}
+		} else if ((toolMode == CreatorToolMode.ADD_BONE 
+				|| toolMode == CreatorToolMode.ADD_HEAD)
+				&& firstSelected != null) {
+			drawJoint(firstSelected, true, true, rootPos);
+		}
+
+		
 	}
 
 	public void changeLevel(String s) {

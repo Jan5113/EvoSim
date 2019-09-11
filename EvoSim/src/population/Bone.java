@@ -141,6 +141,13 @@ public class Bone implements BoneParent, Serializable {
 		
 		return jointDef;
     }
+
+    public void getCreatureBodies(ArrayList<B2DBody> bodies, Vec2 parentHeadPos) {
+        bodies.add(buildBone(parentHeadPos));
+        for (Bone b : children) {
+            b.getCreatureBodies(bodies, parentHeadPos.add(headDir.getVal()));
+        }
+    }
     
     public Bone clone(BoneParent newbp) {
         Bone clone;
