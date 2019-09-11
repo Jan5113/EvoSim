@@ -123,29 +123,12 @@ public class MultiTest{
 		}
 		status = MultiTestStatus.TESTING;
 	}
-	
-	/**
-	 * Starts calculation with only one thread (to avoid sync-problems)
-	 */
-	private void startSingleThread() {
-		testArray[0].start();
-	}
-	
-	/**
-	 * Searches not tested {@link Creature} instances in the population and
-	 * adds them to the queue.
-	 */
-	private void fixMissingTests() {
-		ArrayList<Creature> notTested = pop.notTestedCreatures();
 
-		if (notTested.size() != 0) {
-			System.out.println("Detected " + notTested.size() + " skipped Creatures!");
-			addCreatureListToQueue(notTested);
-			startSingleThread();
-			status = MultiTestStatus.FIXING;
+	private synchronized Creature getNextCreature () {
+		if (creatureQueue.size() != 0) {
+			return creatureQueue.remove(0);
 		} else {
-			status = MultiTestStatus.FIXING;
-			threadExit();
+			return null;
 		}
 	}
 	
@@ -158,9 +141,6 @@ public class MultiTest{
 		System.out.println("Done  " + status.toString());
 		
 		if (status == MultiTestStatus.TESTING) {
-			fixMissingTests();
-		}
-		else if (status == MultiTestStatus.FIXING || status == MultiTestStatus.SINGLETESTING) {
 			status = MultiTestStatus.DONE;
 			pop.allTested();
 		}
@@ -244,17 +224,14 @@ public class MultiTest{
 		 * already evaluated creatures or empty queue.
 		 */
 		private void testCreature() {
-			if (creatureQueue.size() == 0) return;
 			try {
-				Creature c = creatureQueue.remove(0);
-				if (!c.fitnessEvaulated()) {
-					test.setCreature(c);
-					test.startTest();
-					while (!test.isTaskDone()) {
-						test.step(1f, 1.0f);
-					}					
-				} else {
-					//System.out.println("Creature ID " + c.getID() + " already tested!");
+				Creature c = getNextCreature();
+				if (c == null) return;
+				if (c.fitnessEvaulated()) return;
+				test.setCreature(c);
+				test.startTest();
+				while (!test.isTaskDone()) {
+					test.step(1f, 1.0f);
 				}
 				System.out.println("Thread " + threadNr + " tested creature ID: " + creature.getID() + " | Fitness:" + fitness);
 				if (!test.getCreature().fitnessEvaulated()) {
