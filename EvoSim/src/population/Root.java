@@ -162,7 +162,13 @@ public class Root implements BoneParent, Serializable {
         ArrayList<Bone> mutateRootChildren = new ArrayList<Bone>();
         Root mutant = new Root(currentBoneID);
         for (Bone b : rootChildren) {
-            mutateRootChildren.add(b.mutate(mutant, gen, mutationMode));
+            if (Math.random() < 0.02 && b.getID() != 1) {
+                for (Bone c : b.getChildren()) {
+                    mutateRootChildren.add(c.mutate(mutant, gen, mutationMode));
+                }
+            } else {
+                mutateRootChildren.add(b.mutate(mutant, gen, mutationMode));
+            }            
         }
 		if (Math.random() < 0.02) {
             mutateRootChildren.add(new Bone(new MutVec2(gen).getVal(), this, currentBoneID, new Muscle()));

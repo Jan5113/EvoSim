@@ -170,19 +170,25 @@ public class Bone implements BoneParent, Serializable {
             if (mm == MutationMode.M0_ONLY_MUSCLE) {
                 mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);                
             } else {
-                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, null, boneType);                
+                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);                
             }
         } else {
             if (mm == MutationMode.M0_ONLY_MUSCLE) {
                 mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
             } else {
-                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
+                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
             }
 
         }
         ArrayList<Bone> newChildren = new ArrayList<Bone>();
         for (Bone b : children) {
-            newChildren.add(b.mutate(mutant, gen, mm));
+            if (Math.random() < 0.02) {
+                for (Bone c : b.getChildren()) {
+                    newChildren.add(c.mutate(mutant, gen, mm));
+                }
+            } else {
+                newChildren.add(b.mutate(mutant, gen, mm));
+            }
         }
 		if (mm == MutationMode.M2_ALLOW_NEW_BONES && Math.random() < 0.02) {
             newChildren.add(new Bone(new MutVec2(gen).getVal(), this, parent.getIncrCurrentBoneID(), new Muscle()));
