@@ -300,6 +300,14 @@ public class Screen extends Canvas {
 		dim = new Vec2 (dim.x, -dim.y);
 		drawLine (point.getPos().add(dim.negate()), point.getPos().add(dim), point.getColor(selected));
 	}
+	public void drawCross(Vec2 point, boolean selected) {
+		Vec2 dim = new Vec2(0.1f, 0.1f);
+		Color c = Color.RED;
+		if (selected) c = Color.DARKRED;
+		drawLine (point.add(dim.negate()), point.add(dim), c);
+		dim = new Vec2 (dim.x, -dim.y);
+		drawLine (point.add(dim.negate()), point.add(dim), c);
+	}
 	
 	/**
 	 * This method draws a line between two {@link B2DBone}s. The colour varies form white to 

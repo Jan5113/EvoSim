@@ -6,6 +6,7 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import display.Screen;
 import level.Level;
+import population.Bone;
 import population.Root;
 public class CreatorScreen extends Screen {
 	
@@ -15,6 +16,7 @@ public class CreatorScreen extends Screen {
 	private PosID firstSelected;
 	private Vec2 rootPos = new Vec2();
 	private Level level;
+	private CreatorControls creatorControls;
 
 	public CreatorScreen(Level level_in, double xRes, double yRes, float scale_in, Vec2 pos_in) {
 		super(xRes, yRes, scale_in, pos_in);
@@ -23,6 +25,10 @@ public class CreatorScreen extends Screen {
 		toolMode = CreatorToolMode.NONE;
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> mousePressed(e));
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> clickEvent(e));
+	}
+
+	public void setParent(CreatorControls cc) {
+		creatorControls = cc;
 	}
 	
 	public Root getBlueprint() {
@@ -58,6 +64,9 @@ public class CreatorScreen extends Screen {
 				
 			break;
 			case SELECT:
+				if (creatureBlueprint.isEmpty()) break;
+				firstSelected = creatureBlueprint.selectBoneNear(clickPos.add(rootPos.negate()));
+				creatorControls.setSelectedBone(creatureBlueprint.getBone(firstSelected.id));
 			break;
 			default:
 		}
@@ -105,13 +114,16 @@ public class CreatorScreen extends Screen {
 				boolean selected = false;
 				if (firstSelected != null) selected = firstSelected.id == b.getId();
 				drawBody(b, active, selected);
+				if (firstSelected != null && firstSelected.mPos != null)
+					drawJoint(new PosID(firstSelected.id, firstSelected.mPos), true, false, rootPos);
+				if (!creatureBlueprint.isEmpty() && active) drawCross(rootPos, false);
 			}
 			for (PosID j : creatureBlueprint.getJointPos()) {
 				boolean active = (toolMode == CreatorToolMode.ADD_HEAD ||
 						toolMode == CreatorToolMode.ADD_BONE);
 				boolean selected = false;
 				if (firstSelected != null) selected = firstSelected.id == j.id;
-				drawJoint(j, active, selected, rootPos);
+				if (active) drawJoint(j, active, selected, rootPos);
 			}
 		} else if ((toolMode == CreatorToolMode.ADD_BONE 
 				|| toolMode == CreatorToolMode.ADD_HEAD)

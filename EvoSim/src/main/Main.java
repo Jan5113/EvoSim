@@ -193,7 +193,7 @@ public class Main extends Application{
 		BorderPane.setAlignment(mainCreatorScreen, Pos.TOP_LEFT);
 		
 		bp_creatorControl = new CreatorControls(mainCreatorScreen);
-		
+		mainCreatorScreen.setParent(bp_creatorControl);
 		closeCreator();		
 	}
 

@@ -64,25 +64,24 @@ public class Bone implements BoneParent, Serializable {
     }
 
     public ArrayList<PosID> getBonePos(ArrayList<PosID> boneList, Vec2 parentHeadPos) {
-		boneList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal().mul(0.5f))));
+        if (boneID == 1) boneList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal().mul(0.5f))));
+        else boneList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal().mul(0.5f)), parentHeadPos));
+		
 		for (Bone pb : children) {
             pb.getBonePos(boneList, parentHeadPos.add(headDir.getVal()));
 		}
 		return boneList;
 	}
 
-    public ArrayList<PosID> getMusclePos(ArrayList<PosID> musclePosList, Vec2 parentHeadPos) {
-        int[] ids = new int[children.size()];
-        for (int i = 0; i < children.size(); i++) {
-            ids[i] = children.get(i).getID();
+    public void getBone(int id, Bone bone) {
+        if (boneID == id) {
+            bone = this;
+            return;
         }
-		musclePosList.add(new PosID(ids, parentHeadPos.add(headDir.getVal())));
-		for (Bone b : children) {
-            b.getMusclePos(musclePosList, parentHeadPos.add(headDir.getVal()));
-		}
-		return musclePosList;
-	}
-
+        for (Bone b : children) {
+            b.getBone(id, bone);
+        }
+    }
 
     public void build(World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in,
     B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {

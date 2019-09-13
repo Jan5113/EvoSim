@@ -219,7 +219,7 @@ public class B2DBody {
 	 */
 	public void setDefaultPaint() {
 		drawColor = Color.BLUE;
-		selectedDrawColor = Color.CORNFLOWERBLUE;
+		selectedDrawColor = Color.DARKBLUE;
 		drawFill = false;
 	}
 	

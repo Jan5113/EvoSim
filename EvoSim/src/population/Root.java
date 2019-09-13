@@ -58,20 +58,21 @@ public class Root implements BoneParent, Serializable {
 	}
 
     public ArrayList<PosID> getBonePos() {
+        if (isEmpty()) return null;
 		ArrayList<PosID> boneList = new ArrayList<PosID>();
 		for (Bone b : rootChildren) {
-			b.getJointPos(boneList, new Vec2());
+			b.getBonePos(boneList, new Vec2());
         }
 		return boneList;
 	}
 
-    public ArrayList<PosID> getMusclePos() {
-		ArrayList<PosID> musclePosList = new ArrayList<PosID>();
-		for (int i = 1; i < rootChildren.size(); i++) {
-            rootChildren.get(i).getMusclePos(musclePosList, new Vec2());
-		}
-		return musclePosList;
-	}
+    public Bone getBone(int id) {
+        Bone bone = null;
+        for (Bone b : rootChildren) {
+            b.getBone(id, bone);
+        }
+        return bone;
+    }
 
     public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,
             ArrayList<RevoluteJoint> revoluteJoints_in) {

@@ -1,4 +1,5 @@
 package creatureCreator;
+
 import display.Layout;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
@@ -6,6 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import population.Bone;
 
 public class CreatorControls extends BorderPane {
 
@@ -24,6 +26,8 @@ public class CreatorControls extends BorderPane {
 
 	private ComboBox<String> cbb_level;
 	private String[] levels = {"Flat Level", "Hurdles", "Incline", "Random"};
+	
+	private Bone selectedBone;
 
 	public CreatorControls(CreatorScreen cretatorScreen_in) {
 		cretatorScreen = cretatorScreen_in;
@@ -85,6 +89,10 @@ public class CreatorControls extends BorderPane {
 	}
 
 	public void refresh() {
+	}
+
+	public void setSelectedBone(Bone b) {
+		selectedBone = b;
 	}
 
 }
