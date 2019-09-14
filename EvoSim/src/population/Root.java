@@ -67,11 +67,12 @@ public class Root implements BoneParent, Serializable {
 	}
 
     public Bone getBone(int id) {
-        Bone bone = null;
+        ArrayList<Bone> bone = new ArrayList<Bone>();
         for (Bone b : rootChildren) {
             b.getBone(id, bone);
         }
-        return bone;
+        if (bone.size() != 0) return bone.get(0);
+        else return null;
     }
 
     public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,

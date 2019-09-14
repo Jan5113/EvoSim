@@ -62,6 +62,29 @@ public class MutVec2 implements Serializable {
 	public Vec2 getVal() {
 		return new Vec2(x.getVal(), y.getVal());
 	}
+
+	public float getMinLen() {
+		return minLength;
+	}
+
+	public float getMaxLen() {
+		return maxLength;
+	}
+
+	public void setMinMaxLen(float minLen_in, float maxLen_in) {
+		if (minLen_in > maxLen_in) maxLen_in += (minLen_in - (minLen_in = maxLen_in));
+		if (minLen_in * minLen_in > getLengthSq()) minLen_in = getLength();
+		if (maxLen_in * maxLen_in < getLengthSq()) maxLen_in = getLength();
+		minLength = minLen_in;
+		maxLength = maxLen_in;
+	}
+	public float getLengthSq() {
+		return x.getVal() * x.getVal() + y.getVal() * y.getVal();
+	}
+
+	public float getLength() {
+		return (float) Math.sqrt((double) getLengthSq());
+	}
 	
 	public MutVec2 clone() {
 		return new MutVec2(x.clone(), y.clone(), minLength, maxLength);

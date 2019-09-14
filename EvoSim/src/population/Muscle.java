@@ -89,4 +89,18 @@ public class Muscle implements Serializable {
 		return offAngle;
 	}
 
+	public float getMinAngl() {
+		return angleMin;
+	}
+
+	public float getMaxAngl() {
+		return angleMax;
+	}
+
+	public void setMinMaxAngl(float minAngl_in, float maxAngl_in) {
+		if (minAngl_in > maxAngl_in) maxAngl_in += (minAngl_in - (minAngl_in = maxAngl_in));
+		angleMin = minAngl_in;
+		angleMax = maxAngl_in;
+	}
+
 }

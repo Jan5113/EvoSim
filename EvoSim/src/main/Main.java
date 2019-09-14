@@ -185,8 +185,6 @@ public class Main extends Application{
 		mainCreatorScreen.setBackgroundCol(Layout.getSkycolor());
 		mainCreatorScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 		mainCreatorScreen.disableInfo();
-		mainCreatorScreen.disableMarkers();
-		mainCreatorScreen.disableGird();
 		mainCreatorScreen.disableViewLock();
 		mainCreatorScreen.camera.setZoom(150f);
 		Layout.defaultMargin(mainCreatorScreen);

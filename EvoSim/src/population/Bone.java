@@ -55,6 +55,10 @@ public class Bone implements BoneParent, Serializable {
         return headDir.getVal();
     }
 
+    public MutVec2 getHeadDirMutVec() {
+        return headDir;
+    }
+
 	public ArrayList<PosID> getJointPos(ArrayList<PosID> jointList, Vec2 parentHeadPos) {
 		jointList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal())));
 		for (Bone b : children) {
@@ -73,9 +77,9 @@ public class Bone implements BoneParent, Serializable {
 		return boneList;
 	}
 
-    public void getBone(int id, Bone bone) {
+    public void getBone(int id, ArrayList<Bone> bone) {
         if (boneID == id) {
-            bone = this;
+            bone.add(this);
             return;
         }
         for (Bone b : children) {
@@ -169,13 +173,13 @@ public class Bone implements BoneParent, Serializable {
             if (mm == MutationMode.M0_ONLY_MUSCLE) {
                 mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);                
             } else {
-                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, null, boneType);                
+                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, null, boneType);                
             }
         } else {
             if (mm == MutationMode.M0_ONLY_MUSCLE) {
                 mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
             } else {
-                mutant = new Bone(headDir.clone(), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
+                mutant = new Bone(headDir.mutate(gen), newbp, boneID, boneName, boneArg, parentMuscle.mutate(gen), boneType);                
             }
 
         }
@@ -276,6 +280,10 @@ public class Bone implements BoneParent, Serializable {
         for (Bone b : children) {
             b.getMuscles(muscleList);
         }
+    }
+
+    public Muscle getMuscle() {
+        return parentMuscle;
     }
 
     public void getBounds(Vec2[] boundingBox, Vec2 parentHeadPos) {

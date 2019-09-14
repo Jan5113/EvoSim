@@ -6,7 +6,6 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import display.Screen;
 import level.Level;
-import population.Bone;
 import population.Root;
 public class CreatorScreen extends Screen {
 	
