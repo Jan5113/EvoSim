@@ -302,6 +302,17 @@ public class Bone implements BoneParent, Serializable {
         }
     }
 
+    public float getCost() {
+        if (boneType == BoneType.HEAD) return 0;
+        float cost = 0;
+        if (parentMuscle != null) cost += 20;
+        cost += length * 100;
+        for (Bone b : children) {
+            cost += b.getCost();
+        }
+        return cost;
+    }
+
     public void newInitMuscle() {
         if (parentMuscle != null) parentMuscle.newInit();
         for (Bone b : children) {

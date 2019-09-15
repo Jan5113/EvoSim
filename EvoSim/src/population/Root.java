@@ -247,5 +247,13 @@ public class Root implements BoneParent, Serializable {
     public boolean isEmpty() {
         return rootChildren.size() == 0;
     }
+
+    public float getCost() {
+        float cost = 0;
+        for (Bone b : rootChildren) {
+            cost += b.getCost();
+        }
+        return cost;
+    }
     
 }
