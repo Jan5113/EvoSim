@@ -11,15 +11,9 @@ import javafx.scene.paint.Color;
 public class Level implements Serializable {
 	private static final long serialVersionUID = 1L;
     LevelStyle levelStyle;
-    private float incline = 0.3f;
-    private float hurdleDist = 2f;
-    private float hurdleHeight = 0.2f;
-    private float hurdleWidth = 0.2f;
-    //private float randDist = 2f;
-    //private float randMaxDiff = 2f;
-    private float climbHeight = 50f;
-    private float climbWidth = 2f;
+    private LevelSettings levelSettings = new LevelSettings();
 
+    private static float climbHeight = 50f;
     private static float thickness = 20f;
     private static float negX = 20f;
     private static float posX = 100f;
@@ -44,7 +38,7 @@ public class Level implements Serializable {
         Vec2[] verts = {
             new Vec2(0f, -thickness),
             new Vec2(posX, -thickness),
-            new Vec2(posX, posX*incline),
+            new Vec2(posX, posX*levelSettings.incline),
             new Vec2(0f, 0f)
         };
         ps.set(verts, verts.length);
@@ -60,10 +54,11 @@ public class Level implements Serializable {
         levelStyle = LevelStyle.HURDLES;
         getStartArea(levelBodies);
         float x = 0f;
-        while (x < posX - hurdleWidth - hurdleDist) {
-            x += hurdleDist;
+        while (x < posX - levelSettings.hurdleWidth - levelSettings.hurdleDist) {
+            x += levelSettings.hurdleDist;
             B2DBody h = new B2DBody("hurdle");
-            h.setUpRect(x + hurdleWidth/2f, hurdleHeight/2f, hurdleWidth/2f, hurdleHeight/2f, 0, BodyType.STATIC);
+            h.setUpRect(x + levelSettings.hurdleWidth/2f, levelSettings.hurdleHeight/2f,
+                levelSettings.hurdleWidth/2f, levelSettings.hurdleHeight/2f, 0, BodyType.STATIC);
             setVisuals(h);
             levelBodies.add(h);
         }        
@@ -77,7 +72,7 @@ public class Level implements Serializable {
         levelStyle = LevelStyle.CLIMB;
         getStartArea(levelBodies);
         B2DBody w1 = new B2DBody("wall"), w2 = new B2DBody("wall");
-        w1.setUpRect(-climbWidth - 10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
+        w1.setUpRect(-levelSettings.climbWidth - 10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
         w2.setUpRect(10f, climbHeight/2f, 10f, climbHeight/2f, 0, BodyType.STATIC);
         setVisuals(w1);
         setVisuals(w2);
@@ -167,10 +162,16 @@ public class Level implements Serializable {
         return levelStyle;
     }
 
+    public void setLevelStyle(LevelStyle ls_in) {
+        levelStyle = ls_in;
+    }
+
 	public boolean isVertical() {
         if (levelStyle == LevelStyle.CLIMB || levelStyle == LevelStyle.JUMP) return true;
 		return false;
-	}
-
-
+    }
+    
+    public LevelSettings getLevelSettings() {
+        return levelSettings;
+    }
 }

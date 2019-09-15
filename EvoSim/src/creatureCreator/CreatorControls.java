@@ -1,8 +1,8 @@
 package creatureCreator;
 
 import display.Layout;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import level.Level;
+import level.LevelSettings;
+import level.LevelStyle;
 import mutation.MutVec2;
 import population.Bone;
 import population.Muscle;
@@ -34,7 +37,29 @@ public class CreatorControls extends BorderPane {
 
 	private CheckBox cb_mm_1 = new CheckBox("length mutations");
 	private CheckBox cb_mm_2 = new CheckBox("grow/lose bones");
-	
+
+	private GridPane gp_levelProp = new GridPane();
+	private Label lbl_levelProp = new Label("Level Properties");
+
+	private ChoiceBox<LevelStyle> cb_level = new ChoiceBox<LevelStyle>();
+	private ObservableList<LevelStyle> levelStyles = FXCollections.observableArrayList(
+		LevelStyle.FLAT,
+		LevelStyle.INCLINE,
+		LevelStyle.HURDLES,
+		LevelStyle.JUMP,
+		LevelStyle.CLIMB
+	);
+	private TextField tf_incline = new TextField();
+	private TextField tf_climbWidth = new TextField();
+	private TextField tf_hurdleDist = new TextField();
+	private TextField tf_hurdleHeight = new TextField();
+	private TextField tf_hurdleWidth = new TextField();
+
+	private Label lbl_incline = new Label("incline");
+	private Label lbl_climbWidth = new Label("climb width: ");
+	private Label lbl_hurdleDist = new Label("hurdle dist: ");
+	private Label lbl_hurdleHeight = new Label("hurdle height: ");
+	private Label lbl_hurdleWidth = new Label("hurdle width: ");
 
 	private GridPane gp_boneProp = new GridPane();
 
@@ -51,9 +76,6 @@ public class CreatorControls extends BorderPane {
 	private Label lbl_maxAngl = new Label("max angle: ");
 
 	//private Button btn_human = new Button("Human");
-
-	private ChoiceBox<String> cbb_level = new ChoiceBox<String>();
-	private String[] levels = {"Flat Level", "Hurdles", "Incline"};
 	
 	private Bone selectedBone;
 
@@ -77,6 +99,25 @@ public class CreatorControls extends BorderPane {
 		gp_controls.add(btn_add, 1, 0);
 		gp_controls.add(btn_head, 1, 1);
 		//gp_controls.add(btn_human, 3, 0);
+
+		Layout.gridPane(gp_levelProp);
+		gp_levelProp.add(lbl_levelProp, 0, 0);
+		gp_levelProp.add(cb_level, 0, 1);
+		gp_levelProp.add(lbl_incline, 1, 0);
+		gp_levelProp.add(lbl_climbWidth, 1, 1);
+		gp_levelProp.add(tf_incline, 2, 0);
+		gp_levelProp.add(tf_climbWidth, 2, 1);
+		gp_levelProp.add(lbl_hurdleDist, 3, 0);
+		gp_levelProp.add(lbl_hurdleHeight, 3, 1);
+		gp_levelProp.add(tf_hurdleDist, 4, 0);
+		gp_levelProp.add(tf_hurdleHeight, 4, 1);
+		gp_levelProp.add(lbl_hurdleWidth, 5, 0);
+		gp_levelProp.add(tf_hurdleWidth, 6, 0);
+		tf_incline.setPrefWidth(50);
+		tf_climbWidth.setPrefWidth(50);
+		tf_hurdleDist.setPrefWidth(50);
+		tf_hurdleHeight.setPrefWidth(50);
+		tf_hurdleWidth.setPrefWidth(50);
 		
 		Layout.gridPane(gp_creatureProp);
 		gp_creatureProp.add(lbl_creatureProp, 0, 0);
@@ -99,10 +140,11 @@ public class CreatorControls extends BorderPane {
 		gp_boneProp.add(tf_minAngl, 3, 1);
 		gp_boneProp.add(tf_maxAngl, 3, 2);
 
-		cbb_level.getSelectionModel().selectFirst();
-		cbb_level.valueProperty().addListener(e -> {
-			cretatorScreen.changeLevel(cbb_level.getValue().toString());
+		cb_level.setItems(levelStyles);
+		cb_level.valueProperty().addListener(e -> {
+			cretatorScreen.changeLevel(cb_level.getValue());
 		});
+		updateLevel();
 		
 
 		btn_select.setOnAction(e -> {
@@ -164,6 +206,34 @@ public class CreatorControls extends BorderPane {
 			else cretatorScreen.getBlueprint().setMutationMode(MutationMode.M2_ALLOW_NEW_BONES);
 			updateMutMode();
 		});
+
+		
+
+		tf_incline.setOnAction(e -> {
+			Level level = cretatorScreen.getLevel();
+			level.getLevelSettings().incline = Float.parseFloat(tf_incline.getText());
+			updateLevel();	
+		});
+		tf_climbWidth.setOnAction(e -> {
+			Level level = cretatorScreen.getLevel();
+			level.getLevelSettings().climbWidth = Float.parseFloat(tf_climbWidth.getText());
+			updateLevel();	
+		});
+		tf_hurdleDist.setOnAction(e -> {
+			Level level = cretatorScreen.getLevel();
+			level.getLevelSettings().hurdleDist = Float.parseFloat(tf_hurdleDist.getText());
+			updateLevel();	
+		});
+		tf_hurdleHeight.setOnAction(e -> {
+			Level level = cretatorScreen.getLevel();
+			level.getLevelSettings().hurdleHeight = Float.parseFloat(tf_hurdleHeight.getText());
+			updateLevel();	
+		});
+		tf_hurdleWidth.setOnAction(e -> {
+			Level level = cretatorScreen.getLevel();
+			level.getLevelSettings().hurdleWidth = Float.parseFloat(tf_hurdleWidth.getText());
+			updateLevel();	
+		});
 	}
 	
 	private void enableAllBtns () {
@@ -173,6 +243,7 @@ public class CreatorControls extends BorderPane {
 		btn_head.setDisable(false);
 		selectedBone = null;
 		updateSelection();
+		deselectLevel();
 	}
 
 	public void refresh() {
@@ -181,6 +252,17 @@ public class CreatorControls extends BorderPane {
 	public void setSelectedBone(Bone b) {
 		selectedBone = b;
 		updateSelection();
+	}
+
+	public void selectLevel() {
+		gp_controls.getChildren().remove(gp_boneProp);
+		if (!gp_controls.getChildren().contains(gp_levelProp)) {
+			gp_controls.add(gp_levelProp, 3, 0, 1, 2);
+		}
+	}
+
+	public void deselectLevel() {
+		gp_controls.getChildren().remove(gp_levelProp);
 	}
 
 	public void updateMutMode() {
@@ -227,10 +309,20 @@ public class CreatorControls extends BorderPane {
 			if (!gp_controls.getChildren().contains(gp_boneProp)) {
 				gp_controls.add(gp_boneProp, 3, 0, 1, 2);
 			}
+			deselectLevel();
 		} else {
-			System.out.println("rm gp");
 			gp_controls.getChildren().remove(gp_boneProp);
 		}
+	}
+
+	public void updateLevel() {
+		LevelSettings levelSettings = cretatorScreen.getLevel().getLevelSettings();
+		cb_level.setValue(cretatorScreen.getLevel().getLevelStyle());
+		tf_incline.setText(Float.toString(levelSettings.incline));
+		tf_climbWidth.setText(Float.toString(levelSettings.climbWidth));
+		tf_hurdleDist.setText(Float.toString(levelSettings.hurdleDist));
+		tf_hurdleHeight.setText(Float.toString(levelSettings.hurdleHeight));
+		tf_hurdleWidth.setText(Float.toString(levelSettings.hurdleWidth));
 	}
 
 }

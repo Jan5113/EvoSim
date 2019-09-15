@@ -185,6 +185,8 @@ public class Main extends Application{
 		mainCreatorScreen.setBackgroundCol(Layout.getSkycolor());
 		mainCreatorScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
 		mainCreatorScreen.disableInfo();
+		mainCreatorScreen.enableGrid();
+		mainCreatorScreen.enableMarkers();
 		mainCreatorScreen.disableViewLock();
 		mainCreatorScreen.camera.setZoom(150f);
 		Layout.defaultMargin(mainCreatorScreen);
@@ -198,7 +200,7 @@ public class Main extends Application{
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
-		mainMultiTest = new MultiTest(6, pop);
+		mainMultiTest = new MultiTest(3, pop);
 		bp_popControl = new PopScreenControl(this, mainTestScreen, mainMultiTest, mainCreatorScreen, popScreen, pop);
 		Label popTitle = new Label("Population");
 		Layout.defaultMargin(popTitle);

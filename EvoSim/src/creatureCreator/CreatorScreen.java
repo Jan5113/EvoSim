@@ -6,6 +6,7 @@ import org.jbox2d.common.Vec2;
 import box2d.B2DBody;
 import display.Screen;
 import level.Level;
+import level.LevelStyle;
 import population.Root;
 public class CreatorScreen extends Screen {
 	
@@ -13,7 +14,7 @@ public class CreatorScreen extends Screen {
 	private Vec2 mouseCoord;
 	private CreatorToolMode toolMode;
 	private PosID firstSelected;
-	private Vec2 rootPos = new Vec2();
+	private Vec2 rootPos = new Vec2(-1, 0);
 	private Level level;
 	private CreatorControls creatorControls;
 
@@ -63,6 +64,11 @@ public class CreatorScreen extends Screen {
 				
 			break;
 			case SELECT:
+				if (clickPos.y < 0f) {
+					creatorControls.selectLevel();
+					firstSelected = null;
+					break;
+				}
 				if (creatureBlueprint.isEmpty()) break;
 				firstSelected = creatureBlueprint.selectBoneNear(clickPos.add(rootPos.negate()));
 				creatorControls.setSelectedBone(creatureBlueprint.getBone(firstSelected.id));
@@ -133,7 +139,11 @@ public class CreatorScreen extends Screen {
 		
 	}
 
-	public void changeLevel(String s) {
-		System.out.println(s);
+	public void changeLevel(LevelStyle ls_in) {
+		level.setLevelStyle(ls_in);
+	}
+
+	public Level getLevel() {
+		return level;
 	}
 }
