@@ -60,6 +60,7 @@ public class Bone implements BoneParent, Serializable {
     }
 
 	public ArrayList<PosID> getJointPos(ArrayList<PosID> jointList, Vec2 parentHeadPos) {
+        if (boneType == BoneType.HEAD) return jointList;
 		jointList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal())));
 		for (Bone b : children) {
 			b.getJointPos(jointList, parentHeadPos.add(headDir.getVal()));
@@ -69,6 +70,7 @@ public class Bone implements BoneParent, Serializable {
 
     public ArrayList<PosID> getBonePos(ArrayList<PosID> boneList, Vec2 parentHeadPos) {
         if (boneID == 1) boneList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal().mul(0.5f))));
+        else if (boneType == BoneType.HEAD) boneList.add(new PosID(boneID, parentHeadPos));
         else boneList.add(new PosID(boneID, parentHeadPos.add(headDir.getVal().mul(0.5f)), parentHeadPos));
 		
 		for (Bone pb : children) {
@@ -116,9 +118,9 @@ public class Bone implements BoneParent, Serializable {
 		B2DBody boneBody = new B2DBody(getID(), getName());
 		if (getBoneType() == BoneType.BONE) {
             float angle = B2DCamera.getRotation(getHeadDir());
-			boneBody.setUpRect(pos, new Vec2(0.5f * getBoneLength(), getBoneArg()), angle, BodyType.DYNAMIC);
+			boneBody.setUpRect(pos, new Vec2(0.5f * getBoneLength(), boneArg), angle, BodyType.DYNAMIC);
 		} else if (getBoneType() == BoneType.HEAD) {
-            boneBody.setUpCircle(pos, getBoneArg(), 0, BodyType.DYNAMIC);
+            boneBody.setUpCircle(parentHeadPos, boneArg, 0, BodyType.DYNAMIC);
             boneBody.setName("head");
         }
         
@@ -131,8 +133,9 @@ public class Bone implements BoneParent, Serializable {
     private JointDef buildMuscle(B2DBody bone, B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {
 		RevoluteJointDef jointDef = new RevoluteJointDef();
 		jointDef.initialize(bone.getBody(), parentBody.getBody(), parentHeadPos);
-		
-		jointDef.localAnchorA.set(getLocalRoot());
+        
+        if (boneType == BoneType.HEAD) jointDef.localAnchorA.set(new Vec2());
+        else jointDef.localAnchorA.set(getLocalRoot());
 		jointDef.localAnchorB.set(localParentHead);
 		
 		jointDef.maxMotorTorque = parentMuscle.getTorque();
@@ -168,6 +171,7 @@ public class Bone implements BoneParent, Serializable {
     }
     
     public Bone mutate(BoneParent newbp, int gen, MutationMode mm) {
+        if (boneType == BoneType.HEAD) return clone(newbp);
         Bone mutant;
         if (parentMuscle == null) {
             if (mm == MutationMode.M0_ONLY_MUSCLE) {
@@ -185,7 +189,7 @@ public class Bone implements BoneParent, Serializable {
         }
         ArrayList<Bone> newChildren = new ArrayList<Bone>();
         for (Bone b : children) {
-            if (Math.random() < 0.02) {
+            if (Math.random() < 0.02 && b.getBoneType() != BoneType.HEAD) {
                 for (Bone c : b.getChildren()) {
                     newChildren.add(c.mutate(mutant, gen, mm));
                 }
@@ -193,7 +197,7 @@ public class Bone implements BoneParent, Serializable {
                 newChildren.add(b.mutate(mutant, gen, mm));
             }
         }
-		if (mm == MutationMode.M2_ALLOW_NEW_BONES && Math.random() < 0.02) {
+		if (mm == MutationMode.M2_ALLOW_NEW_BONES && Math.random() < 0.02 && getBoneType() != BoneType.HEAD) {
             newChildren.add(new Bone(new MutVec2(gen).getVal(), this, parent.getIncrCurrentBoneID(), new Muscle()));
         }
 
@@ -233,8 +237,9 @@ public class Bone implements BoneParent, Serializable {
 
     public void addHead(int parentID, float size, int newID) {
         if (parentID == getID()) {
-            Bone head = new Bone(new Vec2(0,0), this, newID, new Muscle());
+            Bone head = new Bone(new Vec2(1,0), this, newID, new Muscle());
             head.setBoneType(BoneType.HEAD);
+            head.setBoneArg(size);
             children.add(head);
         } else {
             for (Bone b : children) {

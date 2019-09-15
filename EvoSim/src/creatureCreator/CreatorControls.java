@@ -15,6 +15,7 @@ import level.LevelSettings;
 import level.LevelStyle;
 import mutation.MutVec2;
 import population.Bone;
+import population.BoneType;
 import population.Muscle;
 import population.MutationMode;
 
@@ -294,17 +295,29 @@ public class CreatorControls extends BorderPane {
 
 			tf_minLen.setText(Float.toString(headDir.getMinLen()));
 			tf_maxLen.setText(Float.toString(headDir.getMaxLen()));
-			if (muscle != null) {
-				
-				tf_minAngl.setDisable(false);
-				tf_maxAngl.setDisable(false);
-				tf_minAngl.setText(Float.toString(muscle.getMinAngl()));
-				tf_maxAngl.setText(Float.toString(muscle.getMaxAngl()));
-			} else {
+			if (muscle == null) {
 				tf_minAngl.setDisable(true);
 				tf_maxAngl.setDisable(true);
+				tf_minLen.setDisable(false);
+				tf_maxLen.setDisable(false);
 				tf_minAngl.setText("-");
 				tf_maxAngl.setText("-");
+			} else if (selectedBone.getBoneType() == BoneType.HEAD) {
+				tf_minAngl.setDisable(true);
+				tf_maxAngl.setDisable(true);
+				tf_minLen.setDisable(true);
+				tf_maxLen.setDisable(true);
+				tf_minLen.setText("-");
+				tf_maxLen.setText("-");
+				tf_minAngl.setText("-");
+				tf_maxAngl.setText("-");
+			} else {
+				tf_minAngl.setDisable(false);
+				tf_maxAngl.setDisable(false);
+				tf_minLen.setDisable(false);
+				tf_maxLen.setDisable(false);
+				tf_minAngl.setText(Float.toString(muscle.getMinAngl()));
+				tf_maxAngl.setText(Float.toString(muscle.getMaxAngl()));
 			}
 			if (!gp_controls.getChildren().contains(gp_boneProp)) {
 				gp_controls.add(gp_boneProp, 3, 0, 1, 2);

@@ -14,8 +14,8 @@ public class Root implements BoneParent, Serializable {
     
     private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
-    private ArrayList<B2DBody> creatureBodies;
-    private ArrayList<PosID> creatureJoints;
+    private transient ArrayList<B2DBody> creatureBodies;
+    private transient ArrayList<PosID> creatureJoints;
     private int currentBoneID = 1;
     private Vec2[] boundingBox; 
     private MutationMode mutationMode = MutationMode.M2_ALLOW_NEW_BONES;
@@ -23,8 +23,9 @@ public class Root implements BoneParent, Serializable {
     public Root(boolean init){ //init test
         if (init) initTest();
     }
-    private Root(int currentBoneID_in) {
+    private Root(int currentBoneID_in, MutationMode mm) {
         currentBoneID = currentBoneID_in;
+        mutationMode = mm;
     }
 
     public Muscle[] getMuscleList() {
@@ -121,8 +122,9 @@ public class Root implements BoneParent, Serializable {
 
     public void addHead(int parentID, float size) {
         if (parentID == 0) {
-            Bone head = new Bone(new Vec2(0,0), this, currentBoneID, new Muscle());
+            Bone head = new Bone(new Vec2(1,0), this, currentBoneID, new Muscle());
             head.setBoneType(BoneType.HEAD);
+            head.setBoneArg(size);
             rootChildren.add(head);
         } else {
             for (Bone b : rootChildren) {
@@ -152,7 +154,7 @@ public class Root implements BoneParent, Serializable {
 
     public Root clone() {
         ArrayList<Bone> cloneRootChildren = new ArrayList<Bone>();
-        Root clone = new Root(currentBoneID);
+        Root clone = new Root(currentBoneID, mutationMode);
         for (Bone b : rootChildren) {
             cloneRootChildren.add(b.clone(clone));
         }
@@ -162,9 +164,9 @@ public class Root implements BoneParent, Serializable {
 
     public Root mutate(int gen) {
         ArrayList<Bone> mutateRootChildren = new ArrayList<Bone>();
-        Root mutant = new Root(currentBoneID);
+        Root mutant = new Root(currentBoneID, mutationMode);
         for (Bone b : rootChildren) {
-            if (Math.random() < 0.02 && b.getID() != 1) {
+            if (Math.random() < 0.02 && b.getID() != 1 && b.getBoneType() != BoneType.HEAD && mutationMode == MutationMode.M2_ALLOW_NEW_BONES) {
                 for (Bone c : b.getChildren()) {
                     mutateRootChildren.add(c.mutate(mutant, gen, mutationMode));
                 }
@@ -172,7 +174,7 @@ public class Root implements BoneParent, Serializable {
                 mutateRootChildren.add(b.mutate(mutant, gen, mutationMode));
             }            
         }
-		if (Math.random() < 0.02) {
+		if (Math.random() < 0.02 && mutationMode == MutationMode.M2_ALLOW_NEW_BONES) {
             mutateRootChildren.add(new Bone(new MutVec2(gen).getVal(), this, currentBoneID, new Muscle()));
             currentBoneID ++;
         }
@@ -182,7 +184,8 @@ public class Root implements BoneParent, Serializable {
     }
 
 	public void setMutationMode(MutationMode mm) {
-		mutationMode = mm;
+        mutationMode = mm;
+        System.out.println(mutationMode.toString());
 	}
 
 	public MutationMode getMutationMode() {

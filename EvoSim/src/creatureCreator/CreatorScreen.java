@@ -61,7 +61,8 @@ public class CreatorScreen extends Screen {
 				}
 			break;
 			case ADD_HEAD:
-				
+				if (creatureBlueprint.isEmpty()) break;
+				creatureBlueprint.addHead(creatureBlueprint.selectJointNear(clickPos.add(rootPos.negate())).id, 0.2f);
 			break;
 			case SELECT:
 				if (clickPos.y < 0f) {
@@ -130,8 +131,7 @@ public class CreatorScreen extends Screen {
 				if (firstSelected != null) selected = firstSelected.id == j.id;
 				if (active) drawJoint(j, active, selected, rootPos);
 			}
-		} else if ((toolMode == CreatorToolMode.ADD_BONE 
-				|| toolMode == CreatorToolMode.ADD_HEAD)
+		} else if ((toolMode == CreatorToolMode.ADD_BONE)
 				&& firstSelected != null) {
 			drawJoint(firstSelected, true, true, rootPos);
 		}

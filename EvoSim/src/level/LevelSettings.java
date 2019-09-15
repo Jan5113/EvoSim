@@ -1,6 +1,9 @@
 package level;
 
-public class LevelSettings {
+import java.io.Serializable;
+
+public class LevelSettings implements Serializable {
+    private static final long serialVersionUID = 1L;
     public float incline = 0.3f;
     public float hurdleDist = 2f;
     public float hurdleHeight = 0.2f;
@@ -10,7 +13,7 @@ public class LevelSettings {
     public float climbWidth = 2f;
 
     public LevelSettings() {
-        
+
     }
 
     public LevelSettings(float incline_in, float hurdleDist_in, float hurdleHeight_in, float hurdleWidth_in, float climbWidth_in) {
