@@ -12,7 +12,6 @@ import mutation.MutVec2;
 public class Root implements BoneParent, Serializable {
     private static final long serialVersionUID = 1L;
     
-    private ArrayList<Muscle> muscleList;
     private ArrayList<Bone> rootChildren = new ArrayList<Bone>();
     private transient ArrayList<B2DBody> creatureBodies;
     private transient ArrayList<PosID> creatureJoints;
@@ -26,17 +25,6 @@ public class Root implements BoneParent, Serializable {
     private Root(int currentBoneID_in, MutationMode mm) {
         currentBoneID = currentBoneID_in;
         mutationMode = mm;
-    }
-
-    public Muscle[] getMuscleList() {
-        if (muscleList == null) {
-            refreshMuscleList();
-        }
-        Muscle[] mArray = new Muscle[muscleList.size()];
-        for (int i = 0; i < muscleList.size(); i++) {
-            mArray[i] = muscleList.get(i);
-        }
-        return mArray;
     }
 
     public Vec2[] getBoundingBox() {
@@ -77,14 +65,14 @@ public class Root implements BoneParent, Serializable {
     }
 
     public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,
-            ArrayList<RevoluteJoint> revoluteJoints_in) {
+            ArrayList<RevoluteJoint> revoluteJoints_in, ArrayList<Muscle> muscles) {
         Vec2 pos = getBoundingBox()[1].negate();
         //root bone (no muscle)
-        B2DBody rootBody = rootChildren.get(0).build(w, creatureInstances_in, revoluteJoints_in,
+        B2DBody rootBody = rootChildren.get(0).build(w, creatureInstances_in, revoluteJoints_in, muscles,
                 rootChildren.get(0).getLocalRoot(), pos);
         //rest
         for (int i = 1; i < rootChildren.size(); i++) {
-            rootChildren.get(i).build(w, creatureInstances_in, revoluteJoints_in,
+            rootChildren.get(i).build(w, creatureInstances_in, revoluteJoints_in, muscles,
             rootBody, rootChildren.get(0).getLocalRoot(), pos);
 		}
 
@@ -114,7 +102,6 @@ public class Root implements BoneParent, Serializable {
             }
         }
         currentBoneID++;
-        muscleList = null;
         boundingBox = null;
         creatureBodies = null;
         creatureJoints = null;
@@ -132,17 +119,9 @@ public class Root implements BoneParent, Serializable {
             }
         }
         currentBoneID++;
-        muscleList = null;
         boundingBox = null;
         creatureBodies = null;
         creatureJoints = null;
-    }
-
-    public void refreshMuscleList() {
-        muscleList = new ArrayList<Muscle>();
-        for (Bone b : rootChildren) {
-            b.getMuscles(muscleList);
-        }
     }
 
     public void refreshBoundingBox() {

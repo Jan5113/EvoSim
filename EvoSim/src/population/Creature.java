@@ -87,10 +87,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 			return null;
 		}
 	}
-	public Muscle[] getMuscles() {
-		return rootBone.getMuscleList();
-	}
-	
+
 	public Creature mutate(int id, int gen) {
 		return new Creature(id, rootBone.mutate(gen), cycleLength.mutate(gen));
 	}
@@ -130,7 +127,7 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	}
 
 	public void buildCreature(World w, ArrayList<B2DBody> creatureInstances_in,
-			ArrayList<RevoluteJoint> revoluteJoints_in) {
-		rootBone.buildCreature(w, creatureInstances_in, revoluteJoints_in);
+			ArrayList<RevoluteJoint> revoluteJoints_in, ArrayList<Muscle> muscles) {
+		rootBone.buildCreature(w, creatureInstances_in, revoluteJoints_in, muscles);
 	}
 }

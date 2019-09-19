@@ -18,6 +18,7 @@ public class Test {
 	private ArrayList<B2DBody> worldInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<B2DBody> creatureInstancesList = new ArrayList<B2DBody>();
 	private ArrayList<RevoluteJoint> creatureRevoluteJointsList = new ArrayList<RevoluteJoint>();
+	private ArrayList<Muscle> muscles = new ArrayList<Muscle>();
 	
 	private Creature creature;
 	private float lastFitness = 0.0f;
@@ -41,7 +42,6 @@ public class Test {
 	private final Level level;
 	
 	private float cycleLen;
-	private Muscle[] muscles;
 	
 	public Test (Vec2 gravity_in, TestWrapper testWrapper, Level level) {
 		gravity = gravity_in;
@@ -62,8 +62,7 @@ public class Test {
 		initWorld();		
 		creature = creature_in;
 		buildCreature();
-		cycleLen = creature.getCycleLength();
-		muscles = creature.getMuscles();	
+		cycleLen = creature.getCycleLength();	
 		lastDistance = 0f;
 		lastFitness = 0f;
 		lastRecordTime = 0f;
@@ -76,7 +75,7 @@ public class Test {
 	private void buildCreature () {
 		if (creature == null) {System.err.println("No Creature set! 1"); return;}
 		if (testing) {System.err.println("No Creature set! 2"); return;}
-		creature.buildCreature(testWorld, creatureInstancesList, creatureRevoluteJointsList);
+		creature.buildCreature(testWorld, creatureInstancesList, creatureRevoluteJointsList, muscles);
 	}
 	
 	public void startTest() {
@@ -95,16 +94,16 @@ public class Test {
 			testTimer = testTimer + dtStepSize;
 			testWorld.step(dtStepSize, 10, 10);
 				
-			for (int i = 0; i < muscles.length; i++) {
+			for (int i = 0; i < muscles.size(); i++) {
 				RevoluteJoint r = creatureRevoluteJointsList.get(i);
 				float cycle = testTimer;
 				cycle = cycle % cycleLen;
 				cycle /= cycleLen;
 				
-				if (muscles[i].isActivated(cycle)) { //Joint is active
-					r.setMotorSpeed((muscles[i].getOnAngle() - r.getJointAngle())*10.f);
+				if (muscles.get(i).isActivated(cycle)) { //Joint is active
+					r.setMotorSpeed((muscles.get(i).getOnAngle() - r.getJointAngle())*10.f);
 				} else { //Joint is inactive
-					r.setMotorSpeed((muscles[i].getOffAngle() - r.getJointAngle())*10.f);
+					r.setMotorSpeed((muscles.get(i).getOffAngle() - r.getJointAngle())*10.f);
 				}
 			}
 			if (level.getLevelStyle() == LevelStyle.CLIMB) {
@@ -158,6 +157,7 @@ public class Test {
 		}
 		worldInstancesList.clear();
 		creatureInstancesList.clear();
+		muscles.clear();
 		testTimer = 0.0f;	
 		dtToRun = 0.0f;
 		testing = false;

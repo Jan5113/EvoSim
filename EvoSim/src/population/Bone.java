@@ -90,25 +90,26 @@ public class Bone implements BoneParent, Serializable {
     }
 
     public void build(World w, ArrayList<B2DBody> creatureInstances_in, ArrayList<RevoluteJoint> revoluteJoints_in,
-    B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {
+    ArrayList<Muscle> muscles, B2DBody parentBody, Vec2 localParentHead, Vec2 parentHeadPos) {
         B2DBody boneBody = buildBone(parentHeadPos);
         creatureInstances_in.add(boneBody);
         boneBody.createBody(w);
         if (parentMuscle != null) {
             revoluteJoints_in.add((RevoluteJoint) w.createJoint(buildMuscle(boneBody, parentBody, localParentHead, parentHeadPos)));
+            if (parentMuscle != null) muscles.add(parentMuscle);
         } else System.err.println("Wrong function for root bone");
         for (Bone b : children) {
-            b.build(w, creatureInstances_in, revoluteJoints_in, boneBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
+            b.build(w, creatureInstances_in, revoluteJoints_in, muscles, boneBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
         }
     }
 
     public B2DBody build(World w, ArrayList<B2DBody> creatureInstances_in, 
-    ArrayList<RevoluteJoint> revoluteJoints_in, Vec2 localParentHead, Vec2 parentHeadPos) {
+    ArrayList<RevoluteJoint> revoluteJoints_in, ArrayList<Muscle> muscles, Vec2 localParentHead, Vec2 parentHeadPos) {
         B2DBody rootBody = buildBone(parentHeadPos);
         creatureInstances_in.add(rootBody);
         rootBody.createBody(w);        
         for (Bone b : children) {
-            b.build(w, creatureInstances_in, revoluteJoints_in, rootBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
+            b.build(w, creatureInstances_in, revoluteJoints_in, muscles, rootBody, getLocalHead(), parentHeadPos.add(headDir.getVal()));
         }
         return rootBody;
     }
@@ -278,13 +279,6 @@ public class Bone implements BoneParent, Serializable {
 
     public float getBoneLength() {
         return length;
-    }
-
-    public void getMuscles(ArrayList<Muscle> muscleList) {
-        if (parentMuscle != null) muscleList.add(parentMuscle);
-        for (Bone b : children) {
-            b.getMuscles(muscleList);
-        }
     }
 
     public Muscle getMuscle() {
