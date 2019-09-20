@@ -113,6 +113,9 @@ public class Creature  implements Serializable, Comparable<Creature>{
 	public FloatProperty fitnessProperty() {
 		return fitness;
 	}
+	public float getCost() {
+		return rootBone.getCost();
+	}
 	
 	public float getCycleLength() {
 		return cycleLength.getAbsVal();
