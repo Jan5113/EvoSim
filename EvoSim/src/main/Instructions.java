@@ -1,6 +1,10 @@
 package main;
 
+import java.util.ArrayList;
+
 import org.jbox2d.common.Vec2;
+
+import challenge.ChallengeManager;
 import display.Layout;
 import display.TestScreen;
 import javafx.geometry.Insets;
@@ -19,8 +23,8 @@ import population.Creature;
 import population.Root;
 
 public class Instructions extends BorderPane {
-	private BorderPane[] pages = new BorderPane[12];
-	private Label[] titles = new Label[12];
+	private BorderPane[] pages = new BorderPane[13];
+	private Label[] titles = new Label[13];
 	private int currentPage = 0;
 
 	private Button btn_next = new Button("Next >");
@@ -33,9 +37,9 @@ public class Instructions extends BorderPane {
 
 	private final Main main;
 
-	public Instructions(Main main_in) {
+	public Instructions(Main main_in, ChallengeManager challengeMgr) {
 		super();
-		setupPages();
+		setupPages(challengeMgr);
 		setupButtons();
 		this.setCenter(pages[currentPage]);
 		updateButtons();
@@ -123,19 +127,20 @@ public class Instructions extends BorderPane {
 		titles[currentPage].setStyle("-fx-background-color: #7ebcea;");
 	}
 
-	private void setupPages() {
-		pages[0] = getPage1();
-		pages[1] = getPage2();
-		pages[2] = getPage3();
-		pages[3] = getPage4();
-		pages[4] = getPage5();
-		pages[5] = getPage6();
-		pages[6] = getPage7();
-		pages[7] = getPage8();
-		pages[8] = getPage9();
-		pages[9] = getPage10();
-		pages[10] = getPage11();
-		pages[11] = getPage12();
+	private void setupPages(ChallengeManager challengeMgr) {
+		pages[0] = getMenuPage(challengeMgr);
+		pages[1] = getPage1();
+		pages[2] = getPage2();
+		pages[3] = getPage3();
+		pages[4] = getPage4();
+		pages[5] = getPage5();
+		pages[6] = getPage6();
+		pages[7] = getPage7();
+		pages[8] = getPage8();
+		pages[9] = getPage9();
+		pages[10] = getPage10();
+		pages[11] = getPage11();
+		pages[12] = getPage12();
 
 		for (int i = 0; i < pages.length; i++) {
 			titles[i] = new Label(pages[i].getId());
@@ -155,9 +160,35 @@ public class Instructions extends BorderPane {
 		this.setLeft(vb_contents);
 	}
 
+	private BorderPane getMenuPage(ChallengeManager challengeMgr) {
+		BorderPane page = new BorderPane();
+		Label title = new Label("Main menu");
+		Layout.labelBigTitle(title);
+		//page.setCenter(vb);
+		page.autosize();
+		page.setTop(title);
+
+		GridPane gp = new GridPane();
+		Layout.gridPane(gp);
+		ArrayList<BorderPane> icons = challengeMgr.getChallengeIcons();
+		for (int i = 0; i < icons.size() && i < 9; i++) {
+			BorderPane icon = icons.get(i);
+			gp.add(icon, (i)%3, (i)/3);
+			icons.get(i).setOnMouseClicked(e -> {
+				main.setChallenge(icon.getId());
+			});
+		}
+
+		page.setCenter(gp);
+
+		Layout.rootPadding(page);
+		page.setId("Menu");
+		return page;
+	}
+
 	private static BorderPane getPage1() {
 		BorderPane page = new BorderPane();
-		page.setId("Home");
+		page.setId("Introduction");
 		Label[] lbls = new Label[3];
 
 		for (int i = 0; i < lbls.length; i++) {
@@ -254,7 +285,6 @@ public class Instructions extends BorderPane {
 	}
 
 	private TestScreen[] testScreen = new TestScreen[4];
-
 	private Creature tutorialCret = new Creature(0, new Root(true));
 
 	private BorderPane getPage3() {
@@ -331,15 +361,15 @@ public class Instructions extends BorderPane {
 
 		testScreen[1].startSingleTest(tutorialCret);
 		testScreen[1].setInfoString("Die Mutterkreatur...");
-		//testScreen[2].startSingleTest(tutorialCret.mutate(1, 60));
+		testScreen[2].startSingleTest(tutorialCret.mutate(1, 20));
 		testScreen[2].setInfoString("...eine Variation davon...");
-		//testScreen[3].startSingleTest(tutorialCret.mutate(2, 60));
+		testScreen[3].startSingleTest(tutorialCret.mutate(2, 20));
 		testScreen[3].setInfoString("...und noch eine Variation");
 
 		lbls[0].setText("Ein wichtiger Bestandteil von diesem genetischen Algorithmus ist "
 				+ "natürlich die Veränderung der Kreaturen die Mutation. Was bedeutet das in "
 				+ "für unsere vereinfachten Kreaturen?");
-		lbls[1].setText("Grundsötzlich werden alle Parameter, welche im vorherigen Kapitel "
+		lbls[1].setText("Grundsätzlich werden alle Parameter, welche im vorherigen Kapitel "
 				+ "als \"variabel\" deklariert worden sind, bei der Erstellung vom Nachwuchs "
 				+ "nach dem Zufallsprinzip verändert. Das sind namentlich die Winkel sowie "
 				+ "die Zeitintervalle der Gelenke, aber auch die Zyklusdauer der internen Uhr " + "einer Kreatur.");
@@ -805,10 +835,10 @@ public class Instructions extends BorderPane {
 	}
 
 	public void refresh(float dt) {
-		if (currentPage == 2) { // KREATUR
+		if (currentPage == 3) { // KREATUR
 			testScreen[0].refresh(dt);
 		}
-		if (currentPage == 3) { // MUTATION
+		if (currentPage == 4) { // MUTATION
 			testScreen[1].refresh(dt);
 			testScreen[2].refresh(dt);
 			testScreen[3].refresh(dt);

@@ -1,4 +1,4 @@
-package main;
+package challenge;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +15,9 @@ public class ChallengeCreator {
     
     public static void main(String[] args) {
 
-        System.out.println("-----------------------------");
-        System.out.println("| CREATE A EVOSIM CHALLENGE |");
-        System.out.println("-----------------------------");
+        System.out.println("------------------------------");
+        System.out.println("| CREATE AN EVOSIM CHALLENGE |");
+        System.out.println("------------------------------");
 		System.out.print("Enter new challenge name: ");
         String name = System.console().readLine();
 		System.out.print("Enter .pop-file name: ");
@@ -48,14 +48,14 @@ public class ChallengeCreator {
         }
         Creature c = callengerPop.getArrayList().get(0);
         c.initProperty();
-        System.out.println("-----------------------------");
-        System.out.println("| Challenger stats:         |");
-        System.out.println("-----------------------------");
+        System.out.println("------------------------------");
+        System.out.println("| Challenger stats:          |");
+        System.out.println("------------------------------");
         System.out.println("Fitness:    " + c.getFitness());
         System.out.println("Distance:   " + c.getDistance());
         System.out.println("Cost:       " + c.getCost());
         System.out.println("Generations:" + callengerPop.getGen());
-        System.out.println("-----------------------------");
+        System.out.println("------------------------------");
 		System.out.print("Enter max cost: ");
         float maxCost = Float.parseFloat(System.console().readLine());
 		System.out.print("Enter gold-gen: ");

@@ -10,13 +10,14 @@ public class Challenge implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public final String challengeName;
-    public final Creature challenger;
+    private final Creature challenger;
     public final Level challengerLevel;
 
     public final float maxCost;
     public final int genBronze;
     public final int genSilver;
     public final int genGold;
+    public transient boolean init = false;
 
     public Challenge(Population pop_in, String name, float maxCost_in,
             int gen_bron, int gen_silv, int gen_gold ) {
@@ -29,5 +30,23 @@ public class Challenge implements Serializable {
         genBronze = gen_bron;
         genSilver = gen_silv;
         genGold = gen_gold;
+    }
+
+    public Creature getChallenger() {
+        if (!init) challenger.initProperty();
+        return challenger;
+    }
+
+    public int gen(int rank) {
+        switch (rank) {
+            case 0:
+                return genBronze;
+            case 1:
+                return genSilver;
+            case 2:
+                return genGold;
+            default:
+                return 0;
+        }
     }
 }

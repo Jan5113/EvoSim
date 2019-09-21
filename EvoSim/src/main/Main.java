@@ -1,6 +1,7 @@
 package main;
 import org.jbox2d.common.Vec2;
 
+import challenge.ChallengeManager;
 import creatureCreator.CreatorControls;
 import creatureCreator.CreatorScreen;
 import display.Layout;
@@ -36,6 +37,7 @@ public class Main extends Application{
 	private VBox bp_pop;
 	private BorderPane bp_test;
 	private PopScreen popScreen;
+	private ChallengeManager challengeMgr;
 	
 	private Stage primaryStage;
 	private Scene scene;
@@ -77,8 +79,10 @@ public class Main extends Application{
 		bp_showInstr.setTranslateX(0);
 		bp_showInstr.setTranslateY(0);
 		bp_showInstr.setMinWidth(210);
+
+		challengeMgr = new ChallengeManager();
 		
-		bp_instr = new Instructions(this);
+		bp_instr = new Instructions(this, challengeMgr);
 		
 		primaryStage.heightProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
 		primaryStage.widthProperty().addListener((obs, old, nev) -> stageResize(primaryStage));
@@ -145,6 +149,13 @@ public class Main extends Application{
 	public void setBPInstr() {
 		root.setCenter(bp_instr);
 		showInstr = true;
+	}
+
+	public void setChallenge(String challengeName) {
+		if (challengeName == "Sandbox") {
+			setBPEvo();
+		}
+		System.out.println(challengeName);
 	}
 	
 	public void openCreator() {

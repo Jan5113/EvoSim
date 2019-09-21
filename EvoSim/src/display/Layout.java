@@ -250,6 +250,10 @@ public class Layout {
 		n.setStyle("-fx-background-color: d3e8f8;");
 	}
 
+	public static void setBackgroundColSel(Node n) {
+		n.getStyleClass().add("standard-button");
+	}
+
 	public static void italics(Label label) {
 		label.setStyle("-fx-font-style: italic;");
 	}
