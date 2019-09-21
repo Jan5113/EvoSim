@@ -49,7 +49,7 @@ public class Layout {
 	 * <strong>NOTE: </strong> {@code defaultInsets()} are not being applied!
 	 * 
 	 * @param btn
-	 *            is set to default width and styling
+	 *            is set tbtn_saveo default width and styling
 	 */
 	public static void button(Button btn) {
 		btn.getStyleClass().add("standard-button");
@@ -119,7 +119,7 @@ public class Layout {
 		btn.getStyleClass().add("standard-button");
 		btn.getStyleClass().add("nopadding-button");
 		btn.getStyleClass().add("xl-text");
-		btn.setMinSize(35, 35);
+		btn.setMinSize(34, 34);
 	}
 	
 	/**

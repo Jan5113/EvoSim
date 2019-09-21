@@ -194,13 +194,13 @@ public class Main extends Application{
 		
 		bp_creatorControl = new CreatorControls(mainCreatorScreen);
 		mainCreatorScreen.setParent(bp_creatorControl);
-		closeCreator();		
+		closeCreator();
 	}
 
 	private void setupPopScreen() {
 		bp_pop = new VBox();
 		popScreen = new PopScreen(pop, mainTestScreen);
-		mainMultiTest = new MultiTest(3, pop);
+		mainMultiTest = new MultiTest(12, pop);
 		bp_popControl = new PopScreenControl(this, mainTestScreen, mainMultiTest, mainCreatorScreen, popScreen, pop);
 		Label popTitle = new Label("Population");
 		Layout.defaultMargin(popTitle);
