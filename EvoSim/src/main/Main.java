@@ -1,6 +1,7 @@
 package main;
 import org.jbox2d.common.Vec2;
 
+import challenge.Challenge;
 import challenge.ChallengeManager;
 import creatureCreator.CreatorControls;
 import creatureCreator.CreatorScreen;
@@ -22,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import population.Population;
+import population.PopulationStatus;
 import test.MultiTest;
 
 public class Main extends Application{
@@ -48,7 +50,7 @@ public class Main extends Application{
 	
 	private BorderPane bp_showInstr;
 	
-	private Population pop = new Population(new Vec2(0.0f, -9.81f));
+	private Population pop = new Population(null, challengeMgr);
 	
 	public static void main(String[] args) {
 		launch (args);
@@ -69,7 +71,10 @@ public class Main extends Application{
 		Layout.rootPadding(root);
 
 		setupMainScreen();
+		setupCreatorScreen();
 		setupPopScreen();
+		bp_creatorControl.setPopScreenControl(bp_popControl);
+		bp_creatorControl.setChallenge(pop.getChallenge());
 		setupButton();
 
 		bp_evo = new BorderPane();
@@ -99,8 +104,8 @@ public class Main extends Application{
 			}
 		}.start();
 
-		//setBPInstr();
-		setBPEvo();
+		setBPInstr();
+		//setBPEvo();
 		
 		primaryStage.setScene(scene);
 		stageResize(primaryStage);
@@ -144,6 +149,11 @@ public class Main extends Application{
 	public void setBPEvo() {
 		root.setCenter(bp_evo);
 		showInstr = false;
+
+		if (pop.getPopStat() == PopulationStatus.S00_CREATOR) {
+			openCreator();
+			return;
+		}
 	}
 
 	public void setBPInstr() {
@@ -151,14 +161,18 @@ public class Main extends Application{
 		showInstr = true;
 	}
 
-	public void setChallenge(String challengeName) {
-		if (challengeName == "Sandbox") {
-			setBPEvo();
-		}
-		System.out.println(challengeName);
+	public void setChallenge(String chalName) {
+		Challenge chal = challengeMgr.getChallenge(chalName);
+		if (chal != null) System.out.println("Loaded Challenge: " + chal.challengeName);
+		pop = new Population(chal, challengeMgr);
+		pop.initProperty();
+		setup();
+		setBPEvo();
+//		openCreator();		
 	}
 	
 	public void openCreator() {
+		System.out.println("Opening Creator");
 		((Label) bp_test.getTop()).setText("Creature configurator");
 		bp_test.setCenter(mainCreatorScreen);
 		bp_test.setBottom(bp_creatorControl);
@@ -191,7 +205,23 @@ public class Main extends Application{
 		Layout.labelTitle(testTitle);
 		bp_test.setTop(testTitle);
 		
+	}
+
+	private void setupPopScreen() {
+		bp_pop = new VBox();
+		popScreen = new PopScreen(pop, mainTestScreen);
+		mainMultiTest = new MultiTest(2, pop);
+		bp_popControl = new PopScreenControl(this, mainTestScreen, mainMultiTest, mainCreatorScreen, popScreen, pop);
+		Label popTitle = new Label("Population");
+		Layout.defaultMargin(popTitle);
+		Layout.labelTitle(popTitle);
 		
+		bp_pop.getChildren().add(popTitle);
+		bp_pop.getChildren().add(bp_popControl);
+		bp_pop.getChildren().add(popScreen);
+	}
+	
+	private void setupCreatorScreen() {
 		mainCreatorScreen = new CreatorScreen(pop.getLevel(), 900, 500, 70, new Vec2(-0.5f, 1.0f));
 		mainCreatorScreen.setBackgroundCol(Layout.getSkycolor());
 		mainCreatorScreen.setInactiveBackgroundCol(Layout.getSkycolorInactive());
@@ -205,21 +235,8 @@ public class Main extends Application{
 		
 		bp_creatorControl = new CreatorControls(mainCreatorScreen);
 		mainCreatorScreen.setParent(bp_creatorControl);
-		closeCreator();
-	}
-
-	private void setupPopScreen() {
-		bp_pop = new VBox();
-		popScreen = new PopScreen(pop, mainTestScreen);
-		mainMultiTest = new MultiTest(12, pop);
-		bp_popControl = new PopScreenControl(this, mainTestScreen, mainMultiTest, mainCreatorScreen, popScreen, pop);
-		Label popTitle = new Label("Population");
-		Layout.defaultMargin(popTitle);
-		Layout.labelTitle(popTitle);
 		
-		bp_pop.getChildren().add(popTitle);
-		bp_pop.getChildren().add(bp_popControl);
-		bp_pop.getChildren().add(popScreen);
+		closeCreator();
 	}
 
 	private void refreshScreen(float dt) {

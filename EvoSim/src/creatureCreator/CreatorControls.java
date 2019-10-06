@@ -1,6 +1,8 @@
 package creatureCreator;
 
+import challenge.Challenge;
 import display.Layout;
+import display.PopScreenControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -22,7 +24,9 @@ import population.MutationMode;
 public class CreatorControls extends BorderPane {
 
 	
-	private final CreatorScreen cretatorScreen;
+	private final CreatorScreen creatorScreen;
+	private PopScreenControl popScreenCtrl;
+	private Challenge challenge;
 	GridPane gp_controls = new GridPane();
 
 	// Playback Controls
@@ -80,8 +84,8 @@ public class CreatorControls extends BorderPane {
 	
 	private Bone selectedBone;
 
-	public CreatorControls(CreatorScreen cretatorScreen_in) {
-		cretatorScreen = cretatorScreen_in;
+	public CreatorControls(CreatorScreen creatorScreen_in) {
+		creatorScreen = creatorScreen_in;
 
 		this.setCenter(gp_controls);
 
@@ -143,7 +147,7 @@ public class CreatorControls extends BorderPane {
 
 		cb_level.setItems(levelStyles);
 		cb_level.valueProperty().addListener(e -> {
-			cretatorScreen.changeLevel(cb_level.getValue());
+			creatorScreen.changeLevel(cb_level.getValue());
 		});
 		updateLevel();
 		
@@ -151,22 +155,22 @@ public class CreatorControls extends BorderPane {
 		btn_select.setOnAction(e -> {
 			enableAllBtns();
 			btn_select.setDisable(true);
-			cretatorScreen.toolSelect();
+			creatorScreen.toolSelect();
 		});
 		btn_delete.setOnAction(e -> {
-			cretatorScreen.toolDelete();
+			creatorScreen.toolDelete();
 			selectedBone = null;
 			updateSelection();
 		});
 		btn_add.setOnAction(e -> {
 			enableAllBtns();
 			btn_add.setDisable(true);
-			cretatorScreen.toolAdd();
+			creatorScreen.toolAdd();
 		});
 		btn_head.setOnAction(e -> {
 			enableAllBtns();
 			btn_head.setDisable(true);
-			cretatorScreen.toolHead();
+			creatorScreen.toolHead();
 		});
 /*		btn_human.setOnAction(e -> {
 			cretatorScreen.loadHuman();
@@ -197,44 +201,88 @@ public class CreatorControls extends BorderPane {
 		});
 
 		cb_mm_1.setOnAction(e -> {
-			if (!cb_mm_1.isSelected()) cretatorScreen.getBlueprint().setMutationMode(MutationMode.M0_ONLY_MUSCLE);
-			else cretatorScreen.getBlueprint().setMutationMode(MutationMode.M1_POSITION_MUT);
+			if (!cb_mm_1.isSelected()) creatorScreen.getBlueprint().setMutationMode(MutationMode.M0_ONLY_MUSCLE);
+			else creatorScreen.getBlueprint().setMutationMode(MutationMode.M1_POSITION_MUT);
 			updateMutMode();
 		});
 
 		cb_mm_2.setOnAction(e -> {
-			if (!cb_mm_2.isSelected()) cretatorScreen.getBlueprint().setMutationMode(MutationMode.M1_POSITION_MUT);
-			else cretatorScreen.getBlueprint().setMutationMode(MutationMode.M2_ALLOW_NEW_BONES);
+			if (!cb_mm_2.isSelected()) creatorScreen.getBlueprint().setMutationMode(MutationMode.M1_POSITION_MUT);
+			else creatorScreen.getBlueprint().setMutationMode(MutationMode.M2_ALLOW_NEW_BONES);
 			updateMutMode();
 		});
 
 		
 
 		tf_incline.setOnAction(e -> {
-			Level level = cretatorScreen.getLevel();
+			Level level = creatorScreen.getLevel();
 			level.getLevelSettings().incline = Float.parseFloat(tf_incline.getText());
 			updateLevel();	
 		});
 		tf_climbWidth.setOnAction(e -> {
-			Level level = cretatorScreen.getLevel();
+			Level level = creatorScreen.getLevel();
 			level.getLevelSettings().climbWidth = Float.parseFloat(tf_climbWidth.getText());
 			updateLevel();	
 		});
 		tf_hurdleDist.setOnAction(e -> {
-			Level level = cretatorScreen.getLevel();
+			Level level = creatorScreen.getLevel();
 			level.getLevelSettings().hurdleDist = Float.parseFloat(tf_hurdleDist.getText());
 			updateLevel();	
 		});
 		tf_hurdleHeight.setOnAction(e -> {
-			Level level = cretatorScreen.getLevel();
+			Level level = creatorScreen.getLevel();
 			level.getLevelSettings().hurdleHeight = Float.parseFloat(tf_hurdleHeight.getText());
 			updateLevel();	
 		});
 		tf_hurdleWidth.setOnAction(e -> {
-			Level level = cretatorScreen.getLevel();
+			Level level = creatorScreen.getLevel();
 			level.getLevelSettings().hurdleWidth = Float.parseFloat(tf_hurdleWidth.getText());
 			updateLevel();	
 		});
+	}
+	
+	public void setPopScreenControl(PopScreenControl popscrnctrl) {
+		popScreenCtrl = popscrnctrl;
+	}
+	
+	public void setChallenge(Challenge chal_in) {
+		challenge = chal_in;
+		updateChallengeDisplay();
+	}
+	
+	public void updateChallengeDisplay() {
+		if (challenge == null) {
+			lbl_tools.setText("Tools");
+			updateMutMode();
+			updateSelection();
+			toggleFields(true);
+		} else {
+			float cost = creatorScreen.getCurrentCost();
+			lbl_tools.setText("Tools                      Challenge: " + challenge.challengeName + " (cost: " +
+						Double.toString(Math.floor((double) cost)) + "/" + challenge.maxCost +")");
+			creatorScreen.getBlueprint().setMutationMode(MutationMode.M0_ONLY_MUSCLE);
+			updateMutMode();
+			updateSelection();
+			toggleFields(false);
+			if (cost > challenge.maxCost) {
+				popScreenCtrl.disableMultiButton();
+			} else {
+				popScreenCtrl.enableMultiButton();
+			}
+		}
+		
+	}
+	
+	private void toggleFields(boolean flag) {
+		cb_mm_1.setDisable(!flag);
+		cb_mm_2.setDisable(!flag);
+
+		cb_level.setDisable(!flag);
+		tf_incline.setDisable(!flag);
+		tf_climbWidth.setDisable(!flag);
+		tf_hurdleDist.setDisable(!flag);
+		tf_hurdleHeight.setDisable(!flag);
+		tf_hurdleWidth.setDisable(!flag);
 	}
 	
 	private void enableAllBtns () {
@@ -267,7 +315,7 @@ public class CreatorControls extends BorderPane {
 	}
 
 	public void updateMutMode() {
-		switch (cretatorScreen.getBlueprint().getMutationMode()) {
+		switch (creatorScreen.getBlueprint().getMutationMode()) {
 			case M0_ONLY_MUSCLE:
 				cb_mm_1.setSelected(false);
 				cb_mm_2.setSelected(false);
@@ -295,13 +343,26 @@ public class CreatorControls extends BorderPane {
 
 			tf_minLen.setText(Float.toString(headDir.getMinLen()));
 			tf_maxLen.setText(Float.toString(headDir.getMaxLen()));
-			if (muscle == null) {
+			if (challenge != null && muscle != null && selectedBone.getBoneType() != BoneType.HEAD) {
+				tf_minAngl.setDisable(false);
+				tf_maxAngl.setDisable(false);
+				tf_minLen.setDisable(true);
+				tf_maxLen.setDisable(true);
+				tf_minLen.setText("-");
+				tf_maxLen.setText("-");
+				tf_minAngl.setText(Float.toString(muscle.getMinAngl()));
+				tf_maxAngl.setText(Float.toString(muscle.getMaxAngl()));
+			} else if (muscle == null) {
 				tf_minAngl.setDisable(true);
 				tf_maxAngl.setDisable(true);
-				tf_minLen.setDisable(false);
-				tf_maxLen.setDisable(false);
+				tf_minLen.setDisable(challenge!=null);
+				tf_maxLen.setDisable(challenge!=null);
 				tf_minAngl.setText("-");
 				tf_maxAngl.setText("-");
+				if (challenge!=null) {
+					tf_minLen.setText("-");
+					tf_maxLen.setText("-");
+				}
 			} else if (selectedBone.getBoneType() == BoneType.HEAD) {
 				tf_minAngl.setDisable(true);
 				tf_maxAngl.setDisable(true);
@@ -329,8 +390,8 @@ public class CreatorControls extends BorderPane {
 	}
 
 	public void updateLevel() {
-		LevelSettings levelSettings = cretatorScreen.getLevel().getLevelSettings();
-		cb_level.setValue(cretatorScreen.getLevel().getLevelStyle());
+		LevelSettings levelSettings = creatorScreen.getLevel().getLevelSettings();
+		cb_level.setValue(creatorScreen.getLevel().getLevelStyle());
 		tf_incline.setText(Float.toString(levelSettings.incline));
 		tf_climbWidth.setText(Float.toString(levelSettings.climbWidth));
 		tf_hurdleDist.setText(Float.toString(levelSettings.hurdleDist));

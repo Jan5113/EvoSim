@@ -212,13 +212,10 @@ public class PopScreenControl extends BorderPane{
 	 */
 	private void singleAction() {		
 		switch (pop.getPopStat()) {
-		case S000_NOBLUEPRINT: //CREATE CREATURE
-			main.openCreator();
-			pop.createCreature();
-			break;
 		case S00_CREATOR: //SAVE CREATURE
-			main.closeCreator();			
+			main.closeCreator();
 			pop.saveCreature(creatorScreen.getBlueprint());
+			testScreen.setTestLevel(pop.getLevel());
 			break;
 		case S0_NOTCREATED: //CREATE POP
 			pop.CreateRandPopulation(100);
@@ -254,6 +251,14 @@ public class PopScreenControl extends BorderPane{
 		default:
 			break;
 		}
+	}
+	
+	public void disableMultiButton() {
+		btn_singleAction.setDisable(true);
+	}
+	
+	public void enableMultiButton() {
+		btn_singleAction.setDisable(false);
 	}
 	
 	/**

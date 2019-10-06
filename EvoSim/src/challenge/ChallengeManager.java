@@ -42,14 +42,33 @@ public class ChallengeManager {
     public void updateChallenge(String name, float distance, int gen) {
         for (Challenge cha : challenges) {
             if (cha.challengeName == name) {
-                if (distance < cha.getChallenger().getDistance()) return;
-                if (gen < cha.genGold) properties.updateChallengeProperty(name, 3);
-                if (gen < cha.genSilver) properties.updateChallengeProperty(name, 2);
-                if (gen < cha.genGold) properties.updateChallengeProperty(name, 1);
-                return;
+                updateChallenge(cha, distance, gen);
             }
         }
     }
+
+	public ChallengeProperty getChallengeProperty(Challenge challenge) {
+		return properties.getChallengeProperty(challenge.challengeName);
+	}
+    
+
+
+	public void updateChallenge(Challenge cha, float distance, int gen) {
+		if (distance < cha.getChallenger().getDistance()) return;
+		
+        if (gen <= cha.genGold) {
+        	System.out.println("Achieved gold");
+        	if (properties.updateChallengeProperty(cha, 3)) saveChallengeProperties();
+        } else if (gen <= cha.genSilver) {
+        	System.out.println("Achieved silver");
+        	if (properties.updateChallengeProperty(cha, 2)) saveChallengeProperties();
+        } else if (gen <= cha.genBronze) {
+        	System.out.println("Achieved bronze");
+        	if (properties.updateChallengeProperty(cha, 1)) saveChallengeProperties();
+        }
+        return;
+	}
+
 
     public ArrayList<BorderPane> getChallengeIcons() {
         ArrayList<BorderPane> icons = new ArrayList<BorderPane>();
@@ -108,7 +127,7 @@ public class ChallengeManager {
             Layout.setBackgroundColSel(bp);
 
             icons.add(bp);
-            System.out.println("Added challenge " + cha.challengeName);
+            System.out.println("Added challenge icon " + cha.challengeName + " " + cp.starsEarned);
         }
         return icons;
     }
@@ -223,5 +242,4 @@ public class ChallengeManager {
         star.setPreserveRatio(true);
         return star;
     }
-
 }

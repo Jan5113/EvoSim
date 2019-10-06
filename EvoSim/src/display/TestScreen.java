@@ -525,4 +525,9 @@ public class TestScreen extends Screen implements TestWrapper {
 		return test.getCreature().getID();
 	}
 
+	public void setTestLevel(Level level) {
+		test = new Test(new Vec2(0, -9.81f), (TestWrapper) this, level);
+		
+	}
+
 }

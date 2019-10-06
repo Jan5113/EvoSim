@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.jbox2d.common.Vec2;
-
+import challenge.Challenge;
+import challenge.ChallengeManager;
+import challenge.ChallengeProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -22,26 +24,54 @@ public class Population implements Serializable{
 	private ArrayList<Creature> CreatureList = new ArrayList<Creature>();
 	private Vec2 testGrav;
 	private transient IntegerProperty fitnessSet = new SimpleIntegerProperty(-1);
-	private PopulationStatus popStat = PopulationStatus.S000_NOBLUEPRINT;
+	private PopulationStatus popStat = PopulationStatus.S00_CREATOR;
 	private Root creatureBlueprint;
 	private Level level = new Level();
+	private Challenge challenge;
+	private final ChallengeManager chalMgr;
 	
 	private static float killVal = 0.8f;
 	
 	
-	public Population(Vec2 testGrav_in) {
-		testGrav = testGrav_in.clone();
+	public Population(Challenge chal, ChallengeManager chalMgr_in) {
+		testGrav = new Vec2(0.0f, -9.81f);
+		challenge = chal;
+		chalMgr = chalMgr_in;
 	}
 	
-	public void createCreature() {
-		if (popStat != PopulationStatus.S000_NOBLUEPRINT) {System.err.println("Creature already created!");return;}
+	public void initNewPopulation(Challenge chal) {
+		testGrav = new Vec2(0.0f, -9.81f);
+		challenge = chal;
+		generation = 1;
+		currentID = 0;
+		CreatureList = new ArrayList<Creature>();
+		fitnessSet = new SimpleIntegerProperty(-1);
 		popStat = PopulationStatus.S00_CREATOR;
+		level = new Level();
 	}
 	
 	public void saveCreature(Root blueprint_in) {
 		if (popStat != PopulationStatus.S00_CREATOR) {System.err.println("Creature already created!");return;}
 		creatureBlueprint = blueprint_in;
 		popStat = PopulationStatus.S0_NOTCREATED;
+	}
+	
+	public Challenge getChallenge() {
+		return challenge;
+	}
+	
+	public ChallengeProperty getChallengeProperty() {
+		if (challenge == null || chalMgr == null) return null;
+		return chalMgr.getChallengeProperty(challenge);
+	}
+	
+	public boolean challengeDone() {
+		if (challenge == null || chalMgr == null) return false;
+		return chalMgr.getChallengeProperty(challenge).starsEarned > 0;
+	}
+	
+	public Creature getChallenger() {
+		return challenge.getChallenger();
 	}
 	
 	public void CreateRandPopulation (int popSize_in) {
@@ -80,6 +110,9 @@ public class Population implements Serializable{
 		if (popStat != PopulationStatus.S3_TESTED) {System.err.println("Incorrect PopStatus @ sortPop " + popStat); return;}
 		Collections.sort(CreatureList);
 		exportGeneration();
+		if (chalMgr != null && challenge != null) {
+			chalMgr.updateChallenge(challenge, CreatureList.get(0).getDistance(), generation);
+		}
 		popStat = PopulationStatus.S4_SORTED;
 	}
 
@@ -166,6 +199,7 @@ public class Population implements Serializable{
 	}
 
 	public Level getLevel() {
+		if (challenge != null) return challenge.challengerLevel;
 		return level;
 	}
 	

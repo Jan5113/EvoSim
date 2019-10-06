@@ -190,7 +190,7 @@ public class Bone implements BoneParent, Serializable {
         }
         ArrayList<Bone> newChildren = new ArrayList<Bone>();
         for (Bone b : children) {
-            if (Math.random() < 0.02 && b.getBoneType() != BoneType.HEAD) {
+            if (Math.random() < 0.02 && b.getBoneType() != BoneType.HEAD && mm == MutationMode.M2_ALLOW_NEW_BONES) {
                 for (Bone c : b.getChildren()) {
                     newChildren.add(c.mutate(mutant, gen, mm));
                 }

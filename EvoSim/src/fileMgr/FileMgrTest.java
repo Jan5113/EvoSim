@@ -1,7 +1,5 @@
 package fileMgr;
 
-import org.jbox2d.common.Vec2;
-
 import display.Layout;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -33,7 +31,7 @@ public class FileMgrTest extends Application {
 		root.setCenter(btn_save);
 		
 		btn_save.setOnAction(e -> {
-			FileIO.safePopulation(new Population(new Vec2()));
+			FileIO.safePopulation(new Population(null, null));
 		});
 		primaryStage.setScene(scene);
 		primaryStage.show();

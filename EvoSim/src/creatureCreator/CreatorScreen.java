@@ -34,6 +34,11 @@ public class CreatorScreen extends Screen {
 	public Root getBlueprint() {
 		return creatureBlueprint;
 	}
+	
+	public void initBlueprint(boolean initDefault) {
+		creatureBlueprint = new Root(initDefault);
+		if (initDefault) rootPos = new Vec2(-1, 0);
+	}
 
 	private void mousePressed(MouseEvent e) {
 		mouseCoord = new Vec2((float) e.getX(), (float) e.getY());
@@ -59,6 +64,7 @@ public class CreatorScreen extends Screen {
 						clickPos.add(rootPos.add(firstSelected.pos).negate()));
 					firstSelected = null;
 				}
+				creatorControls.updateChallengeDisplay();
 			break;
 			case ADD_HEAD:
 				if (creatureBlueprint.isEmpty()) break;
@@ -86,6 +92,7 @@ public class CreatorScreen extends Screen {
 	public void toolDelete() {
 		creatureBlueprint = new Root(false);
 		firstSelected = null;
+		creatorControls.updateChallengeDisplay();
 		refresh();
 	}
 
@@ -145,5 +152,9 @@ public class CreatorScreen extends Screen {
 
 	public Level getLevel() {
 		return level;
+	}
+
+	public float getCurrentCost() {
+		return creatureBlueprint.getCost();
 	}
 }
